@@ -1,10 +1,13 @@
-from setuptools import setup
+from setuptools import find_packages, setup
 
 setup(
-    name="comp0034-cw2-team-01",
-    version="1.0.0",
-    packages=["flask_app"],
-    package_dir={"": "src"},
+    name='crayfish_analysis_app',
+    version='1.0.0',
+    packages=find_packages(),
     include_package_data=True,
-    install_requires=["flask"],
+    zip_safe=False,
+    install_requires=[
+        'flask',
+        'flask-sqlalechemy',
+    ],
 )

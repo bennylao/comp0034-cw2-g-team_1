@@ -1,0 +1,3 @@
+graft crayfish_analysis_app/static
+graft crayfish_analysis_app/templates
+global-exclude *.pyc
