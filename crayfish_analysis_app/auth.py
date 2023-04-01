@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, url_for, redirect
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import User, db, Post, Comment
+from .models import User, db, Post, Comment, Like
 
 main_bp = Blueprint('auth', __name__)
 
@@ -147,4 +147,22 @@ def delete_comment(comment_id):
         db.session.commit()
         flash("Comment deleted.", category="success")
     
+    return redirect(url_for("auth.home"))
+
+@main_bp.route("/like-post/<post_id>", methods=["GET"])
+@login_required
+def like(post_id):
+    post = Post.query.filter_by(id=post_id)
+    like = Like.query.filter_by(author=current_user.id, post_id=post_id).first()
+
+    if not post:
+        flash("Post does not exist.", category="error")
+    elif like:
+        db.session.delete(like)
+        db.session.commit()
+    else:
+        like = Like(author=current_user.id, post_id=post_id)
+        db.session.add(like)
+        db.session.commit()
+
     return redirect(url_for("auth.home"))
