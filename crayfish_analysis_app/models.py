@@ -16,7 +16,7 @@ class User(db.Model, UserMixin):
     likes = db.relationship('Like', backref='user', passive_deletes=True)
 
 login_manager = LoginManager()
-login_manager.login_view = "auth.login"
+login_manager.login_view = "views.login"
 
 @login_manager.user_loader
 def load_user(id):

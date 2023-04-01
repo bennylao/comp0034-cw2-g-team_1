@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User, db, Post, Comment, Like
 
-main_bp = Blueprint('auth', __name__)
+main_bp = Blueprint('views', __name__)
 
 @main_bp.route('/')
 @main_bp.route("/home")
@@ -42,7 +42,7 @@ def signup():
             db.session.commit()
             login_user(new_user, remember=True)
             flash('User created!')
-            return redirect(url_for('auth.home'))
+            return redirect(url_for('views.home'))
 
     return render_template('signup.html', user=current_user)
 
@@ -58,7 +58,7 @@ def login():
             if check_password_hash(user.password, password):
                 flash('Logged in!', category='success')
                 login_user(user, remember=True)
-                return redirect(url_for('auth.home'))
+                return redirect(url_for('views.home'))
             else:
                 flash('Password is incorrect.', category='error')
         else:
@@ -70,7 +70,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('auth.home'))
+    return redirect(url_for('views.home'))
 
 @main_bp.route("/create-post", methods=['GET', 'POST'])
 @login_required
@@ -85,7 +85,7 @@ def create_post():
             db.session.add(post)
             db.session.commit()
             flash('Post created!', category='success')
-            return redirect(url_for('auth.forum'))
+            return redirect(url_for('views.forum'))
 
     return render_template('create_post.html', user=current_user)
 
@@ -102,7 +102,7 @@ def delete_post(id):
         db.session.delete(post)
         db.session.commit()
         flash("Post deleted.", category="success")
-    return redirect(url_for('auth.forum'))
+    return redirect(url_for('views.forum'))
 
 @main_bp.route("/posts/<username>")
 def posts(username):
@@ -110,7 +110,7 @@ def posts(username):
 
     if not user:
         flash("No user with that username exists.", category="error")
-        return redirect(url_for("auth.forum"))
+        return redirect(url_for("views.forum"))
 
     posts = user.posts
     return render_template("posts.html", user=current_user, posts=posts, username=username)
@@ -130,7 +130,7 @@ def create_comment(post_id):
             db.session.commit()
             flash("Comment added.", category="success")
     
-    return redirect(url_for("auth.forum"))
+    return redirect(url_for("views.forum"))
 
 @main_bp.route("/delete-comment/<comment_id>")
 @login_required
@@ -146,7 +146,7 @@ def delete_comment(comment_id):
         db.session.commit()
         flash("Comment deleted.", category="success")
     
-    return redirect(url_for("auth.forum"))
+    return redirect(url_for("views.forum"))
 
 @main_bp.route("/like-post/<post_id>", methods=["GET"])
 @login_required
@@ -164,7 +164,7 @@ def like(post_id):
         db.session.add(like)
         db.session.commit()
 
-    return redirect(url_for("auth.forum"))
+    return redirect(url_for("views.forum"))
 
 @main_bp.route("/about")
 def about():
@@ -184,7 +184,6 @@ def dashboard():
     return render_template('dashboard.html', user=current_user)
 
 @main_bp.route("/forum")
-# @login_required
 def forum():
     """Returns forum page """
     posts = Post.query.all()

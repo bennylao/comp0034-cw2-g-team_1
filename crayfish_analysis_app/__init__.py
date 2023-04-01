@@ -9,7 +9,7 @@ def create_app(config_class_name):
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    from crayfish_analysis_app.auth import main_bp
+    from crayfish_analysis_app.views import main_bp
     
     app.register_blueprint(main_bp, url_prefix="/")
 
