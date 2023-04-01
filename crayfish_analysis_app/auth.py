@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, url_for, redirect
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import User, db
+from .models import User, db, Post
 
 main_bp = Blueprint('auth', __name__)
 
@@ -71,12 +71,19 @@ def logout():
     logout_user()
     return redirect(url_for('auth.home'))
 
-# @main_bp.route('/about', methods=['GET',])
-# def about():
-#     """Returns about page """
-#     return 'Returns about page'
+@main_bp.route("/create-post", methods=['GET', 'POST'])
+@login_required
+def create_post():
+    if request.method == "POST":
+        text = request.form.get('text')
 
-# @main_bp.route('/user/<username>')
-# def user(username):
-#     """Returns user account page """
-#     return f"Returns account page for {username}"
+        if not text:
+            flash('Post cannot be empty.', category='error')
+        else:
+            post = Post(text=text, author=current_user.id)
+            db.session.add(post)
+            db.session.commit()
+            flash('Post created!', category='success')
+            return redirect(url_for('auth.home'))
+
+    return render_template('create_post.html', user=current_user)
