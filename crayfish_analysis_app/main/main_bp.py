@@ -8,4 +8,4 @@ main_bp = Blueprint('main', __name__)
 @login_required
 def home():
     """Returns home page """
-    return render_template("home.html", name=current_user.username)
+    return render_template("home.html", user=current_user)

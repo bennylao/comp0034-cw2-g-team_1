@@ -10,7 +10,7 @@ main_bp = Blueprint('auth', __name__)
 @login_required
 def home():
     """Returns home page """
-    return render_template('home.html', name=current_user.username)
+    return render_template('home.html', user=current_user)
 
 @main_bp.route("/signup", methods=['GET','POST'])
 def signup():
@@ -43,7 +43,7 @@ def signup():
             flash('User created!')
             return redirect(url_for('auth.home'))
 
-    return render_template('signup.html')
+    return render_template('signup.html', user=current_user)
 
 @main_bp.route("/login", methods=['GET','POST'])
 def login():
@@ -63,7 +63,7 @@ def login():
         else:
             flash('Email does not exist.', category='error')
 
-    return render_template('login.html')
+    return render_template('login.html', user=current_user)
 
 @main_bp.route("/logout")
 @login_required
