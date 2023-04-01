@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, url_for, redirect
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import User, db, Post
+from .models import User, db, Post, Comment
 
 main_bp = Blueprint('auth', __name__)
 
@@ -113,5 +113,22 @@ def posts(username):
         flash("No user with that username exists.", category="error")
         return redirect(url_for("auth.home"))
 
-    posts = Post.query.filter_by(author=user.id).all()
+    posts = user.posts
     return render_template("posts.html", user=current_user, posts=posts, username=username)
+
+@main_bp.route("/create-comment/<post_id>", methods=['POST'])
+@login_required
+def create_comment(post_id):
+    text = request.form.get('text')
+
+    if not text:
+        flash("Comment cannot be empty.", category='error')
+    else:
+        post = Post.query.filter_by(id=post_id)
+        if post:
+            comment = Comment(text=text, author=current_user.id, post_id=post_id)
+            db.session.add(comment)
+            db.session.commit()
+            flash("Comment added.", category="success")
+    
+    return redirect(url_for("auth.home"))
