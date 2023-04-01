@@ -85,7 +85,7 @@ def create_post():
             db.session.add(post)
             db.session.commit()
             flash('Post created!', category='success')
-            return redirect(url_for('auth.home'))
+            return redirect(url_for('auth.forum'))
 
     return render_template('create_post.html', user=current_user)
 
@@ -102,16 +102,15 @@ def delete_post(id):
         db.session.delete(post)
         db.session.commit()
         flash("Post deleted.", category="success")
-    return redirect(url_for('auth.home'))
+    return redirect(url_for('auth.forum'))
 
 @main_bp.route("/posts/<username>")
-@login_required
 def posts(username):
     user = User.query.filter_by(username=username).first()
 
     if not user:
         flash("No user with that username exists.", category="error")
-        return redirect(url_for("auth.home"))
+        return redirect(url_for("auth.forum"))
 
     posts = user.posts
     return render_template("posts.html", user=current_user, posts=posts, username=username)
@@ -131,7 +130,7 @@ def create_comment(post_id):
             db.session.commit()
             flash("Comment added.", category="success")
     
-    return redirect(url_for("auth.home"))
+    return redirect(url_for("auth.forum"))
 
 @main_bp.route("/delete-comment/<comment_id>")
 @login_required
@@ -147,7 +146,7 @@ def delete_comment(comment_id):
         db.session.commit()
         flash("Comment deleted.", category="success")
     
-    return redirect(url_for("auth.home"))
+    return redirect(url_for("auth.forum"))
 
 @main_bp.route("/like-post/<post_id>", methods=["GET"])
 @login_required
@@ -165,15 +164,28 @@ def like(post_id):
         db.session.add(like)
         db.session.commit()
 
-    return redirect(url_for("auth.home"))
+    return redirect(url_for("auth.forum"))
 
 @main_bp.route("/about")
 def about():
     """Returns about page """
     return render_template('about.html', user=current_user)
 
+@main_bp.route("/account-management")
+@login_required
+def account_management():
+    """Returns account management page """
+    return render_template('account_management.html', user=current_user)
+
 @main_bp.route("/dashboard")
 @login_required
 def dashboard():
     """Returns crayfish dashboard """
     return render_template('dashboard.html', user=current_user)
+
+@main_bp.route("/forum")
+# @login_required
+def forum():
+    """Returns forum page """
+    posts = Post.query.all()
+    return render_template('forum.html', user=current_user, posts=posts)
