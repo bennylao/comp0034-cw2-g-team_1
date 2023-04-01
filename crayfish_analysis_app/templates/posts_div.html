@@ -32,10 +32,19 @@
                             <div>
                                 <a href="/posts/{{comment.user.username}}"
                                     >{{comment.user.username}}</a
-                                >:{{comment.text}}
+                                >:&nbsp;{{comment.text}}
                             </div>
                             <div>
-                                <small class="text-muted">{{comment.date_created}}</small>                            
+                                <small class="text-muted">{{comment.date_created}}</small>
+                                {% if user.id == comment.author or user.id == post.author %}
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="/delete-comment/{{comment.id}}" class="dropwdown-item">Delete</a></li>
+                                    </ul>
+                                </div>
+                                {% endif %}              
                             </div>
                         </div>
                         {% endfor %}
@@ -69,6 +78,7 @@
             </button>
         </a>
     </div>
+    <br />
 {% endblock %}
 
 {% endblock %}
