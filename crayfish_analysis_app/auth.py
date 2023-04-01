@@ -7,7 +7,7 @@ main_bp = Blueprint('auth', __name__)
 
 @main_bp.route('/')
 @main_bp.route("/home")
-@login_required
+# @login_required
 def home():
     """Returns home page """
     posts = Post.query.all()
@@ -166,3 +166,14 @@ def like(post_id):
         db.session.commit()
 
     return redirect(url_for("auth.home"))
+
+@main_bp.route("/about")
+def about():
+    """Returns about page """
+    return render_template('about.html', user=current_user)
+
+@main_bp.route("/dashboard")
+@login_required
+def dashboard():
+    """Returns crayfish dashboard """
+    return render_template('dashboard.html', user=current_user)

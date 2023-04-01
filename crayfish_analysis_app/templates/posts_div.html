@@ -2,7 +2,7 @@
 {% block title %}Posts_div{% endblock %}
 {% block content%}
 <br />
-<h1 align="center">{% block header1 %}Hello this the home page{% endblock %}</h1>
+<h1 align="center">{% block header1 %}{% endblock %}</h1>
 <br />
 <h2 align="center">{% block header2 %}Posts{% endblock %}</h2>
 <br />
@@ -24,7 +24,7 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="/delete-post/{{post.id}}" class="dropwdown-item"
+                            <a href="/delete-post/{{post.id}}" class="dropwdown-item text-danger"
                             >Delete</a
                             >
                         </li>
@@ -53,7 +53,7 @@
                                     <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown">
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a href="/delete-comment/{{comment.id}}" class="dropwdown-item">Delete</a></li>
+                                        <li><a href="/delete-comment/{{comment.id}}" class="dropwdown-item text-danger">Delete</a></li>
                                     </ul>
                                 </div>
                                 {% endif %}              
