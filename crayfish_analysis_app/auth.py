@@ -10,7 +10,8 @@ main_bp = Blueprint('auth', __name__)
 @login_required
 def home():
     """Returns home page """
-    return render_template('home.html', user=current_user)
+    posts = Post.query.all()
+    return render_template('home.html', user=current_user, posts=posts)
 
 @main_bp.route("/signup", methods=['GET','POST'])
 def signup():
@@ -87,3 +88,18 @@ def create_post():
             return redirect(url_for('auth.home'))
 
     return render_template('create_post.html', user=current_user)
+
+@main_bp.route("/delete-post/<id>")
+@login_required
+def delete_post(id):
+    post = Post.query.filter_by(id=id).first()
+
+    if not post:
+        flash("Post does not exist.", category="error")
+    elif current_user.id != post.user.id:
+        flash("You do not have permission to delete this post.", category="error")
+    else:
+        db.session.delete(post)
+        db.session.commit()
+        flash("Post deleted.", category="success")
+    return redirect(url_for('auth.home'))
