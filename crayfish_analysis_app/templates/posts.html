@@ -1,4 +1,13 @@
-{% extends "base.html" %}
-{% block title %}Posts{% endblock %}
-{% block content%}
+{% extends "posts_div.html" %}
+{% block title %}{{username}}'s Posts{% endblock %}
+{% block header1 %}{{username}}'s Posts{% endblock %}
+{% block header2 %}{% endblock %}
+{% block footer %}
+<div align="center">
+    <a href="/home">
+        <button type="button" class="btn btn-secondary btn-lg">
+            Back
+        </button>
+    </a>
+</div>
 {% endblock %}

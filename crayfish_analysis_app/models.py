@@ -1,6 +1,5 @@
-import datetime
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import func, DateTime, DATETIME
+from sqlalchemy import func
 from flask_login import UserMixin
 from flask_login import LoginManager
 

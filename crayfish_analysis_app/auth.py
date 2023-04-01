@@ -103,3 +103,15 @@ def delete_post(id):
         db.session.commit()
         flash("Post deleted.", category="success")
     return redirect(url_for('auth.home'))
+
+@main_bp.route("/posts/<username>")
+@login_required
+def posts(username):
+    user = User.query.filter_by(username=username).first()
+
+    if not user:
+        flash("No user with that username exists.", category="error")
+        return redirect(url_for("auth.home"))
+
+    posts = Post.query.filter_by(author=user.id).all()
+    return render_template("posts.html", user=current_user, posts=posts, username=username)
