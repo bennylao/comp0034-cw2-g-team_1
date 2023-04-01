@@ -1,5 +1,5 @@
 from flask import Flask
-from .models import db
+from .models import db, login_manager
 
 def create_app(config_class_name):
     """Create and configure the Flask app"""
@@ -18,5 +18,7 @@ def create_app(config_class_name):
     with app.app_context():
         db.create_all()
         print("Database created successfully!")
+
+    login_manager.init_app(app)
 
     return app
