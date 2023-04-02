@@ -3,15 +3,19 @@
 {% block content%}
 <br />
 <h1 align="center">Make a Post</h1>
-
-<form method="POST">
-    <textarea name="text" id="text" class="form-control"></textarea>
-    <br />
-    <div align="center">
-        <button type="submit" class="btn btn-lg btn-primary">Post</button>
+<div class="card border-0">
+    <div class="card-body">
+      <div>
+        <form method="POST">
+            <textarea name="text" id="text" class="form-control"></textarea>
+            <br />
+            <div align="center">
+                <button type="submit" class="btn btn-lg btn-primary">Post</button>
+            </div>
+        </form>
+      </div>
     </div>
-</form>
-<br />
+  </div>
 <div align="center">
     <a href="/forum">
         <button type="button" class="btn btn-lg btn-secondary">
