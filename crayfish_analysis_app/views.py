@@ -110,6 +110,28 @@ def delete_post(id):
         flash("Post deleted.", category="success")
     return redirect(url_for('views.forum'))
 
+@main_bp.route("/delete-account/<id>", methods=['POST'])
+@login_required
+def delete_user(id):
+    user = User.query.filter_by(id=id).first()
+
+    if not user:
+        flash("User does not exist.", category="error")
+    elif current_user.id != user.id:
+        flash("You do not have permission to delete this user.", category="error")
+    else:
+        # Delete the user's posts
+        Post.query.filter_by(author=id).delete()
+        # Delete the user's comments
+        Comment.query.filter_by(author=id).delete()
+        # Delete the user's likes
+        Like.query.filter_by(author=id).delete()
+        # Delete the user
+        db.session.delete(user)
+        db.session.commit()
+        flash("Account successfully deleted.", category="success")
+        return redirect(url_for('views.home'))
+    return redirect(url_for('views.home'))
 
 @main_bp.route("/posts/<username>")
 def posts(username):
