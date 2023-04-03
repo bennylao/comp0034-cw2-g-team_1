@@ -2,10 +2,13 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
 from flask_login import UserMixin
 from flask_login import LoginManager
+from datetime import datetime
 
 db = SQLAlchemy()
 
 class User(db.Model, UserMixin):
+
+    date_created = db.Column(db.Date, nullable=True, default=datetime.utcnow)
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
@@ -23,6 +26,7 @@ def load_user(id):
     return User.query.get(int(id))
 
 class Post(db.Model):
+    date_created = db.Column(db.Date, nullable=True, default=datetime.utcnow)
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.Text, nullable=False)
     # date_created = db.Column(db.DateTime(timezone=True), default=func.now())
@@ -31,6 +35,7 @@ class Post(db.Model):
     likes = db.relationship('Like', backref='Post', passive_deletes=True)
 
 class Comment(db.Model):
+    date_created = db.Column(db.Date, nullable=True, default=datetime.utcnow)
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(200), nullable=False)
     # date_created = db.Column(db.DateTime(timezone=True), default=func.now())
@@ -38,6 +43,7 @@ class Comment(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete='CASCADE'), nullable=False)
 
 class Like(db.Model):
+    date_created = db.Column(db.Date, nullable=True, default=datetime.utcnow)
     id = db.Column(db.Integer, primary_key=True)
     # date_created = db.Column(db.DateTime(timezone=True), default=func.now())
     author = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
