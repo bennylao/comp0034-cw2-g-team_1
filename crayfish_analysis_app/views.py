@@ -30,12 +30,12 @@ def signup():
             flash('Username is already in use.', category='error')
         elif password1 != password2:
             flash('Passwords don\'t match!', category='error')
-        elif len(username) < 2:
-            flash('Username is too short', category='error')
+        elif len(username) < 3:
+            flash('Username is too short. It must be 3 characters or more.', category='error')
         elif len(password1)< 6:
-            flash('Password is too short', category='error')
+            flash('Password is too short. It must be 6 characters or more.', category='error')
         elif len(email) <4:
-            flash('email is invalid', category='error')
+            flash('Email is invalid', category='error')
         else:
             new_user = User(email=email, username=username, password=generate_password_hash(password1, method='sha256'))
             db.session.add(new_user)
