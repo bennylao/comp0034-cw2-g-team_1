@@ -6,8 +6,8 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
-class User(db.Model, UserMixin):
 
+class User(db.Model, UserMixin):
     date_created = db.Column(db.Date, nullable=True, default=datetime.utcnow)
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
@@ -18,12 +18,15 @@ class User(db.Model, UserMixin):
     comments = db.relationship('Comment', backref='user', passive_deletes=True)
     likes = db.relationship('Like', backref='user', passive_deletes=True)
 
+
 login_manager = LoginManager()
 login_manager.login_view = "views.login"
+
 
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
 
 class Post(db.Model):
     date_created = db.Column(db.Date, nullable=True, default=datetime.utcnow)
@@ -34,6 +37,7 @@ class Post(db.Model):
     comments = db.relationship('Comment', backref='post', passive_deletes=True)
     likes = db.relationship('Like', backref='Post', passive_deletes=True)
 
+
 class Comment(db.Model):
     date_created = db.Column(db.Date, nullable=True, default=datetime.utcnow)
     id = db.Column(db.Integer, primary_key=True)
@@ -41,6 +45,7 @@ class Comment(db.Model):
     # date_created = db.Column(db.DateTime(timezone=True), default=func.now())
     author = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete='CASCADE'), nullable=False)
+
 
 class Like(db.Model):
     date_created = db.Column(db.Date, nullable=True, default=datetime.utcnow)

@@ -5,6 +5,7 @@ from .models import User, db, Post, Comment, Like
 
 main_bp = Blueprint('views', __name__)
 
+
 @main_bp.route('/')
 @main_bp.route("/home")
 # @login_required
@@ -13,7 +14,8 @@ def home():
     posts = Post.query.all()
     return render_template('home.html', user=current_user, posts=posts)
 
-@main_bp.route("/signup", methods=['GET','POST'])
+
+@main_bp.route("/signup", methods=['GET', 'POST'])
 def signup():
     """Render signup page and handle signup form submission"""
     if request.method == 'POST':
@@ -32,9 +34,9 @@ def signup():
             flash('Passwords don\'t match!', category='error')
         elif len(username) < 3:
             flash('Username is too short. It must be 3 characters or more.', category='error')
-        elif len(password1)< 6:
+        elif len(password1) < 6:
             flash('Password is too short. It must be 6 characters or more.', category='error')
-        elif len(email) <4:
+        elif len(email) < 4:
             flash('Email is invalid', category='error')
         else:
             new_user = User(email=email, username=username, password=generate_password_hash(password1, method='sha256'))
@@ -46,7 +48,8 @@ def signup():
 
     return render_template('signup.html', user=current_user)
 
-@main_bp.route("/login", methods=['GET','POST'])
+
+@main_bp.route("/login", methods=['GET', 'POST'])
 def login():
     """Returns login page"""
     if request.method == 'POST':
@@ -66,11 +69,13 @@ def login():
 
     return render_template('login.html', user=current_user)
 
+
 @main_bp.route("/logout")
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('views.home'))
+
 
 @main_bp.route("/create-post", methods=['GET', 'POST'])
 @login_required
@@ -89,6 +94,7 @@ def create_post():
 
     return render_template('create_post.html', user=current_user)
 
+
 @main_bp.route("/delete-post/<id>")
 @login_required
 def delete_post(id):
@@ -104,6 +110,7 @@ def delete_post(id):
         flash("Post deleted.", category="success")
     return redirect(url_for('views.forum'))
 
+
 @main_bp.route("/posts/<username>")
 def posts(username):
     user = User.query.filter_by(username=username).first()
@@ -114,6 +121,7 @@ def posts(username):
 
     posts = user.posts
     return render_template("posts.html", user=current_user, posts=posts, username=username)
+
 
 @main_bp.route("/create-comment/<post_id>", methods=['POST'])
 @login_required
@@ -129,8 +137,9 @@ def create_comment(post_id):
             db.session.add(comment)
             db.session.commit()
             flash("Comment added.", category="success")
-    
+
     return redirect(url_for("views.forum"))
+
 
 @main_bp.route("/delete-comment/<comment_id>")
 @login_required
@@ -145,8 +154,9 @@ def delete_comment(comment_id):
         db.session.delete(comment)
         db.session.commit()
         flash("Comment deleted.", category="success")
-    
+
     return redirect(url_for("views.forum"))
+
 
 @main_bp.route("/like-post/<post_id>", methods=["GET"])
 @login_required
@@ -166,10 +176,12 @@ def like(post_id):
 
     return redirect(url_for("views.forum"))
 
+
 @main_bp.route("/about")
 def about():
     """Returns about page """
     return render_template('about.html', user=current_user)
+
 
 @main_bp.route("/account-management")
 @login_required
@@ -177,11 +189,13 @@ def account_management():
     """Returns account management page """
     return render_template('account_management.html', user=current_user)
 
+
 @main_bp.route("/dashboard")
 @login_required
 def dashboard():
     """Returns crayfish dashboard """
     return render_template('dashboard.html', user=current_user)
+
 
 @main_bp.route("/forum")
 def forum():

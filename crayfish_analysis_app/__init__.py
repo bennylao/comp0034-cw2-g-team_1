@@ -1,6 +1,7 @@
 from flask import Flask
 from .models import db, login_manager
 
+
 def create_app(config_class_name):
     """Create and configure the Flask app"""
     app = Flask(__name__)
@@ -10,7 +11,7 @@ def create_app(config_class_name):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     from crayfish_analysis_app.views import main_bp
-    
+
     app.register_blueprint(main_bp, url_prefix="/")
 
     db.init_app(app)
