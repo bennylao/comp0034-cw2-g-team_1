@@ -110,6 +110,42 @@ def delete_post(id):
         flash("Post deleted.", category="success")
     return redirect(url_for('views.forum'))
 
+
+@main_bp.route("/change-password", methods=['GET', 'POST'])
+@login_required
+#checks the old password agsint the existing database password.
+#if the old password matches, then the user can change their password using Post method.
+
+def change_password():
+
+    #obtains the entry inputed by the user.
+    if request.method == 'POST':
+        old_password = request.form.get("old_password")
+        new_password1 = request.form.get("new_password1")
+        new_password2 = request.form.get("new_password2")
+        
+        #checks old password against the database & displays error message if they dont match.
+        if not check_password_hash(current_user.password, old_password):
+            flash('Old password is incorrect.', category='error')
+
+        #checks if the new passwords are the same.
+        elif new_password1 != new_password2:
+            flash('New passwords don\'t match!', category='error')
+
+        #checks if length of new password meets the requirement.
+        elif len(new_password1) < 6:
+            flash('Password is too short. It must be 6 characters or more.', category='error')
+        
+        #updates the database with the new password.
+        else:
+            current_user.password = generate_password_hash(new_password1, method='sha256')
+            db.session.commit()
+            flash('Password changed!', category='success')
+            return redirect(url_for('views.home'))
+
+    return render_template('change_password.html', user=current_user)
+
+
 @main_bp.route("/delete-account/<id>", methods=['POST'])
 @login_required
 def delete_user(id):
