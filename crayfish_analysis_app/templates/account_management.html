@@ -4,4 +4,53 @@
 <br />
 <h1 align="center">{% block header1 %}Account Management{% endblock %}</h1>
 <br />
+<div align="center">
+    <form method="POST" action="/delete-account/{{user.id}}" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+        <button type="submit" class="btn btn-lg btn-danger">
+            Delete Account
+        </button>
+    </form>
+</div>
+<br />
+
+<div class="d-flex justify-content-center align-items-center" style="height:50vh">
+    <div class="card border-0" style="max-width: 1600px;">
+      <div class="card-body">
+        <form method="POST" action="/change-password">
+          <h1 class="card-title text-center">Change Password</h1>
+          <div class="form-group">            
+            <label for="old_password">Old Password</label>
+            <input
+                type="password"
+                id="old_password"
+                name="old_password"
+                class="form-control"
+                placeholder="Enter Old Password"
+            />
+            <label for="new_password1">New Password</label>
+            <input
+                type="password"
+                id="new_password1"
+                name="new_password1"
+                class="form-control"
+                placeholder="Enter New Password"
+            />
+            <label for="password_confirm">Confirm New Password</label>
+            <input
+                type="password"
+                id="new_password2"
+                name="new_password2"
+                class="form-control"
+                placeholder="Confirm New Password"
+            />
+            <br />
+            <div align="center"><button class="btn btn-primary" type="submit">Change Password</button></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
 {% endblock %}
+
+
