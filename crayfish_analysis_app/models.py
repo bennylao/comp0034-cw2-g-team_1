@@ -77,9 +77,9 @@ class Comment(db.Model):
 class Like(db.Model):
     date_created = db.Column(db.Date, nullable=True, default=datetime.utcnow)
     id = db.Column(db.Integer, primary_key=True)
-    # date_created = db.Column(db.DateTime(timezone=True), default=func.now())
     author = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete='CASCADE'), nullable=False)
+
 
 class Crayfish1(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -88,6 +88,7 @@ class Crayfish1(db.Model):
     gender = db.Column(db.String(2), nullable=False)
     length = db.Column(db.Float, nullable=False)
 
+
 class Crayfish2(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     site = db.Column(db.String(10), nullable=False)
@@ -95,28 +96,28 @@ class Crayfish2(db.Model):
     length = db.Column(db.Float, nullable=False)
     weight = db.Column(db.Float, nullable=False)
 
+
 excel = Path(__file__).parent.joinpath("prepared_datasets.xlsx")
 crayfishdb1, crayfishdb2 = read_excel_multi_index(excel)
 site_list = list(crayfishdb1.columns.get_level_values(0).unique())
 site_df1 = []
 site_df2 = []
 for site in site_list:
-    met_1 = crayfishdb1[site, 'Drawdown'].dropna(how = 'all')
+    met_1 = crayfishdb1[site, 'Drawdown'].dropna(how='all')
     met_1.insert(0, "Site", [site] * len(met_1.index), True)
     met_1.insert(1, "Method", ["Drawdown"] * len(met_1.index), True)
-    met_2 = crayfishdb1[site, 'Handsearch'].dropna(how = 'all')
+    met_2 = crayfishdb1[site, 'Handsearch'].dropna(how='all')
     met_2.insert(0, "Site", [site] * len(met_2.index), True)
     met_2.insert(1, "Method", ["Handsearch"] * len(met_2.index), True)
-    met_3 = crayfishdb1[site, 'Trapping'].dropna(how = 'all')
+    met_3 = crayfishdb1[site, 'Trapping'].dropna(how='all')
     met_3.insert(0, "Site", [site] * len(met_3.index), True)
     met_3.insert(1, "Method", ["Trapping"] * len(met_3.index), True)
     site_df1.append(pd.concat([met_1, met_2, met_3]))
 
 for site in site_list:
-    sitedb = crayfishdb2[site].dropna(how = 'all')
+    sitedb = crayfishdb2[site].dropna(how='all')
     sitedb.insert(0, "Site", [site] * len(sitedb.index), True)
     site_df2.append(sitedb)
 
 Sheet_1 = pd.concat(site_df1).reset_index(drop=True)
 Sheet_2 = pd.concat(site_df2).reset_index(drop=True)
-

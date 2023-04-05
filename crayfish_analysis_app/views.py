@@ -2,6 +2,10 @@ from flask import Blueprint, render_template, request, flash, url_for, redirect
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User, db, Post, Comment, Like
+import re
+
+# Regular expression for validating an Email
+regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,4}\b'
 
 main_bp = Blueprint('views', __name__)
 
@@ -36,7 +40,7 @@ def signup():
             flash('Username is too short. It must be 3 characters or more.', category='error')
         elif len(password1) < 6:
             flash('Password is too short. It must be 6 characters or more.', category='error')
-        elif len(email) < 4:
+        elif not re.fullmatch(regex, email):
             flash('Email is invalid', category='error')
         else:
             new_user = User(email=email, username=username, password=generate_password_hash(password1, method='sha256'))
