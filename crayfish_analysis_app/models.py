@@ -4,7 +4,7 @@ from flask_login import LoginManager
 from datetime import datetime
 from pathlib import Path
 import pandas as pd
-from crayfish_analysis_app.helper_functions import read_excel_multi_index
+from .helper_functions import read_excel_multi_index
 from sqlalchemy import func, create_engine
 
 
