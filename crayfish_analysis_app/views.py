@@ -73,6 +73,18 @@ def login():
 
     return render_template('login.html', user=current_user)
 
+@main_bp.route('/reset_password', methods=['GET', 'POST'])
+def reset_password():
+    if request.method == 'POST':
+        email = request.form.get("email")
+        user = User.query.filter_by(email=email).first()
+        if user:
+            flash('A Reset Link Has Been Sent to This Email.', category='suceess')
+        else:
+            flash('This Email is Not Recognised.', category='error')
+          
+    return render_template('reset_password.html', user=current_user, title='Reset Password')
+
 
 @main_bp.route("/logout")
 @login_required
