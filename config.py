@@ -1,5 +1,4 @@
 """Flask config class for the flask_bp app."""
-
 import pathlib
 
 
@@ -14,10 +13,13 @@ class Config(object):
 
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + str(basedir.joinpath("data", "database.db"))
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ECHO = False
 
 
 class ProductionConfig(Config):
-    """Production environment config"""
+    """Production config.
+    Not currently implemented.
+    """
 
     pass
 
@@ -25,7 +27,8 @@ class ProductionConfig(Config):
 class DevelopmentConfig(Config):
     """Development environment config"""
 
-    SQLALCHEMY_ECHO = True
+    FLASK_ENV = "development"
+    DEBUG = True
 
 
 class TestingConfig(Config):
@@ -33,3 +36,4 @@ class TestingConfig(Config):
 
     TESTING = True
     SQLALCHEMY_ECHO = True
+    WTF_CSRF_ENABLED = False
