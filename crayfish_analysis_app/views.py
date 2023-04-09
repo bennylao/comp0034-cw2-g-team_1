@@ -41,7 +41,7 @@ def signup():
         elif len(password1) < 6:
             flash('Password is too short. It must be 6 characters or more.', category='error')
         elif not re.fullmatch(regex, email):
-            flash('Email is invalid', category='error')
+            flash('Email is invalid.', category='error')
         else:
             new_user = User(email=email, username=username, password=generate_password_hash(password1, method='sha256'))
             db.session.add(new_user)
@@ -79,9 +79,9 @@ def reset_password():
         email = request.form.get("email")
         user = User.query.filter_by(email=email).first()
         if user:
-            flash('A Reset Link Has Been Sent to This Email.', category='suceess')
+            flash('A reset link has been sent to this email.', category='suceess')
         else:
-            flash('This Email is Not Recognised.', category='error')
+            flash('This email is not recognised.', category='error')
           
     return render_template('reset_password.html', user=current_user, title='Reset Password')
 
@@ -264,11 +264,11 @@ def account_management():
     return render_template('account_management.html', user=current_user)
 
 
-@main_bp.route("/dashboard")
-@login_required
-def dashboard():
-    """Returns crayfish dashboard """
-    return render_template('dashboard.html', user=current_user)
+# @main_bp.route("/dashboard")
+# @login_required
+# def dashboard():
+#     """Returns crayfish dashboard """
+#     return render_template('dashboard.html', user=current_user)
 
 
 @main_bp.route("/forum")

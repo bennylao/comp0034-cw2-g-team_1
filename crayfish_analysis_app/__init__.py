@@ -1,6 +1,7 @@
 from flask import Flask
 from .models import db, login_manager, Sheet_1, Sheet_2, Crayfish1, Crayfish2
 from sqlalchemy import create_engine
+from .dash_app.app import create_dash_app
 
 
 def create_app(config_class_name):
@@ -14,6 +15,8 @@ def create_app(config_class_name):
     app.register_blueprint(main_bp, url_prefix="/")
 
     db.init_app(app)
+
+    create_dash_app(app)
 
     with app.app_context():
         db.create_all()
