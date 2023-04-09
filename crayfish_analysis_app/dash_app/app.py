@@ -220,7 +220,7 @@ def create_dash_app(flask_app):
             dcc.Store(id='title-4'),
 
             # Create dashboard title
-            dbc.Stack([
+            dbc.Card([
                 dbc.Row([
                     dbc.Col([
                         html.H1("Crayfish Analysis Dashboard",
@@ -233,7 +233,9 @@ def create_dash_app(flask_app):
                     ], width=12)
                 ]),
             ],
-                gap=3,
+                body=True,
+                className="mb-3",
+                style={'border-color': 'white'}
             ),
 
             # Create a card group for app description
