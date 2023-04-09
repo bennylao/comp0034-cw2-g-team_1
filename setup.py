@@ -9,5 +9,7 @@ setup(
     install_requires=[
         'flask',
         'Flask-SQLAlchemy',
+        'dash',
+        'plotly',
     ],
 )

@@ -1,6 +1,5 @@
 from flask import Flask
-from .models import db, login_manager, Sheet_1, Sheet_2, Crayfish1, Crayfish2
-from sqlalchemy import create_engine
+from .models import db, login_manager
 from .dash_app.app import create_dash_app
 
 
@@ -21,36 +20,6 @@ def create_app(config_class_name):
     with app.app_context():
         db.create_all()
         print("Database created successfully!")
-
-        # Deletes the crayfish1 and crayfish 2 table
-        crayfishTable1 = Crayfish1.query.all()
-        crayfishTable2 = Crayfish2.query.all()
-        for c in crayfishTable1:
-            db.session.delete(c)
-        for c in crayfishTable2:
-            db.session.delete(c)
-
-        # Creates crayfish1 table
-        for i in range(len(Sheet_1.index)):
-            id = i
-            site = Sheet_1.iloc[i].tolist()[0]
-            method = Sheet_1.iloc[i].tolist()[1]
-            gender = Sheet_1.iloc[i].tolist()[2]
-            length = Sheet_1.iloc[i].tolist()[3]
-            new_entry = Crayfish1(id=id, site=site, method=method, gender=gender, length=length)
-            db.session.add(new_entry)
-
-        # Creates crayfish1 table
-        for i in range(len(Sheet_2.index)):
-            id = i
-            site = Sheet_2.iloc[i].tolist()[0]
-            gender = Sheet_2.iloc[i].tolist()[1]
-            length = Sheet_2.iloc[i].tolist()[2]
-            weight = Sheet_2.iloc[i].tolist()[3]
-            new_entry = Crayfish2(id=id, site=site, gender=gender, length=length, weight=weight)
-            db.session.add(new_entry)
-
-        db.session.commit()
 
     login_manager.init_app(app)
 
