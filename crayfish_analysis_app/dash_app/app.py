@@ -222,10 +222,20 @@ def create_dash_app(flask_app):
             dcc.Store(id='title-3'),
             dcc.Store(id='title-4'),
 
-            dbc.Button("Return To Homepage", outline=True, color="primary",
-                       className="me-1", href="http://127.0.0.1:5000/home"),
+            dbc.NavbarSimple(
+                brand="Return Home",
+                brand_href="http://127.0.0.1:5000/home",
+                children=[
+                    dbc.NavItem(dbc.NavLink("Forum", href="http://127.0.0.1:5000/forum")),
+                    dbc.NavItem(dbc.NavLink("About", href="http://127.0.0.1:5000/about")),
+                ],
+                sticky="top",
+                color="dark",
+                dark=True,
+                fluid=True,
+                style={"font-size": "16px"},
+            ),
 
-            # Create dashboard title
             dbc.Card([
                 dbc.Row([
                     dbc.Col([
