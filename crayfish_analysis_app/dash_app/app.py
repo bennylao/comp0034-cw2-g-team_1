@@ -233,6 +233,7 @@ def create_dash_app(flask_app):
                 color="dark",
                 dark=True,
                 fluid=True,
+                style={"font-size": "16px"},
             ),
 
             dbc.Card([
