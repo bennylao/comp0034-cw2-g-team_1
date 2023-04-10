@@ -15,7 +15,6 @@ def test_get_home(client):
 
 
 def test_post_signup_new_user(client):
-
     # Check if the region exists, it does then delete it
     exists = db.session.execute(
         db.select(User).filter_by(username="ucl_benny")
@@ -30,4 +29,26 @@ def test_post_signup_new_user(client):
         "password1": "123456",
         "password2": "123456"
     })
+
+    target = db.session.execute(
+        db.select(User).filter_by(username="ucl_benny")
+    ).scalar()
+
     assert response.status_code == 302
+    assert target.email == "bennyuclsample@gmail.com"
+
+
+def test_post_delete_user(client):
+    # Check if the region exists, it does then delete it
+    exists = db.session.execute(
+        db.select(User).filter_by(username="ucl_benny")
+    ).scalar()
+    if exists:
+        db.session.execute(db.delete(User).where(User.username == "ucl_benny"))
+        db.session.commit()
+
+    target = db.session.execute(
+        db.select(User).filter_by(username="abc")
+    ).scalar()
+
+    assert target is None

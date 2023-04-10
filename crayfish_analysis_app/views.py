@@ -4,9 +4,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User, db, Post, Comment, Like
 import re
 
-# Regular expression for validating an Email
-regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,4}\b'
-
 main_bp = Blueprint('views', __name__)
 
 
@@ -27,6 +24,9 @@ def signup():
         username = request.form.get("username")
         password1 = request.form.get("password1")
         password2 = request.form.get("password2")
+
+        # Regular expression for validating an Email
+        regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,4}\b'
 
         email_exists = User.query.filter_by(email=email).first()
         username_exists = User.query.filter_by(username=username).first()
@@ -73,16 +73,17 @@ def login():
 
     return render_template('login.html', user=current_user)
 
+
 @main_bp.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
     if request.method == 'POST':
         email = request.form.get("email")
         user = User.query.filter_by(email=email).first()
         if user:
-            flash('A reset link has been sent to this email.', category='suceess')
+            flash('A reset link has been sent to this email.', category='success')
         else:
             flash('This email is not recognised.', category='error')
-          
+
     return render_template('reset_password.html', user=current_user, title='Reset Password')
 
 
@@ -129,37 +130,35 @@ def delete_post(id):
 
 @main_bp.route("/change-password", methods=['GET', 'POST'])
 @login_required
-#checks the old password agsint the existing database password.
-#if the old password matches, then the user can change their password using Post method.
-
+# checks the old password against the existing database password.
+# if the old password matches, then the user can change their password using Post method.
 def change_password():
-
-    #obtains the entry inputed by the user.
+    # obtains the entry inputted by the user.
     if request.method == 'POST':
         old_password = request.form.get("old_password")
         new_password1 = request.form.get("new_password1")
         new_password2 = request.form.get("new_password2")
-        
-        #checks old password against the database & displays error message if they dont match.
+
+        # checks old password against the database & displays error message if they don't match.
         if not check_password_hash(current_user.password, old_password):
             flash('Old password is incorrect.', category='error')
 
-        #checks if the new passwords are the same.
+        # checks if the new passwords are the same.
         elif new_password1 != new_password2:
             flash('New passwords don\'t match!', category='error')
 
-        #checks if length of new password meets the requirement.
+        # checks if length of new password meets the requirement.
         elif len(new_password1) < 6:
             flash('Password is too short. It must be 6 characters or more.', category='error')
-        
-        #updates the database with the new password.
+
+        # updates the database with the new password.
         else:
             current_user.password = generate_password_hash(new_password1, method='sha256')
             db.session.commit()
             flash('Password has been successfully changed!', category='success')
             return redirect(url_for('views.home'))
 
-    return render_template('change_password.html', user=current_user)
+    return render_template('home.html', user=current_user)
 
 
 @main_bp.route("/delete-account/<id>", methods=['POST'])
@@ -184,6 +183,7 @@ def delete_user(id):
         flash("Account successfully deleted.", category="success")
         return redirect(url_for('views.home'))
     return redirect(url_for('views.home'))
+
 
 @main_bp.route("/posts/<username>")
 def posts(username):
@@ -262,6 +262,7 @@ def about():
 def account_management():
     """Returns account management page """
     return render_template('account_management.html', user=current_user)
+
 
 @main_bp.route("/forum")
 def forum():
