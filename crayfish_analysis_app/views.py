@@ -1,8 +1,10 @@
-from flask import Blueprint, render_template, request, flash, url_for, redirect
+from flask import Blueprint, render_template, request, flash, url_for, redirect, request, make_response, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import User, db, Post, Comment, Like
+from .models import User, db, Post, Comment, Like, Crayfish1, Crayfish2
 import re
+from crayfish_analysis_app.schemas import Crayfish1Schema, Crayfish2Schema
+from crayfish_analysis_app import create_app
 
 main_bp = Blueprint('views', __name__)
 
@@ -269,3 +271,150 @@ def forum():
     """Returns forum page """
     posts = Post.query.all()
     return render_template('forum.html', user=current_user, posts=posts)
+
+crayfish1s_schema = Crayfish1Schema(many=True)
+crayfish1_schema = Crayfish1Schema()
+crayfish2s_schema = Crayfish2Schema(many=True)
+crayfish2_schema = Crayfish2Schema()
+
+@main_bp.get("/crayfish1")
+def crayfish1():
+    """Returns a list of NOC region codes and their details in JSON."""
+    # Select all the regions using Flask-SQLAlchemy
+    all_crayfish1 = db.session.execute(db.select(Crayfish1)).scalars()
+    # Get the data using Marshmallow schema (returns JSON)
+    result = crayfish1s_schema.dump(all_crayfish1)
+    # Return the data
+    return result
+
+@main_bp.get("/crayfish1/<int:id>")
+def crayfish1_id(id):
+    """Returns the details for a specified event id"""
+    crayfish = db.session.execute(
+        db.select(Crayfish1).filter_by(id=id)
+    ).scalar_one_or_none()
+    return crayfish1_schema.dump(crayfish)
+
+@main_bp.get("/crayfish2")
+def crayfish2():
+    """Returns a list of NOC region codes and their details in JSON."""
+    # Select all the regions using Flask-SQLAlchemy
+    all_crayfish2 = db.session.execute(db.select(Crayfish2)).scalars()
+    # Get the data using Marshmallow schema (returns JSON)
+    result = crayfish2s_schema.dump(all_crayfish2)
+    # Return the data
+    return result
+
+@main_bp.get("/crayfish2/<int:id>")
+def crayfish2_id(id):
+    """Returns the details for a specified event id"""
+    crayfish = db.session.execute(
+        db.select(Crayfish2).filter_by(id=id)
+    ).scalar_one_or_none()
+    return crayfish2_schema.dump(crayfish)
+
+@main_bp.delete('/crayfish1/<code>')
+def crayfish1_delete(code):
+    """Removes a NOC record from the dataset."""
+    # Query the database to find the record, return a 404 not found code it the record isn't found
+    crayfish = db.session.execute(
+        db.select(Crayfish1).filter_by(id=code)
+    ).scalar_one_or_none()
+    # Delete the record you found
+    db.session.delete(crayfish)
+    db.session.commit()
+    # Return a JSON HTTP response to let the person know it was deleted
+    text = jsonify({"Successfully deleted": crayfish.id})
+    response = make_response(text, 200)
+    response.headers["Content-type"] = "application/json"
+    return response
+
+@main_bp.delete('/crayfish2/<code>')
+def crayfish2_delete(code):
+    """Removes a NOC record from the dataset."""
+    # Query the database to find the record, return a 404 not found code it the record isn't found
+    crayfish = db.session.execute(
+        db.select(Crayfish2).filter_by(id=code)
+    ).scalar_one_or_none()
+    # Delete the record you found
+    db.session.delete(crayfish)
+    db.session.commit()
+    # Return a JSON HTTP response to let the person know it was deleted
+    text = jsonify({"Successfully deleted": crayfish.id})
+    response = make_response(text, 200)
+    response.headers["Content-type"] = "application/json"
+    return response
+
+@main_bp.post("/crayfish1")
+def crayfish1_add():
+    """Adds a new NOC record to the dataset."""
+    # Get the values of the JSON sent in the request
+    site = request.json.get("site", "")
+    method = request.json.get("method", "")
+    gender = request.json.get("gender", "")
+    length = request.json.get("length", "")
+    # Create a new Region object using the values
+    crayfish = Crayfish1(site=site, method=method, gender = gender, length = length)
+    # Save the new region to the database
+    db.session.add(crayfish)
+    db.session.commit()
+    # Return a reponse to the user with the newly added region in JSON format
+    result = crayfish1_schema.jsonify(crayfish)
+    return result
+
+@main_bp.post("/crayfish2")
+def crayfish2_add():
+    """Adds a new NOC record to the dataset."""
+    # Get the values of the JSON sent in the request
+    site = request.json.get("site", "")
+    gender = request.json.get("gender", "")
+    length = request.json.get("length", "")
+    weight = request.json.get("weight", "")
+    # Create a new Region object using the values
+    crayfish = Crayfish2(site=site, gender = gender, length = length, weight = weight)
+    # Save the new region to the database
+    db.session.add(crayfish)
+    db.session.commit()
+    # Return a reponse to the user with the newly added region in JSON format
+    result = crayfish2_schema.jsonify(crayfish)
+    return result
+
+@main_bp.patch('/crayfish1/<code>')
+def crayfish1_update(code):
+    """Updates changed fields for the NOC record"""
+    # Find the current region in the database
+    existing_crayfish = db.session.execute(
+        db.select(Crayfish1).filter_by(id=code)
+    ).scalar_one_or_none()
+    # Get the updated details from the json sent in the HTTP patch request
+    crayfish_json = request.get_json()
+    # Use Marshmallow to update the existing records with the changes in the json
+    crayfish1_schema.load(crayfish_json, instance=existing_crayfish, partial=True)
+    # Commit the changes to the database
+    db.session.commit()
+    # Return json showing the updated record
+    updated_region = db.session.execute(
+        db.select(Crayfish1).filter_by(id=code)
+    ).scalar_one_or_none()
+    result = crayfish1_schema.jsonify(updated_region)
+    return result
+
+@main_bp.patch('/crayfish2/<code>')
+def crayfish2_update(code):
+    """Updates changed fields for the NOC record"""
+    # Find the current region in the database
+    existing_crayfish = db.session.execute(
+        db.select(Crayfish2).filter_by(id=code)
+    ).scalar_one_or_none()
+    # Get the updated details from the json sent in the HTTP patch request
+    crayfish_json = request.get_json()
+    # Use Marshmallow to update the existing records with the changes in the json
+    crayfish2_schema.load(crayfish_json, instance=existing_crayfish, partial=True)
+    # Commit the changes to the database
+    db.session.commit()
+    # Return json showing the updated record
+    updated_region = db.session.execute(
+        db.select(Crayfish2).filter_by(id=code)
+    ).scalar_one_or_none()
+    result = crayfish2_schema.jsonify(updated_region)
+    return result
