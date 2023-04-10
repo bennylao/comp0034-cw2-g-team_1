@@ -48,12 +48,15 @@ for site in site_list:
     met_1 = df1[site, 'Drawdown'].dropna()
     met_1.insert(0, "Site", [site] * len(met_1.index), True)
     met_1.insert(1, "Method", ["Drawdown"] * len(met_1.index), True)
+
     met_2 = df1[site, 'Handsearch'].dropna(how='all')
     met_2.insert(0, "Site", [site] * len(met_2.index), True)
     met_2.insert(1, "Method", ["Handsearch"] * len(met_2.index), True)
+
     met_3 = df1[site, 'Trapping'].dropna(how='all')
     met_3.insert(0, "Site", [site] * len(met_3.index), True)
     met_3.insert(1, "Method", ["Trapping"] * len(met_3.index), True)
+    
     site_df1.append(pd.concat([met_1, met_2, met_3]))
 
 for site in site_list:
