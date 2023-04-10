@@ -225,7 +225,7 @@ def create_dash_app(flask_app):
                     dbc.Col([
                         html.H1("Crayfish Analysis Dashboard",
                                 style={"textAlign": "center",
-                                    'border': '2px solid #333',
+                                    'border': '2px solid white',
                                     "width": "50%",
                                     "margin": "0 auto",
                                     "backgroundColor": "white"},
@@ -330,7 +330,7 @@ def create_dash_app(flask_app):
                         className="mb-3",
 
                     ),
-                ], style={"width": "50%", "margin": "0 auto"},
+                ], style={"width": "80%", "margin": "0 auto"},
             ),
 
             # Pie Chart
@@ -348,7 +348,7 @@ def create_dash_app(flask_app):
             ],
                 body=True,
                 className="mb-3",
-                style={"width": "50%", "margin": "0 auto"},
+                style={"width": "80%", "margin": "0 auto"},
 
             ),
 
@@ -405,7 +405,7 @@ def create_dash_app(flask_app):
             ],
                 body=True,
                 className="mb-3",
-                style={"width": "50%", "margin": "0 auto"},
+                style={"width": "80%", "margin": "0 auto"},
             ),
 
             # Distribution Curves
@@ -440,7 +440,7 @@ def create_dash_app(flask_app):
             ],
                 body=True,
                 className="mb-3",
-                style={"width": "50%", "margin": "0 auto"},
+                style={"width": "80%", "margin": "0 auto"},
             ),
 
             # Population Graph
@@ -475,7 +475,7 @@ def create_dash_app(flask_app):
             ],
                 body=True,
                 className="mb-3",
-                style={"width": "50%", "margin": "0 auto"},
+                style={"width": "80%", "margin": "0 auto"},
             ),
 
             # Create modals for each graph
@@ -588,9 +588,7 @@ def create_dash_app(flask_app):
         fig.update_layout(
             xaxis_title='Site',
             yaxis_title="Number of Crayfish Caught",
-            font=dict(
-                family="Times New Roman",
-                size=18),
+            font=dict(size=15),
             yaxis_range=[0, 700],
             paper_bgcolor="white",
         ),
@@ -630,8 +628,7 @@ def create_dash_app(flask_app):
         # additional customisation to the chart
         fig1.update_layout(
             font=dict(
-                family="Times New Roman",
-                size=18,
+                size=15,
             ),
             paper_bgcolor="white",
 
@@ -648,8 +645,7 @@ def create_dash_app(flask_app):
         # additional customisation to the chart
         fig2.update_layout(
             font=dict(
-                family="Times New Roman",
-                size=18,
+                size=15,
             ),
             paper_bgcolor="white",
         )
@@ -741,8 +737,7 @@ def create_dash_app(flask_app):
             yaxis_title="Probability Density",
             legend_title="Site",
             font=dict(
-                family="Times New Roman",
-                size=18),
+                size=15),
             yaxis_range=[0, 30],
             paper_bgcolor="white",
 
@@ -791,13 +786,13 @@ def create_dash_app(flask_app):
         # customising the chart by addint title, axis etc
         fig.update_layout(
             title={"text": 'Population Trend for Site DGB',
+                "font": {"size": 18},
                 'x': 0.5},
 
             xaxis_title="Year",
             yaxis_title="Population",
             font=dict(
-                family="Times New Roman",
-                size=18),
+                size=15),
             yaxis_range=[count_2017_m - 100, count_2016_f + count_2016_m + 100],
             paper_bgcolor="white",
         ),

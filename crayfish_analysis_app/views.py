@@ -263,14 +263,6 @@ def account_management():
     """Returns account management page """
     return render_template('account_management.html', user=current_user)
 
-
-# @main_bp.route("/dashboard")
-# @login_required
-# def dashboard():
-#     """Returns crayfish dashboard """
-#     return render_template('dashboard.html', user=current_user)
-
-
 @main_bp.route("/forum")
 def forum():
     """Returns forum page """
