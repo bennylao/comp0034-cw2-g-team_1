@@ -1,10 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import func, create_engine
 from flask_login import UserMixin
 from flask_login import LoginManager
 from datetime import datetime
-import pandas as pd
-from pathlib import Path
+
 
 db = SQLAlchemy()
 
@@ -17,7 +15,6 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
-    # date_created = db.Column(db.DateTime(timezone=True), default=func.now())
     posts = db.relationship('Post', backref='user', passive_deletes=True)
     comments = db.relationship('Comment', backref='user', passive_deletes=True)
     likes = db.relationship('Like', backref='user', passive_deletes=True)
@@ -46,7 +43,6 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date_created = db.Column(db.Date, nullable=True, default=datetime.utcnow)
     text = db.Column(db.Text, nullable=False)
-    # date_created = db.Column(db.DateTime(timezone=True), default=func.now())
     author = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     comments = db.relationship('Comment', backref='post', passive_deletes=True)
     likes = db.relationship('Like', backref='Post', passive_deletes=True)
@@ -67,7 +63,6 @@ class Comment(db.Model):
     date_created = db.Column(db.Date, nullable=True, default=datetime.utcnow)
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(200), nullable=False)
-    # date_created = db.Column(db.DateTime(timezone=True), default=func.now())
     author = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete='CASCADE'), nullable=False)
 
@@ -86,7 +81,6 @@ class Like(db.Model):
     __tablename__ = "like"
     date_created = db.Column(db.Date, nullable=True, default=datetime.utcnow)
     id = db.Column(db.Integer, primary_key=True)
-    # date_created = db.Column(db.DateTime(timezone=True), default=func.now())
     author = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete='CASCADE'), nullable=False)
 

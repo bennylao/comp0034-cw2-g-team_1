@@ -2,6 +2,10 @@ from flask import Blueprint, render_template, request, flash, url_for, redirect
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User, db, Post, Comment, Like
+import re
+
+# Regular expression for validating an Email
+regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,4}\b'
 
 main_bp = Blueprint('views', __name__)
 
@@ -36,8 +40,8 @@ def signup():
             flash('Username is too short. It must be 3 characters or more.', category='error')
         elif len(password1) < 6:
             flash('Password is too short. It must be 6 characters or more.', category='error')
-        elif len(email) < 4:
-            flash('Email is invalid', category='error')
+        elif not re.fullmatch(regex, email):
+            flash('Email is invalid.', category='error')
         else:
             new_user = User(email=email, username=username, password=generate_password_hash(password1, method='sha256'))
             db.session.add(new_user)
@@ -68,6 +72,18 @@ def login():
             flash('Email does not exist.', category='error')
 
     return render_template('login.html', user=current_user)
+
+@main_bp.route('/reset_password', methods=['GET', 'POST'])
+def reset_password():
+    if request.method == 'POST':
+        email = request.form.get("email")
+        user = User.query.filter_by(email=email).first()
+        if user:
+            flash('A reset link has been sent to this email.', category='suceess')
+        else:
+            flash('This email is not recognised.', category='error')
+          
+    return render_template('reset_password.html', user=current_user, title='Reset Password')
 
 
 @main_bp.route("/logout")
@@ -246,14 +262,6 @@ def about():
 def account_management():
     """Returns account management page """
     return render_template('account_management.html', user=current_user)
-
-
-@main_bp.route("/dashboard")
-@login_required
-def dashboard():
-    """Returns crayfish dashboard """
-    return render_template('dashboard.html', user=current_user)
-
 
 @main_bp.route("/forum")
 def forum():

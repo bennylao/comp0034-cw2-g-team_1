@@ -36,4 +36,3 @@ class TestingConfig(Config):
 
     TESTING = True
     SQLALCHEMY_ECHO = True
-    WTF_CSRF_ENABLED = False
