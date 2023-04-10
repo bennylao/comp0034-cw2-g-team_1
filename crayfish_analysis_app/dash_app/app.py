@@ -222,6 +222,9 @@ def create_dash_app(flask_app):
             dcc.Store(id='title-3'),
             dcc.Store(id='title-4'),
 
+            dbc.Button("Return To Homepage", outline=True, color="primary",
+                       className="me-1", href="http://127.0.0.1:5000/home"),
+
             # Create dashboard title
             dbc.Card([
                 dbc.Row([
