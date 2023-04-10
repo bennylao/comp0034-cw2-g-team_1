@@ -1,10 +1,8 @@
 """Flask config class for the flask_bp app."""
-
-import os
 import pathlib
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-basedir_pathlib = pathlib.Path(__file__).parent
+
+basedir = pathlib.Path(__file__).parent
 
 
 class Config(object):
@@ -12,11 +10,16 @@ class Config(object):
 
     # Never put SECRET_KEY in GitHub for a deployed app!
     SECRET_KEY = "wLFkhRTi1ELlKXFgKb8OKg"
+
+    SQLALCHEMY_DATABASE_URI = "sqlite:///" + str(basedir.joinpath("data", "database.db"))
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ECHO = False
 
 
 class ProductionConfig(Config):
-    """Production environment config"""
+    """Production config.
+    Not currently implemented.
+    """
 
     pass
 
@@ -24,7 +27,8 @@ class ProductionConfig(Config):
 class DevelopmentConfig(Config):
     """Development environment config"""
 
-    SQLALCHEMY_ECHO = True
+    FLASK_ENV = "development"
+    DEBUG = True
 
 
 class TestingConfig(Config):
@@ -32,3 +36,4 @@ class TestingConfig(Config):
 
     TESTING = True
     SQLALCHEMY_ECHO = True
+    WTF_CSRF_ENABLED = False

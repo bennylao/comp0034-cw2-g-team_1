@@ -1,15 +1,13 @@
 from flask import Flask
-from .models import db, login_manager, Sheet_1, Sheet_2, Crayfish1, Crayfish2
-from sqlalchemy import create_engine
-
+from .models import db, login_manager, Crayfish1, Crayfish2
+from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
 
 def create_app(config_class_name):
     """Create and configure the Flask app"""
     app = Flask(__name__)
 
     app.config.from_object(config_class_name)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     from crayfish_analysis_app.views import main_bp
 
@@ -18,9 +16,13 @@ def create_app(config_class_name):
     db.init_app(app)
 
     with app.app_context():
+        from . import views
+
         db.create_all()
         print("Database created successfully!")
 
+        # Create tables in the database (if not already existing)
+        """
         #Deletes the crayfish1 and crayfish 2 table
         crayfishTable1 = Crayfish1.query.all()
         crayfishTable2 = Crayfish2.query.all()
@@ -48,9 +50,7 @@ def create_app(config_class_name):
             weight = Sheet_2.iloc[i].tolist()[3]
             new_entry = Crayfish2(id = id, site = site, gender = gender, length = length, weight = weight)
             db.session.add(new_entry)
-        
-        db.session.commit()
-
-    login_manager.init_app(app)
+        """
 
     return app
+
