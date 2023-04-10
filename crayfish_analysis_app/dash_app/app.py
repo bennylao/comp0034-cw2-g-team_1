@@ -191,11 +191,12 @@ def toggle_modal(n1, is_open):
 
 
 # import data
-excel = Path(__file__).parent.joinpath("prepared_datasets.xlsx")
+excel = Path(__file__).parents[2].joinpath("data/prepared_datasets.xlsx")
 df1, df2 = read_excel_multi_index(excel)
 site_list = list(df2.columns.get_level_values(0).unique())
 length_minimum, length_maximum = find_min_and_max(df2, 'Carapace length  (mm)')
 weight_minimum, weight_maximum = find_min_and_max(df2, 'Weight (g)')
+
 
 # Creates the Dash app
 def create_dash_app(flask_app):
@@ -204,7 +205,9 @@ def create_dash_app(flask_app):
     :return dash_app: A configured Dash app registered to the Flask app
     """
     # Register the Dash app to a route '/dashboard/' on a Flask app
-    app = dash.Dash(__name__, server=flask_app, url_base_pathname="/dashboard/", meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1",}], external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP],)
+    app = dash.Dash(__name__, server=flask_app, url_base_pathname="/dashboard/",
+                    meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1", }],
+                    external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP], )
 
     app.layout = dbc.Container(
 
@@ -219,7 +222,20 @@ def create_dash_app(flask_app):
             dcc.Store(id='title-3'),
             dcc.Store(id='title-4'),
 
-            # Create dashboard title
+            dbc.NavbarSimple(
+                brand="Return Home",
+                brand_href="http://127.0.0.1:5000/home",
+                children=[
+                    dbc.NavItem(dbc.NavLink("Forum", href="http://127.0.0.1:5000/forum")),
+                    dbc.NavItem(dbc.NavLink("About", href="http://127.0.0.1:5000/about")),
+                ],
+                sticky="top",
+                color="dark",
+                dark=True,
+                fluid=True,
+                style={"font-size": "16px"},
+            ),
+
             dbc.Card([
                 dbc.Row([
                     dbc.Col([
@@ -255,7 +271,8 @@ def create_dash_app(flask_app):
                                         className="card-text",
                                     ),
 
-                                    dbc.Button("Pie Charts", outline=True, color="primary", className="me-1", id='btn-pie'),
+                                    dbc.Button("Pie Charts", outline=True, color="primary", className="me-1",
+                                               id='btn-pie'),
                                 ]
                             )
                         ],
@@ -278,7 +295,8 @@ def create_dash_app(flask_app):
                                         "fishermen.",
                                         className="card-text",
                                     ),
-                                    dbc.Button("Bar Chart", outline=True, color="primary", className="me-1", id='btn-bar'),
+                                    dbc.Button("Bar Chart", outline=True, color="primary", className="me-1",
+                                               id='btn-bar'),
                                 ]
                             )
                         ],
@@ -290,19 +308,21 @@ def create_dash_app(flask_app):
                     dbc.Card(
                         [
                             dbc.CardImg(
-                                src="https://st2.depositphotos.com/1075946/7097/i/600/depositphotos_70975345-stock-photo"
+                                src="https://st2.depositphotos.com/1075946/7097/i/600/depositphotos_70975345-stock"
+                                    "-photo "
                                     "-student-taking-sample-of-water.jpg",
                                 top=True),
                             dbc.CardBody(
                                 [
                                     html.P(
                                         "This dashboard aims to help scientists monitor crayfish populations and help "
-                                        "fishermen identify specific populations of crayfish so that they can fish more "
+                                        "fishermen identify specific populations of crayfish so that they can fish "
+                                        "more "
                                         "sustainably.",
                                         className="card-text",
                                     ),
                                     dbc.Button("Distribution Curves", outline=True, color="primary", className="me-1",
-                                            id='btn-dist'),
+                                               id='btn-dist'),
                                 ]
                             )
                         ],
@@ -322,7 +342,7 @@ def create_dash_app(flask_app):
                                         className="card-text",
                                     ),
                                     dbc.Button("Line Graph", outline=True, color="primary", className="me-1",
-                                            id='btn-line'),
+                                               id='btn-line'),
                                 ]
                             )
                         ],
@@ -336,12 +356,13 @@ def create_dash_app(flask_app):
             # Pie Chart
             dbc.Card([
                 dbc.Stack([html.H4("Sex Ratio and Trapping Method Pie Charts", id='pie-title'),
-                        dbc.Button(id="pie-modal-button", class_name="bi bi-question-circle", outline=True, n_clicks=0)],
-                        direction="horizontal"),
+                           dbc.Button(id="pie-modal-button", class_name="bi bi-question-circle", outline=True,
+                                      n_clicks=0)],
+                          direction="horizontal"),
 
                 html.H6("Site:"),
                 dcc.Dropdown(site_list, 'DGB2016',
-                            id='pie-site-selection'),
+                             id='pie-site-selection'),
 
                 dcc.Graph(id='pie-chart-sex-ratio'),
                 dcc.Graph(id='pie-chart-method'),
@@ -355,8 +376,9 @@ def create_dash_app(flask_app):
             # Bar Chart
             dbc.Card([
                 dbc.Stack([html.H4("Bar Chart for User-Selected Features", id='bar-title'),
-                        dbc.Button(id="bar-modal-button", class_name="bi bi-question-circle", outline=True, n_clicks=0)],
-                        direction="horizontal"),
+                           dbc.Button(id="bar-modal-button", class_name="bi bi-question-circle", outline=True,
+                                      n_clicks=0)],
+                          direction="horizontal"),
 
                 dbc.Card([
                     html.Div([
@@ -411,9 +433,9 @@ def create_dash_app(flask_app):
             # Distribution Curves
             dbc.Card([
                 dbc.Stack([html.H4("Carapace Length and Weight Distributions", className="card-title", id='dist-title'),
-                        dbc.Button(id="dist-modal-button", class_name="bi bi-question-circle", outline=True,
-                                    n_clicks=0)],
-                        direction="horizontal"),
+                           dbc.Button(id="dist-modal-button", class_name="bi bi-question-circle", outline=True,
+                                      n_clicks=0)],
+                          direction="horizontal"),
                 html.H6("Sites:"),
                 dcc.Dropdown(site_list, site_list, id='distribution-site', multi=True),
                 dbc.Stack([
@@ -430,7 +452,7 @@ def create_dash_app(flask_app):
                 ),
                 html.H6("Data Types:"),
                 dbc.Button("Carapace Length", id='dist-length', value='Carapace length  (mm)', outline=True,
-                        color="primary", size='sm'),
+                           color="primary", size='sm'),
                 dbc.Button("Weight", id='dist-weight', value='Weight (g)', outline=True, color="primary", size='sm'),
                 dcc.Graph(id='normal-distribution'),
 
@@ -447,9 +469,9 @@ def create_dash_app(flask_app):
             dbc.Card([
 
                 dbc.Stack([html.H4("Population Trend", id='line-title'),
-                        dbc.Button(id="line-modal-button", class_name="bi bi-question-circle", outline=True,
-                                    n_clicks=0)],
-                        direction="horizontal"),
+                           dbc.Button(id="line-modal-button", class_name="bi bi-question-circle", outline=True,
+                                      n_clicks=0)],
+                          direction="horizontal"),
                 dbc.Stack([
                     html.H6("Sex:"),
                     dbc.Checklist(
@@ -503,7 +525,8 @@ def create_dash_app(flask_app):
                     dbc.ModalBody(" "),
                     dbc.ModalBody(
                         "Use the carapace length range, weight range, and sex checkboxes to specify which crayfish you "
-                        "would like to view data for. Press the 'Apply Filters' button to view the specific bar charts"),
+                        "would like to view data for."
+                        " Press the 'Apply Filters' button to view the specific bar charts"),
                 ],
                 id="bar-modal",
                 size="xl",
@@ -517,7 +540,8 @@ def create_dash_app(flask_app):
                     dbc.ModalBody("-How are the weights and lengths for the crayfish distributed for each sex?"),
                     dbc.ModalBody(" "),
                     dbc.ModalBody(
-                        "Use the sites dropdown, sex checkboxes, and data types checkboxes to specify which crayfish you "
+                        "Use the sites dropdown, sex checkboxes, and data types checkboxes to specify which crayfish "
+                        "you "
                         "would like to view data for."),
                 ],
                 id="dist-modal",
@@ -557,11 +581,11 @@ def create_dash_app(flask_app):
         This function is used to update the bar chart based on the selected site
         Args:
             _click: useless variable passed from callback
-        length_min (float): minimum length of crayfish
-        length_max (float): maximum length of crayfish
-        weight_min (float): minimum weight of crayfish
-        weight_max (float): maximum weight of crayfish
-        sex (list): a list contains 'M' or 'F'
+            length_min (float): minimum length of crayfish
+            length_max (float): maximum length of crayfish
+            weight_min (float): minimum weight of crayfish
+            weight_max (float): maximum weight of crayfish
+            sex (list): a list contains 'M' or 'F'
         Raises:
             NA
         Returns:
@@ -571,7 +595,8 @@ def create_dash_app(flask_app):
         # shows everything in the dataframe
         count = []
 
-        length_min, length_max, weight_min, weight_max = set_value_if_none(length_min, length_max, weight_min, weight_max)
+        length_min, length_max, weight_min, weight_max = set_value_if_none(length_min, length_max, weight_min,
+                                                                           weight_max)
         # go through dataframe and find values which comply with the selection
         for site in site_list:
             count.append(count_crayfish(df2, site, length_min, length_max, weight_min, weight_max, sex))
@@ -615,7 +640,7 @@ def create_dash_app(flask_app):
         count_f, count_m = num_m_f(df1, site)
         # finding the number of crayfish based on trapping method
         count_t = [df1[site, 'Drawdown', 'Gender'].count(), df1[site, 'Handsearch', 'Gender'].count(),
-                df1[site, 'Trapping', 'Gender'].count()]
+                   df1[site, 'Trapping', 'Gender'].count()]
         # finding the mean stats on the site
         mean_f, mean_m = mean_stats(df1, site)
         # generating the graph and customising the male/female chart
@@ -727,7 +752,7 @@ def create_dash_app(flask_app):
         # enabiling the hoverover feature
         for data in dist_data_list:
             fig.add_trace(go.Scatter(x=data, y=normal_dist_probability(data, dist_mean_list[i], dist_sd_list[i]),
-                                    name=site_selection[i]))
+                                     name=site_selection[i]))
             i += 1
 
         # customising the chart appreadence and features

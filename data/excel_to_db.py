@@ -45,7 +45,7 @@ site_df1 = []
 site_df2 = []
 
 for site in site_list:
-    met_1 = df1[site, 'Drawdown'].dropna()
+    met_1 = df1[site, 'Drawdown'].dropna(how='all')
     met_1.insert(0, "Site", [site] * len(met_1.index), True)
     met_1.insert(1, "Method", ["Drawdown"] * len(met_1.index), True)
 
