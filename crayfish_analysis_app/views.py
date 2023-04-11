@@ -1,10 +1,9 @@
-from flask import Blueprint, render_template, request, flash, url_for, redirect, request, make_response, jsonify
+from flask import Blueprint, render_template, flash, url_for, redirect, request, make_response, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User, db, Post, Comment, Like, Crayfish1, Crayfish2
 import re
 from crayfish_analysis_app.schemas import Crayfish1Schema, Crayfish2Schema
-from crayfish_analysis_app import create_app
 
 main_bp = Blueprint('views', __name__)
 
@@ -272,10 +271,12 @@ def forum():
     posts = Post.query.all()
     return render_template('forum.html', user=current_user, posts=posts)
 
+
 crayfish1s_schema = Crayfish1Schema(many=True)
 crayfish1_schema = Crayfish1Schema()
 crayfish2s_schema = Crayfish2Schema(many=True)
 crayfish2_schema = Crayfish2Schema()
+
 
 @main_bp.get("/crayfish1")
 def crayfish1():
@@ -287,6 +288,7 @@ def crayfish1():
     # Return the data
     return result
 
+
 @main_bp.get("/crayfish1/<int:id>")
 def crayfish1_id(id):
     """Returns the details for a specified event id"""
@@ -294,6 +296,7 @@ def crayfish1_id(id):
         db.select(Crayfish1).filter_by(id=id)
     ).scalar_one_or_none()
     return crayfish1_schema.dump(crayfish)
+
 
 @main_bp.get("/crayfish2")
 def crayfish2():
@@ -305,6 +308,7 @@ def crayfish2():
     # Return the data
     return result
 
+
 @main_bp.get("/crayfish2/<int:id>")
 def crayfish2_id(id):
     """Returns the details for a specified event id"""
@@ -312,6 +316,7 @@ def crayfish2_id(id):
         db.select(Crayfish2).filter_by(id=id)
     ).scalar_one_or_none()
     return crayfish2_schema.dump(crayfish)
+
 
 @main_bp.delete('/crayfish1/<code>')
 def crayfish1_delete(code):
@@ -329,6 +334,7 @@ def crayfish1_delete(code):
     response.headers["Content-type"] = "application/json"
     return response
 
+
 @main_bp.delete('/crayfish2/<code>')
 def crayfish2_delete(code):
     """Removes a NOC record from the dataset."""
@@ -345,6 +351,7 @@ def crayfish2_delete(code):
     response.headers["Content-type"] = "application/json"
     return response
 
+
 @main_bp.post("/crayfish1")
 def crayfish1_add():
     """Adds a new NOC record to the dataset."""
@@ -354,13 +361,14 @@ def crayfish1_add():
     gender = request.json.get("gender", "")
     length = request.json.get("length", "")
     # Create a new Region object using the values
-    crayfish = Crayfish1(site=site, method=method, gender = gender, length = length)
+    crayfish = Crayfish1(site=site, method=method, gender=gender, length=length)
     # Save the new region to the database
     db.session.add(crayfish)
     db.session.commit()
-    # Return a reponse to the user with the newly added region in JSON format
+    # Return a response to the user with the newly added region in JSON format
     result = crayfish1_schema.jsonify(crayfish)
     return result
+
 
 @main_bp.post("/crayfish2")
 def crayfish2_add():
@@ -371,13 +379,14 @@ def crayfish2_add():
     length = request.json.get("length", "")
     weight = request.json.get("weight", "")
     # Create a new Region object using the values
-    crayfish = Crayfish2(site=site, gender = gender, length = length, weight = weight)
+    crayfish = Crayfish2(site=site, gender=gender, length=length, weight=weight)
     # Save the new region to the database
     db.session.add(crayfish)
     db.session.commit()
-    # Return a reponse to the user with the newly added region in JSON format
+    # Return a response to the user with the newly added region in JSON format
     result = crayfish2_schema.jsonify(crayfish)
     return result
+
 
 @main_bp.patch('/crayfish1/<code>')
 def crayfish1_update(code):
@@ -398,6 +407,7 @@ def crayfish1_update(code):
     ).scalar_one_or_none()
     result = crayfish1_schema.jsonify(updated_region)
     return result
+
 
 @main_bp.patch('/crayfish2/<code>')
 def crayfish2_update(code):

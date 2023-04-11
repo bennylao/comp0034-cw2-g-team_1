@@ -13,6 +13,7 @@ class Crayfish1Schema(ma.SQLAlchemyAutoSchema):
         sqla_session = db.session
         include_relationships = True
 
+
 class Crayfish2Schema(ma.SQLAlchemyAutoSchema):
     """Marshmallow schema for the attributes of an event class. Inherits all the attributes from the Crayfish2 class."""
 

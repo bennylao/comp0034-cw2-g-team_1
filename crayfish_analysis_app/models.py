@@ -3,15 +3,15 @@ from flask_login import UserMixin
 from flask_login import LoginManager
 from datetime import datetime
 
-
 db = SQLAlchemy()
+
 
 class User(db.Model, UserMixin):
     """User"""
 
     __tablename__ = "user"
-    date_created = db.Column(db.Date, nullable=True, default=datetime.utcnow)
     id = db.Column(db.Integer, primary_key=True)
+    date_created = db.Column(db.Date, nullable=True, default=datetime.utcnow)
     username = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
@@ -26,6 +26,7 @@ class User(db.Model, UserMixin):
         """
         clsname = self.__class__.__name__
         return f"{clsname}: <{self.date_created}, {self.id}, {self.username}, {self.email}, {self.password} >"
+
 
 login_manager = LoginManager()
 login_manager.login_view = "views.login"
@@ -60,8 +61,8 @@ class Comment(db.Model):
     """Comments on posts"""
 
     __tablename__ = "comment"
-    date_created = db.Column(db.Date, nullable=True, default=datetime.utcnow)
     id = db.Column(db.Integer, primary_key=True)
+    date_created = db.Column(db.Date, nullable=True, default=datetime.utcnow)
     text = db.Column(db.String(200), nullable=False)
     author = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete='CASCADE'), nullable=False)
@@ -79,8 +80,8 @@ class Like(db.Model):
     """Likes on post"""
 
     __tablename__ = "like"
-    date_created = db.Column(db.Date, nullable=True, default=datetime.utcnow)
     id = db.Column(db.Integer, primary_key=True)
+    date_created = db.Column(db.Date, nullable=True, default=datetime.utcnow)
     author = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete='CASCADE'), nullable=False)
 
@@ -91,6 +92,7 @@ class Like(db.Model):
         """
         clsname = self.__class__.__name__
         return f"{clsname}: <{self.date_created}, {self.id}, {self.author}, {self.post_id}>"
+
 
 class Crayfish1(db.Model):
     """Sheet_1 form prepared_datasets.xlsx"""
@@ -110,6 +112,7 @@ class Crayfish1(db.Model):
         clsname = self.__class__.__name__
         return f"{clsname}: < {self.id}, {self.site}, {self.method}, {self.gender}, {self.length}>"
 
+
 class Crayfish2(db.Model):
     """Sheet_2 form prepared_datasets.xlsx"""
 
@@ -127,6 +130,3 @@ class Crayfish2(db.Model):
         """
         clsname = self.__class__.__name__
         return f"{clsname}: < {self.id}, {self.site}, {self.gender}, {self.length}, {self.weight}>"
-
-
-
