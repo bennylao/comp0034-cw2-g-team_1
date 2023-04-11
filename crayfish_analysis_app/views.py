@@ -291,7 +291,7 @@ def crayfish1():
     # Get the data using Marshmallow schema (returns JSON)
     result = crayfish1s_schema.dump(all_crayfish1)
     # Return the data
-    return render_template("crayfish1.html", crayfish_list=result, user = current_user)
+    return render_template("crayfish1.html", crayfish_list=result, user=current_user)
 
 
 @main_bp.get("/crayfish1/<int:id>")
@@ -313,7 +313,7 @@ def crayfish2():
     # Get the data using Marshmallow schema (returns JSON)
     result = crayfish2s_schema.dump(all_crayfish2)
     # Return the data
-    return render_template("crayfish2.html", crayfish_list=result, user = current_user)
+    return render_template("crayfish2.html", crayfish_list=result, user=current_user)
 
 
 @main_bp.get("/crayfish2/<int:id>")
@@ -370,7 +370,7 @@ def crayfish1_add():
     gender = request.json.get("gender", "")
     length = request.json.get("length", "")
     # Create a new Crayfish1 object using the values
-    crayfish = Crayfish1(site=site, method=method, gender = gender, length = length)
+    crayfish = Crayfish1(site=site, method=method, gender=gender, length=length)
     # Save the new crayfish to the database
     db.session.add(crayfish)
     db.session.commit()
@@ -388,7 +388,7 @@ def crayfish2_add():
     length = request.json.get("length", "")
     weight = request.json.get("weight", "")
     # Create a new Crayfish2 object using the values
-    crayfish = Crayfish2(site=site, gender = gender, length = length, weight = weight)
+    crayfish = Crayfish2(site=site, gender=gender, length=length, weight=weight)
     # Save the new crayfish to the database
     db.session.add(crayfish)
     db.session.commit()
@@ -438,43 +438,40 @@ def crayfish2_update(code):
     result = crayfish2_schema.jsonify(updated_region)
     return result
 
+
 @main_bp.route('/crayfish1/download')
-@login_required
 def post1():
     si = StringIO()
-    #Creating a new csv instance
+    # Creating a new csv instance
     cw = csv.writer(si)
-    #Get the data from the crayfish1 table
+    # Get the data from the crayfish1 table
     crayfish_list = Crayfish1.query.all()
     cw.writerow(["id", "site", "method", "gender", "length (mm)"])
-    #Add the data to the csv file
+    # Add the data to the csv file
     for crayfish in crayfish_list:
         crayfish_ls = [crayfish.id, crayfish.site, crayfish.method, crayfish.gender, crayfish.length]
         cw.writerow(crayfish_ls)
     output = make_response(si.getvalue())
-    #Name the file
+    # Name the file
     output.headers["Content-Disposition"] = "attachment; filename=database1.csv"
     output.headers["Content-type"] = "text/csv"
     return output
 
+
 @main_bp.route('/crayfish2/download')
-@login_required
 def post2():
     si = StringIO()
-    #Creating a new csv instance
+    # Creating a new csv instance
     cw = csv.writer(si)
-    #Get the data from the crayfish2 table
+    # Get the data from the crayfish2 table
     crayfish_list = Crayfish2.query.all()
     cw.writerow(["id", "site", "gender", "length (mm)", "weight (g)"])
-    #Add the data to the csv file
+    # Add the data to the csv file
     for crayfish in crayfish_list:
         crayfish_ls = [crayfish.id, crayfish.site, crayfish.gender, crayfish.length, crayfish.weight]
         cw.writerow(crayfish_ls)
-    #Name the file
+    # Name the file
     output = make_response(si.getvalue())
     output.headers["Content-Disposition"] = "attachment; filename=database2.csv"
     output.headers["Content-type"] = "text/csv"
     return output
-
-
-
