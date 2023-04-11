@@ -36,7 +36,7 @@ def test_post_signup_new_user(client):
 
     assert response.status_code == 302
     assert target.email == "crayfish_king@crayfish.com"
-    assert check_password_hash(target.password, 'ilovecrayfish') == True
+    assert check_password_hash(target.password, 'ilovecrayfish') is True
 
 
 def test_post_signup_invalid_email(client):
@@ -47,7 +47,7 @@ def test_post_signup_invalid_email(client):
         db.session.execute(db.delete(User).where(User.username == "Invalid_email"))
         db.session.commit()
 
-    response = client.post("/signup", data={
+    client.post("/signup", data={
         "username": "Invalid_email",
         "email": "I-am-invalid-email",
         "password1": "invalidemail",
@@ -89,7 +89,6 @@ def test_post_login_wrong_email(client, create_user):
 
 
 def test_post_delete_user(client, create_user):
-
     client.post("/login", data={
         "email": "testingsample@test.com",
         "password": "123456",
