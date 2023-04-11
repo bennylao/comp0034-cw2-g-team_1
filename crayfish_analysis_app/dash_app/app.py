@@ -241,10 +241,10 @@ def create_dash_app(flask_app):
                     dbc.Col([
                         html.H1("Crayfish Analysis Dashboard",
                                 style={"textAlign": "center",
-                                    'border': '2px solid white',
-                                    "width": "50%",
-                                    "margin": "0 auto",
-                                    "backgroundColor": "white"},
+                                       'border': '2px solid white',
+                                       "width": "50%",
+                                       "margin": "0 auto",
+                                       "backgroundColor": "white"},
                                 )
                     ], width=12)
                 ]),
@@ -441,11 +441,11 @@ def create_dash_app(flask_app):
                 dbc.Stack([
                     html.H6("Sex:"),
                     dbc.Checklist(id='dist-sex', options=[{"label": "M", "value": 'M'}, {"label": "F", "value": 'F'}],
-                                value=['M', 'F'],
-                                label_checked_style={"color": "green"},
-                                input_checked_style={"backgroundColor": "green", "borderColor": "green", },
-                                inline=True
-                                ),
+                                  value=['M', 'F'],
+                                  label_checked_style={"color": "green"},
+                                  input_checked_style={"backgroundColor": "green", "borderColor": "green", },
+                                  inline=True
+                                  ),
                 ],
                     direction="horizontal",
                     gap=3,
@@ -564,7 +564,6 @@ def create_dash_app(flask_app):
         ],
     )
 
-
     @app.callback(
         Output('bar-chart', 'figure'),
         Input('bar-update-button', 'n_clicks'),
@@ -619,7 +618,6 @@ def create_dash_app(flask_app):
         ),
 
         return fig
-
 
     @app.callback(
         Output('pie-chart-sex-ratio', 'figure'),
@@ -676,7 +674,6 @@ def create_dash_app(flask_app):
         )
 
         return fig1, fig2
-
 
     @app.callback(
         Output('normal-distribution', 'figure'),
@@ -772,7 +769,6 @@ def create_dash_app(flask_app):
 
         return fig, button_id_prev
 
-
     @app.callback(
         Output('line-graph-pop', 'figure'),
         [Input('line-sex', 'value')]
@@ -794,25 +790,25 @@ def create_dash_app(flask_app):
         if option == ["M", "F"] or option == ["F", "M"]:
             fig = go.Figure(data=go.Scatter(x=[2016, 2017],
                                             y=[count_2016_f + count_2016_m,
-                                            count_2017_f + count_2017_m]))
+                                               count_2017_f + count_2017_m]))
         # updating chart to show population of male
         elif option == ["M"]:
             fig = go.Figure(data=go.Scatter(x=[2016, 2017],
                                             y=[count_2016_m,
-                                            count_2017_m]))
+                                               count_2017_m]))
         # updating chart to show population of female
         elif option == ["F"]:
             fig = go.Figure(data=go.Scatter(x=[2016, 2017],
                                             y=[count_2016_f,
-                                            count_2017_f]))
+                                               count_2017_f]))
         # updating chart to make it empty
         else:
             fig = go.Figure()
         # customising the chart by addint title, axis etc
         fig.update_layout(
             title={"text": 'Population Trend for Site DGB',
-                "font": {"size": 18},
-                'x': 0.5},
+                   "font": {"size": 18},
+                   'x': 0.5},
 
             xaxis_title="Year",
             yaxis_title="Population",
@@ -825,7 +821,6 @@ def create_dash_app(flask_app):
         fig.update_xaxes(dtick="M2")
         fig.update_traces(hovertemplate='Year: %{x} <br>Population: %{y}<extra></extra>')
         return fig
-
 
     # callback for modal
     app.callback(
@@ -911,4 +906,3 @@ def create_dash_app(flask_app):
 
     if __name__ == '__main__':
         app.run_server(debug=True)
-

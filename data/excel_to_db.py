@@ -56,7 +56,7 @@ for site in site_list:
     met_3 = df1[site, 'Trapping'].dropna(how='all')
     met_3.insert(0, "Site", [site] * len(met_3.index), True)
     met_3.insert(1, "Method", ["Trapping"] * len(met_3.index), True)
-    
+
     site_df1.append(pd.concat([met_1, met_2, met_3]))
 
 for site in site_list:

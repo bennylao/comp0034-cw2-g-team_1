@@ -32,6 +32,9 @@ def signup():
         password1 = request.form.get("password1")
         password2 = request.form.get("password2")
 
+        # Regular expression for validating an Email
+        regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,4}\b'
+
         email_exists = User.query.filter_by(email=email).first()
         username_exists = User.query.filter_by(username=username).first()
         if email_exists:
@@ -77,16 +80,17 @@ def login():
 
     return render_template('login.html', user=current_user)
 
+
 @main_bp.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
     if request.method == 'POST':
         email = request.form.get("email")
         user = User.query.filter_by(email=email).first()
         if user:
-            flash('A reset link has been sent to this email.', category='suceess')
+            flash('A reset link has been sent to this email.', category='success')
         else:
             flash('This email is not recognised.', category='error')
-          
+
     return render_template('reset_password.html', user=current_user, title='Reset Password')
 
 
@@ -133,37 +137,35 @@ def delete_post(id):
 
 @main_bp.route("/change-password", methods=['GET', 'POST'])
 @login_required
-#checks the old password agsint the existing database password.
-#if the old password matches, then the user can change their password using Post method.
-
+# checks the old password against the existing database password.
+# if the old password matches, then the user can change their password using Post method.
 def change_password():
-
-    #obtains the entry inputed by the user.
+    # obtains the entry inputted by the user.
     if request.method == 'POST':
         old_password = request.form.get("old_password")
         new_password1 = request.form.get("new_password1")
         new_password2 = request.form.get("new_password2")
-        
-        #checks old password against the database & displays error message if they dont match.
+
+        # checks old password against the database & displays error message if they don't match.
         if not check_password_hash(current_user.password, old_password):
             flash('Old password is incorrect.', category='error')
 
-        #checks if the new passwords are the same.
+        # checks if the new passwords are the same.
         elif new_password1 != new_password2:
             flash('New passwords don\'t match!', category='error')
 
-        #checks if length of new password meets the requirement.
+        # checks if length of new password meets the requirement.
         elif len(new_password1) < 6:
             flash('Password is too short. It must be 6 characters or more.', category='error')
-        
-        #updates the database with the new password.
+
+        # updates the database with the new password.
         else:
             current_user.password = generate_password_hash(new_password1, method='sha256')
             db.session.commit()
             flash('Password has been successfully changed!', category='success')
             return redirect(url_for('views.home'))
 
-    return render_template('change_password.html', user=current_user)
+    return render_template('home.html', user=current_user)
 
 
 @main_bp.route("/delete-account/<id>", methods=['POST'])
@@ -188,6 +190,7 @@ def delete_user(id):
         flash("Account successfully deleted.", category="success")
         return redirect(url_for('views.home'))
     return redirect(url_for('views.home'))
+
 
 @main_bp.route("/posts/<username>")
 def posts(username):
@@ -267,16 +270,19 @@ def account_management():
     """Returns account management page """
     return render_template('account_management.html', user=current_user)
 
+
 @main_bp.route("/forum")
 def forum():
     """Returns forum page """
     posts = Post.query.all()
     return render_template('forum.html', user=current_user, posts=posts)
 
+
 crayfish1s_schema = Crayfish1Schema(many=True)
 crayfish1_schema = Crayfish1Schema()
 crayfish2s_schema = Crayfish2Schema(many=True)
 crayfish2_schema = Crayfish2Schema()
+
 
 @main_bp.route("/crayfish1")
 def crayfish1():
@@ -288,6 +294,7 @@ def crayfish1():
     # Return the data
     return render_template("index1.html", crayfish_list=result, user = current_user)
 
+
 @main_bp.get("/crayfish1/<int:id>")
 def crayfish1_id(id):
     """Returns the details for a specified id"""
@@ -297,6 +304,7 @@ def crayfish1_id(id):
     ).scalar_one_or_none()
     # Get the data using Marshmallow schema (returns JSON) and return the data
     return crayfish1_schema.dump(crayfish)
+
 
 @main_bp.get("/crayfish2")
 def crayfish2():
@@ -308,6 +316,7 @@ def crayfish2():
     # Return the data
     return render_template("index2.html", crayfish_list=result, user = current_user)
 
+
 @main_bp.get("/crayfish2/<int:id>")
 def crayfish2_id(id):
     """Returns the details for a specified id"""
@@ -317,6 +326,7 @@ def crayfish2_id(id):
     ).scalar_one_or_none()
     # Get the data using Marshmallow schema (returns JSON) and return the data
     return crayfish2_schema.dump(crayfish)
+
 
 @main_bp.delete('/crayfish1/<code>')
 def crayfish1_delete(code):
@@ -334,6 +344,7 @@ def crayfish1_delete(code):
     response.headers["Content-type"] = "application/json"
     return response
 
+
 @main_bp.delete('/crayfish2/<code>')
 def crayfish2_delete(code):
     """Removes a crayfish2 record from the dataset."""
@@ -350,6 +361,7 @@ def crayfish2_delete(code):
     response.headers["Content-type"] = "application/json"
     return response
 
+
 @main_bp.post("/crayfish1")
 def crayfish1_add():
     """Adds a new crayfish1 record to the dataset."""
@@ -363,9 +375,10 @@ def crayfish1_add():
     # Save the new crayfish to the database
     db.session.add(crayfish)
     db.session.commit()
-    # Return a reponse to the user with the newly added region in JSON format
+    # Return a response to the user with the newly added region in JSON format
     result = crayfish1_schema.jsonify(crayfish)
     return result
+
 
 @main_bp.post("/crayfish2")
 def crayfish2_add():
@@ -380,9 +393,10 @@ def crayfish2_add():
     # Save the new crayfish to the database
     db.session.add(crayfish)
     db.session.commit()
-    # Return a reponse to the user with the newly added region in JSON format
+    # Return a response to the user with the newly added region in JSON format
     result = crayfish2_schema.jsonify(crayfish)
     return result
+
 
 @main_bp.patch('/crayfish1/<code>')
 def crayfish1_update(code):
@@ -403,6 +417,7 @@ def crayfish1_update(code):
     ).scalar_one_or_none()
     result = crayfish1_schema.jsonify(updated_region)
     return result
+
 
 @main_bp.patch('/crayfish2/<code>')
 def crayfish2_update(code):
