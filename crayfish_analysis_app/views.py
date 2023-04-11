@@ -6,7 +6,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User, db, Post, Comment, Like, Crayfish1, Crayfish2
 import re
 from crayfish_analysis_app.schemas import Crayfish1Schema, Crayfish2Schema
-import requests
 
 # Regular expression for validating an Email
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,4}\b'
@@ -292,7 +291,7 @@ def crayfish1():
     # Get the data using Marshmallow schema (returns JSON)
     result = crayfish1s_schema.dump(all_crayfish1)
     # Return the data
-    return render_template("index1.html", crayfish_list=result, user = current_user)
+    return render_template("crayfish1.html", crayfish_list=result, user = current_user)
 
 
 @main_bp.get("/crayfish1/<int:id>")
@@ -314,7 +313,7 @@ def crayfish2():
     # Get the data using Marshmallow schema (returns JSON)
     result = crayfish2s_schema.dump(all_crayfish2)
     # Return the data
-    return render_template("index2.html", crayfish_list=result, user = current_user)
+    return render_template("crayfish2.html", crayfish_list=result, user = current_user)
 
 
 @main_bp.get("/crayfish2/<int:id>")
