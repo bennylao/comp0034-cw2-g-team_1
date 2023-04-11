@@ -302,7 +302,7 @@ def crayfish1_id(id):
     return crayfish1_schema.dump(crayfish)
 
 
-@main_bp.get("/crayfish2")
+@main_bp.route("/crayfish2")
 def crayfish2():
     """Returns a list of crayfish data in crayfish2 in JSON."""
     # Select all the regions using Flask-SQLAlchemy
@@ -437,8 +437,10 @@ def crayfish2_update(code):
 
 
 @main_bp.route('/crayfish1/download')
-@login_required
-def post1():
+def download_1():
+    # Adapted from code from 'Dead_EyE' on the python forum at
+    # https://python-forum.io/thread-27675.html
+    # Accessed 11/04/2023
     si = StringIO()
     # Creating a new csv instance
     cw = csv.writer(si)
@@ -457,8 +459,10 @@ def post1():
 
 
 @main_bp.route('/crayfish2/download')
-@login_required
-def post2():
+def download_2():
+    # Adapted from code from 'Dead_EyE' on the python forum at
+    # https://python-forum.io/thread-27675.html
+    # Accessed 11/04/2023
     si = StringIO()
     # Creating a new csv instance
     cw = csv.writer(si)
