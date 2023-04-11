@@ -1,10 +1,12 @@
+import csv
+from io import StringIO
 from flask import Blueprint, render_template, request, flash, url_for, redirect, request, make_response, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User, db, Post, Comment, Like, Crayfish1, Crayfish2
 import re
 from crayfish_analysis_app.schemas import Crayfish1Schema, Crayfish2Schema
-from crayfish_analysis_app import create_app
+import requests
 
 # Regular expression for validating an Email
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,4}\b'
@@ -276,45 +278,49 @@ crayfish1_schema = Crayfish1Schema()
 crayfish2s_schema = Crayfish2Schema(many=True)
 crayfish2_schema = Crayfish2Schema()
 
-@main_bp.get("/crayfish1")
+@main_bp.route("/crayfish1")
 def crayfish1():
-    """Returns a list of NOC region codes and their details in JSON."""
+    """Returns a list crayfish data in crayfish1 in JSON."""
     # Select all the regions using Flask-SQLAlchemy
     all_crayfish1 = db.session.execute(db.select(Crayfish1)).scalars()
     # Get the data using Marshmallow schema (returns JSON)
     result = crayfish1s_schema.dump(all_crayfish1)
     # Return the data
-    return result
+    return render_template("index1.html", crayfish_list=result, user = current_user)
 
 @main_bp.get("/crayfish1/<int:id>")
 def crayfish1_id(id):
-    """Returns the details for a specified event id"""
+    """Returns the details for a specified id"""
+    # Query the database to find the record, return a 404 not found code it the record isn't found
     crayfish = db.session.execute(
         db.select(Crayfish1).filter_by(id=id)
     ).scalar_one_or_none()
+    # Get the data using Marshmallow schema (returns JSON) and return the data
     return crayfish1_schema.dump(crayfish)
 
 @main_bp.get("/crayfish2")
 def crayfish2():
-    """Returns a list of NOC region codes and their details in JSON."""
+    """Returns a list of crayfish data in crayfish2 in JSON."""
     # Select all the regions using Flask-SQLAlchemy
     all_crayfish2 = db.session.execute(db.select(Crayfish2)).scalars()
     # Get the data using Marshmallow schema (returns JSON)
     result = crayfish2s_schema.dump(all_crayfish2)
     # Return the data
-    return result
+    return render_template("index2.html", crayfish_list=result, user = current_user)
 
 @main_bp.get("/crayfish2/<int:id>")
 def crayfish2_id(id):
-    """Returns the details for a specified event id"""
+    """Returns the details for a specified id"""
+    # Query the database to find the record, return a 404 not found code it the record isn't found
     crayfish = db.session.execute(
         db.select(Crayfish2).filter_by(id=id)
     ).scalar_one_or_none()
+    # Get the data using Marshmallow schema (returns JSON) and return the data
     return crayfish2_schema.dump(crayfish)
 
 @main_bp.delete('/crayfish1/<code>')
 def crayfish1_delete(code):
-    """Removes a NOC record from the dataset."""
+    """Removes a crayfish1 record from the dataset."""
     # Query the database to find the record, return a 404 not found code it the record isn't found
     crayfish = db.session.execute(
         db.select(Crayfish1).filter_by(id=code)
@@ -330,7 +336,7 @@ def crayfish1_delete(code):
 
 @main_bp.delete('/crayfish2/<code>')
 def crayfish2_delete(code):
-    """Removes a NOC record from the dataset."""
+    """Removes a crayfish2 record from the dataset."""
     # Query the database to find the record, return a 404 not found code it the record isn't found
     crayfish = db.session.execute(
         db.select(Crayfish2).filter_by(id=code)
@@ -346,15 +352,15 @@ def crayfish2_delete(code):
 
 @main_bp.post("/crayfish1")
 def crayfish1_add():
-    """Adds a new NOC record to the dataset."""
+    """Adds a new crayfish1 record to the dataset."""
     # Get the values of the JSON sent in the request
     site = request.json.get("site", "")
     method = request.json.get("method", "")
     gender = request.json.get("gender", "")
     length = request.json.get("length", "")
-    # Create a new Region object using the values
+    # Create a new Crayfish1 object using the values
     crayfish = Crayfish1(site=site, method=method, gender = gender, length = length)
-    # Save the new region to the database
+    # Save the new crayfish to the database
     db.session.add(crayfish)
     db.session.commit()
     # Return a reponse to the user with the newly added region in JSON format
@@ -363,15 +369,15 @@ def crayfish1_add():
 
 @main_bp.post("/crayfish2")
 def crayfish2_add():
-    """Adds a new NOC record to the dataset."""
+    """Adds a new crayfish2 record to the dataset."""
     # Get the values of the JSON sent in the request
     site = request.json.get("site", "")
     gender = request.json.get("gender", "")
     length = request.json.get("length", "")
     weight = request.json.get("weight", "")
-    # Create a new Region object using the values
+    # Create a new Crayfish2 object using the values
     crayfish = Crayfish2(site=site, gender = gender, length = length, weight = weight)
-    # Save the new region to the database
+    # Save the new crayfish to the database
     db.session.add(crayfish)
     db.session.commit()
     # Return a reponse to the user with the newly added region in JSON format
@@ -380,8 +386,8 @@ def crayfish2_add():
 
 @main_bp.patch('/crayfish1/<code>')
 def crayfish1_update(code):
-    """Updates changed fields for the NOC record"""
-    # Find the current region in the database
+    """Updates changed fields for the crayfish1 record"""
+    # Find the current crayfish1 in the database
     existing_crayfish = db.session.execute(
         db.select(Crayfish1).filter_by(id=code)
     ).scalar_one_or_none()
@@ -400,8 +406,8 @@ def crayfish1_update(code):
 
 @main_bp.patch('/crayfish2/<code>')
 def crayfish2_update(code):
-    """Updates changed fields for the NOC record"""
-    # Find the current region in the database
+    """Updates changed fields for the crayfish2 record"""
+    # Find the current crayfish2 in the database
     existing_crayfish = db.session.execute(
         db.select(Crayfish2).filter_by(id=code)
     ).scalar_one_or_none()
@@ -417,3 +423,44 @@ def crayfish2_update(code):
     ).scalar_one_or_none()
     result = crayfish2_schema.jsonify(updated_region)
     return result
+
+@main_bp.route('/crayfish1/download')
+@login_required
+def post1():
+    si = StringIO()
+    #Creating a new csv instance
+    cw = csv.writer(si)
+    #Get the data from the crayfish1 table
+    crayfish_list = Crayfish1.query.all()
+    cw.writerow(["id", "site", "method", "gender", "length (mm)"])
+    #Add the data to the csv file
+    for crayfish in crayfish_list:
+        crayfish_ls = [crayfish.id, crayfish.site, crayfish.method, crayfish.gender, crayfish.length]
+        cw.writerow(crayfish_ls)
+    output = make_response(si.getvalue())
+    #Name the file
+    output.headers["Content-Disposition"] = "attachment; filename=database1.csv"
+    output.headers["Content-type"] = "text/csv"
+    return output
+
+@main_bp.route('/crayfish2/download')
+@login_required
+def post2():
+    si = StringIO()
+    #Creating a new csv instance
+    cw = csv.writer(si)
+    #Get the data from the crayfish2 table
+    crayfish_list = Crayfish2.query.all()
+    cw.writerow(["id", "site", "gender", "length (mm)", "weight (g)"])
+    #Add the data to the csv file
+    for crayfish in crayfish_list:
+        crayfish_ls = [crayfish.id, crayfish.site, crayfish.gender, crayfish.length, crayfish.weight]
+        cw.writerow(crayfish_ls)
+    #Name the file
+    output = make_response(si.getvalue())
+    output.headers["Content-Disposition"] = "attachment; filename=database2.csv"
+    output.headers["Content-type"] = "text/csv"
+    return output
+
+
+
