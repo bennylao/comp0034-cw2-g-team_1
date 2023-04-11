@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% set title = 'Crayfish with weight' %}
+{% block content %}
+
+<h1>Crayfish with weight and length</h1>
+<a class="nav-item nav-link" href="/crayfish2/download">Database 2 Download</a>
+<p>We have data for the following crayfish</p>
+<ul>
+    {% for crayfish2 in crayfish_list %}
+    <li>{{ crayfish2['id'] }} {{ crayfish2['site'] }} {{ crayfish2['gender'] }} {{ crayfish2['length'] }}mm {{ crayfish2['weight'] }}g</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

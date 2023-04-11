@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% set title = 'Trapping Methods' %}
+{% block content %}
+
+<h1>Crayfish Caught Using Different Trapping Methods</h1>
+<a class="nav-item nav-link" href="/crayfish1/download">Database 1 Download</a>
+<p>We have data for the following methods</p>
+<ul>
+    {% for crayfish1 in crayfish_list %}
+    <li>{{ crayfish1['id'] }} {{ crayfish1['site'] }} {{ crayfish1['method'] }} {{ crayfish1['gender'] }} {{ crayfish1['length'] }}mm</li>
+    {% endfor %}
+</ul>
+
+
+{% endblock %}
