@@ -354,7 +354,6 @@ def crayfish2_delete(code):
 
 @main_bp.post("/crayfish1")
 def crayfish1_add():
-    """Adds a new NOC record to the dataset."""
     # Get the values of the JSON sent in the request
     site = request.json.get("site", "")
     method = request.json.get("method", "")
