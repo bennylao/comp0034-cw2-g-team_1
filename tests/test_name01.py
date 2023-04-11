@@ -69,7 +69,7 @@ def test_post_login(client, create_user):
 
 
 def test_post_login_wrong_password(client, create_user):
-    response = client.post("/login", data={
+    client.post("/login", data={
         "email": "testingsample@test.com",
         "password": "WrongPassword",
     })
@@ -79,7 +79,7 @@ def test_post_login_wrong_password(client, create_user):
 
 
 def test_post_login_wrong_email(client, create_user):
-    response = client.post("/login", data={
+    client.post("/login", data={
         "email": "WrongEmail@test.com",
         "password": "123456",
     })

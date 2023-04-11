@@ -23,8 +23,6 @@ def create_app(config_class_name):
     create_dash_app(app)
 
     with app.app_context():
-        from .models import Crayfish1, Crayfish2
-        from crayfish_analysis_app import views
 
         db.create_all()
         print("Database created successfully!")
