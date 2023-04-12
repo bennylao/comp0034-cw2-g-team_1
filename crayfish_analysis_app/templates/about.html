@@ -2,6 +2,90 @@
 {% block title %}About{% endblock %}
 {% block content%}
 <br />
-<h1 align="center">{% block header1 %}About{% endblock %}</h1>
-<br />
+<h1 align="center">{% block header1 %}About Us{% endblock %}</h1>
+<br   />
+
+<body>
+    <div class = "container">
+        <div class = "row">
+            <div class = "col-md-6" style ="text-align: center;">
+                <h2>Our Mission</h2>
+                <p>
+                    The population of the invasive signal crayfish is increasing rapidly which is harming the ecosystem and biodiversity 
+                    as they consume the surrounding aquatic life. They also damage public infrastructure by burrowing into the riverbanks. 
+                    Current crayfish trapping methods are not very effective. Therefore, We aim to provide scientists with a reliable tool that
+                    can help them locate and minor the signal crayfish population.    
+                </p>
+            </div>
+            <div class = "col-md-6" style ="text-align: center;">
+                <h2>Our Team</h2>
+                <p>
+                    Our team consists of four undergraducte university students from different engineering diciplines. 
+                    We are a group of passionate individuals who are serious about the environment and are commited 
+                    to be working on this project. Due to our differnet academic backgrounds, we are able to utilise a range of
+                    different skills and knowledge to help us achieve our goal.
+                </p>
+            </div>
+        </div>
+
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="card border-0">
+            <div class="card-body">
+            <div class="card-group border-light">
+                <div class="card-body">
+                    <div class="card-group">
+                        <div class="card">
+                            <img src="https://thumbs.dreamstime.com/b/smiling-diverse-office-workers-group-multiracial-employees-smiling-diverse-office-workers-group-multiracial-team-employees-154158054.jpg" class="card-img-top" alt="...">
+    
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class ="container">  
+        <div class="row">
+            <div class="col-md-12" style="text-align:center;">
+                <p>
+                    For more access to our web-app, please sign-up or log-in into an exisiting account.
+                </p>
+            </div>
+            <div class="col-md-6" style="text-align:right;">
+                <div>
+                <a class ="btn btn-primary" href = "{{url_for('views.signup')}}">Sign-up</a>
+                </div>
+            </div>
+            <div class="col-md-6" style="text-align:left;">
+                <a class ="btn btn-primary" href = "{{url_for('views.login')}}">Log-in</a>
+        
+            </div>
+        </div>
+    </div>
+
+    <br />
+    <br />
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12" style="text-align:center;">
+                <h2 style="font-size:20px;">Contact</h2>
+                <p style="font-size:12px;">You can contact us by sending an email to Crayfishteamt@gmail.com.</p>
+                <p style="font-size:12px;">You can also call us on +44 12345678 or +020 12345678</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12" style="text-align:center;">
+                <button onclick="window.location.href='https://en-gb.facebook.com/'">Visit our Facebook</button>
+            </div>
+        </div>
+    <div>
+    
+</body>
+
+
+
 {% endblock %}
