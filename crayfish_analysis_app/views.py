@@ -762,3 +762,9 @@ def post2():
     output.headers["Content-Disposition"] = "attachment; filename=database2.csv"
     output.headers["Content-type"] = "text/csv"
     return output
+
+
+@main_bp.app_errorhandler(404)
+def page_not_found(e):
+    """ Return error 404 """
+    return render_template('404.html', user=current_user), 404
