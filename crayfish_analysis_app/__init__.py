@@ -28,6 +28,7 @@ def create_app(config_class_name):
     create_dash_app(app)
 
     with app.app_context():
+
         db.create_all()
         print("Database created successfully!")
 
