@@ -183,6 +183,7 @@ def test_post_signup_existing_user(test_client):
 
     assert text == 'Username is already in use.'
 
+
 def test_post_signup_not_same_password(test_client):
     exists = db.session.execute(
         db.select(User).filter_by(username="Invalid_email")
