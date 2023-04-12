@@ -7,6 +7,7 @@ from werkzeug.security import check_password_hash
 from flask import get_flashed_messages
 import time
 
+
 def test_home_page_title(chrome_driver, run_app_win, flask_port):
     """
     GIVEN a running app
@@ -17,6 +18,7 @@ def test_home_page_title(chrome_driver, run_app_win, flask_port):
     chrome_driver.get(url)
     chrome_driver.implicitly_wait(3)
     assert chrome_driver.title == "Home"
+
 
 def test_homepage_subheadings(chrome_driver, run_app_win, flask_port):
     """
@@ -40,6 +42,7 @@ def test_homepage_subheadings(chrome_driver, run_app_win, flask_port):
     assert heading2.text == "Monitor Populations"
     assert heading3.text == "Protect Ecosystems"
 
+
 def test_forum_page_title(chrome_driver, run_app_win, flask_port):
     """
     GIVEN a running app
@@ -48,10 +51,11 @@ def test_forum_page_title(chrome_driver, run_app_win, flask_port):
     """
     url = f"http://localhost:{flask_port}/forum"
     chrome_driver.get(url)
-    title =  WebDriverWait(chrome_driver, 10).until(
+    title = WebDriverWait(chrome_driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '/html/body/div/h1'))
     )
     assert title.text == "Forum Posts"
+
 
 def test_About_page_title(chrome_driver, run_app_win, flask_port):
     """
@@ -61,10 +65,11 @@ def test_About_page_title(chrome_driver, run_app_win, flask_port):
     """
     url = f"http://localhost:{flask_port}/about"
     chrome_driver.get(url)
-    title =  WebDriverWait(chrome_driver, 10).until(
+    title = WebDriverWait(chrome_driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '/html/body/div/h1'))
     )
     assert title.text == "About"
+
 
 def test_link_to_dashboard(chrome_driver, run_app_win, flask_port):
     """
@@ -81,6 +86,7 @@ def test_link_to_dashboard(chrome_driver, run_app_win, flask_port):
     current_url = chrome_driver.current_url
     assert current_url == f"http://localhost:{flask_port}/dashboard/"
 
+
 def test_dashboard_title(chrome_driver, run_app_win, flask_port):
     """
     GIVEN a running app
@@ -93,6 +99,7 @@ def test_dashboard_title(chrome_driver, run_app_win, flask_port):
         EC.presence_of_element_located((By.XPATH, '//*[@id="react-entry-point"]/div/div[1]/div/div/div/h1'))
     )
     assert heading.text == "Crayfish Analysis Dashboard"
+
 
 def test_signup(chrome_driver, run_app_win, flask_port, test_client):
     """
@@ -136,9 +143,9 @@ def test_signup(chrome_driver, run_app_win, flask_port, test_client):
         db.select(User).filter_by(username="iamusername")
     ).scalar()
 
-
     assert target.email == "iamemail@gmail.com"
     assert check_password_hash(target.password, '123456') is True
+
 
 def test_login(chrome_driver, run_app_win, flask_port, test_client):
     """
@@ -166,6 +173,7 @@ def test_login(chrome_driver, run_app_win, flask_port, test_client):
 
     current_url = chrome_driver.current_url
     assert current_url == f"http://localhost:{flask_port}/home"
+
 
 def test_forum_post(chrome_driver, run_app_win, flask_port, test_client):
     """
@@ -205,8 +213,7 @@ def test_forum_post(chrome_driver, run_app_win, flask_port, test_client):
     )
     create_post.click()
 
-
-    text_post =  WebDriverWait(chrome_driver, 10).until(
+    text_post = WebDriverWait(chrome_driver, 10).until(
         EC.presence_of_element_located((By.ID, 'text'))
     )
 
@@ -222,6 +229,7 @@ def test_forum_post(chrome_driver, run_app_win, flask_port, test_client):
     search_text = 'This is a new post that I made.'
 
     assert search_text in current_url
+
 
 def test_like(chrome_driver, run_app_win, flask_port, test_client):
     """
@@ -263,7 +271,7 @@ def test_like(chrome_driver, run_app_win, flask_port, test_client):
     )
     create_post.click()
 
-    text_post =  WebDriverWait(chrome_driver, 10).until(
+    text_post = WebDriverWait(chrome_driver, 10).until(
         EC.presence_of_element_located((By.ID, 'text'))
     )
 
@@ -283,6 +291,7 @@ def test_like(chrome_driver, run_app_win, flask_port, test_client):
     assert WebDriverWait(chrome_driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '//*[@id="posts"]/div/div[1]/div'))
     ).text == "1"
+
 
 def test_comment(chrome_driver, run_app_win, flask_port, test_client):
     """
@@ -325,7 +334,7 @@ def test_comment(chrome_driver, run_app_win, flask_port, test_client):
     )
     create_post.click()
 
-    text_post =  WebDriverWait(chrome_driver, 10).until(
+    text_post = WebDriverWait(chrome_driver, 10).until(
         EC.presence_of_element_located((By.ID, 'text'))
     )
 
@@ -353,35 +362,3 @@ def test_comment(chrome_driver, run_app_win, flask_port, test_client):
     source = chrome_driver.page_source
 
     assert 'This is a new comment that I made.' in source
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
