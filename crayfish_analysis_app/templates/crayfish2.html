@@ -4,10 +4,11 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<h1>Crayfish Weights and Lengths</h1>
+<h1 style="text-align: center">Crayfish Weights and Lengths</h1>
 <form>
 <button type="submit" formaction="/crayfish2/download" class="btn"> <i class="fa fa-download"></i> Download Database 2</button>
 </form>
+<br>
 <p>We have data for the following crayfish</p>
 <ul>
     {% for crayfish2 in crayfish_list %}
