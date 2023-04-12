@@ -1,6 +1,6 @@
 from crayfish_analysis_app.models import db
 from crayfish_analysis_app.models import User
-from flask import get_flashed_messages
+from flask import get_flashed_messages, url_for, request
 from werkzeug.security import check_password_hash
 
 
@@ -11,6 +11,16 @@ def test_get_home(test_client):
     THEN
     """
     response = test_client.get("/home")
+    assert response.status_code == 200
+
+
+def test_get_signup(test_client):
+    """
+    GIVEN
+    WHEN
+    THEN
+    """
+    response = test_client.get("/signup")
     assert response.status_code == 200
 
 
@@ -108,3 +118,15 @@ def test_post_delete_user(test_client, create_user):
 
     assert response.status_code == 302
     assert exist is None
+
+
+def test_get_logout(test_client, create_user):
+    test_client.post("/login", data={
+        "email": "testingsample@test.com",
+        "password": "123456",
+    })
+
+    response = test_client.get(url_for('whatever.url'), follow_redirects=True)
+    assert response.status_code == 302
+    # Check that the second request was to the index page.
+    assert response.request.path == "/home"
