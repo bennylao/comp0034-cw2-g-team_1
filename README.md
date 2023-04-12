@@ -44,7 +44,7 @@ Although all the tests passed on a local computer (CI 1), sometimes the first te
 unknown error. The error occurred from the command ```chrome_driver.get(url)``` (see CI 2 and CI 3).
 
 ### CI 1 (Screenshot from PyCharm)
-![Screenshot](Screenshots/Screenshot 2023-04-12 235959.png)
+![Screenshot_1](Screenshots/Screenshot 2023-04-12 235959.png)
 
 ### CI 2
 ![Screenshot](Screenshots/Screenshot 2023-04-13 000823.png)
