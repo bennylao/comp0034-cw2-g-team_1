@@ -9,14 +9,14 @@ import subprocess
 import socket
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def app():
     """Create a Flask app configured for testing"""
     app = create_app(config.TestingConfig)
     yield app
 
 
-@pytest.fixture()
+@pytest.fixture(scope="function")
 def test_client(app):
     """ Flask test client within an application context. """
     with app.test_client() as testing_client:
@@ -25,7 +25,7 @@ def test_client(app):
             yield testing_client
 
 
-@pytest.fixture()
+@pytest.fixture(scope="function")
 def create_user():
     # Check if the region exists, it does then delete it
     exists = db.session.execute(
@@ -39,7 +39,7 @@ def create_user():
 
 
 # Used for Selenium tests
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def chrome_driver():
     """Selenium webdriver with options to support running in GitHub actions
     Note:
@@ -55,7 +55,7 @@ def chrome_driver():
     driver.quit()
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def flask_port():
     """Ask OS for a free port."""
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -65,7 +65,7 @@ def flask_port():
         return port
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def run_app_win(flask_port):
     """Runs the Flask app for live server testing on Windows"""
     server = subprocess.Popen(
