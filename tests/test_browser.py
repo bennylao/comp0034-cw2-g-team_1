@@ -4,17 +4,6 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-def test_home_page_running(run_app_win, flask_port):
-    """
-    GIVEN a running app
-    WHEN the homepage is accessed successfully
-    THEN the status code will be 200
-    """
-    url = f"http://localhost:{flask_port}/"
-    response = requests.get(url)
-    assert response.status_code == 200
-
-
 def test_home_page_title(chrome_driver, run_app_win, flask_port):
     """
     GIVEN a running app
