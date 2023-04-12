@@ -39,7 +39,7 @@ def create_user():
 
 
 # Used for Selenium tests
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="session")
 def chrome_driver():
     """Selenium webdriver with options to support running in GitHub actions
     Note:
@@ -55,7 +55,7 @@ def chrome_driver():
     driver.quit()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def flask_port():
     """Ask OS for a free port."""
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -65,7 +65,7 @@ def flask_port():
         return port
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def run_app_win(flask_port):
     """Runs the Flask app for live server testing on Windows"""
     server = subprocess.Popen(
