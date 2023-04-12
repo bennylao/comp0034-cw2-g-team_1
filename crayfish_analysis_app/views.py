@@ -9,7 +9,6 @@ from flask_mail import Message
 from config import Config
 from crayfish_analysis_app.schemas import Crayfish1Schema, Crayfish2Schema
 
-
 main_bp = Blueprint('views', __name__)
 
 
@@ -79,58 +78,58 @@ def login():
 
     return render_template('login.html', user=current_user)
 
-def send_email (user):
-    #generate reset token using the function get_reset_token() in models.py
+
+def send_email(user):
+    # generate reset token using the function get_reset_token() in models.py
     token = user.get_reset_token()
-    #creating message object with subject, sender and recipient
-    msg = Message('Password Reset Request', 
-                   sender = 'ranaprasen24@gmail.com',
-                   recipients = [user.email])
-    msg.body =f'''Please click on the link below to reset your password:
+    # creating message object with subject, sender and recipient
+    msg = Message('Password Reset Request',
+                  sender='ranaprasen24@gmail.com',
+                  recipients=[user.email])
+    msg.body = f'''Please click on the link below to reset your password:
 {url_for('views.reset_token', token=token, _external=True)}
 If you did not request to change password, you can ignore this email.
 '''
     Config.MAIL.send(msg)
-    
+
 
 @main_bp.route('/reset-password', methods=['GET', 'POST'])
 def reset_request():
     if request.method == 'POST':
-        #obtains the entry inputted by the user
+        # obtains the entry inputted by the user
         email = request.form.get("email")
-        #finds user with the email
+        # finds user with the email
         user = User.query.filter_by(email=email).first()
         if user:
-            #sends email to the user if email is found
+            # sends email to the user if email is found
             send_email(user)
             flash('A reset link has been sent to this email.', category='suceess')
             return redirect(url_for('views.login'))
         else:
             flash('This email is not recognised.', category='error')
-          
+
     return render_template('reset_request.html', user=current_user)
 
 
-
 @main_bp.route('/reset-password/<token>', methods=['GET', 'POST'])
-def reset_token(token): 
-    #verifies the token using function verify_token() in models.py     
+def reset_token(token):
+    # verifies the token using function verify_token() in models.py
     user = User.verify_token(token)
-    
+
     if user is None:
         flash('The Token is Expired or Invalid', category='warning')
         return redirect(url_for('views.reset_request'))
     else:
-        #obtains entry inputted by the user
+        # obtains entry inputted by the user
         if request.method == 'POST':
             reset_password1 = request.form.get("reset_password1")
             reset_password2 = request.form.get("reset_password2")
-            #checks if passwords match and if password is long enough
+            # checks if passwords match and if password is long enough
             if reset_password1 != reset_password2:
                 flash('New passwords don\'t match!', category='error')
             elif len(reset_password1) < 6:
                 flash('Password is too short. It must be 6 characters or more.', category='error')
-            #updates database with new password
+            # updates database with new password
             else:
                 user.password = generate_password_hash(reset_password1, method='sha256')
                 db.session.commit()

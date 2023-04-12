@@ -28,21 +28,20 @@ def create_app(config_class_name):
     create_dash_app(app)
 
     with app.app_context():
-
         db.create_all()
         print("Database created successfully!")
 
     login_manager.init_app(app)
 
-     #Configuring the mail server
-    #Using the gmail server using flask-mail
+    # Configuring the mail server
+    # Using the gmail server using flask-mail
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'
     app.config['MAIL_PORT'] = 465
     app.config['MAIL_USE_TLS'] = False
     app.config['MAIL_USE_SSL'] = True
     app.config['MAIL_USERNAME'] = 'ranaprasen24@gmail.com'
     app.config['MAIL_PASSWORD'] = 'zuvbrfoamcspsvub'
-    #initialising the extension with flask app
+    # initialising the extension with flask app
     mail = Mail(app)
 
     Config.MAIL = mail

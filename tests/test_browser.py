@@ -1,7 +1,9 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from crayfish_analysis_app.models import db,  User
+from werkzeug.security import check_password_hash
+import time
 
 def test_home_page_title(chrome_driver, run_app_win, flask_port):
     """
