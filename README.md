@@ -37,3 +37,8 @@ python data/excel_to_db.py
 
 ### Coverage Report
 *insert screenshot*
+
+
+### Unexpected Error Occurred on GitHub Continuous Integration
+Although all the tests passed on a local computer, sometimes the first tests will fail without unknown error.
+![Screenshot](Screenshots/Screenshot 2023-04-12 235959.png)
