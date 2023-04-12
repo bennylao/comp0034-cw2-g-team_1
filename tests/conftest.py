@@ -39,7 +39,7 @@ def create_user():
 
 
 # Used for Selenium tests
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def chrome_driver():
     """Selenium webdriver with options to support running in GitHub actions
     Note:
