@@ -226,8 +226,9 @@ def create_dash_app(flask_app):
                 brand="Return Home",
                 brand_href="http://127.0.0.1:5000/home",
                 children=[
+                    dbc.NavItem(dbc.NavLink("Database 1", href="http://127.0.0.1:5000/crayfish1")),
+                    dbc.NavItem(dbc.NavLink("Database 2", href="http://127.0.0.1:5000/crayfish2")),
                     dbc.NavItem(dbc.NavLink("Forum", href="http://127.0.0.1:5000/forum")),
-                    dbc.NavItem(dbc.NavLink("About", href="http://127.0.0.1:5000/about")),
                 ],
                 sticky="top",
                 color="dark",
