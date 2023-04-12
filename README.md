@@ -44,13 +44,13 @@ Although all the tests passed on a local computer (CI 1), sometimes the first te
 unknown error. The error occurred from the command ```chrome_driver.get(url)``` (see CI 2 and CI 3).
 
 ### CI 1 (Screenshot from PyCharm)
-![Screenshot](Screenshots/Screenshot 2023-04-12 235959.png)
+![Screenshot](Screenshots/ci-1.png)
 
 ### CI 2
-![Screenshot](Screenshots/Screenshot 2023-04-13 000823.png)
+![Screenshot](Screenshots/ci-2.png)
 
 ### CI 3
-![Screenshot](Screenshots/Screenshot 2023-04-13 000747.png)
+![Screenshot](Screenshots/ci-3.png)
 
 However, this issue can be somehow resolved by performing the following actions.
 
@@ -74,7 +74,7 @@ def chrome_driver():
 ```
 2) Commit it to GitHub
 3) You should see all the tests related to Selenium are failing
-![Screenshot](Screenshots/Screenshot 2023-04-13 002650.png)
+![Screenshot](Screenshots/github-all-tests-failed.png)
 4) Put ```scope=class``` back to the fixture ```chrome_driver``` in ```conftest.py```
 ```
 ### conftest.py
@@ -95,8 +95,8 @@ def chrome_driver():
 ```
 5) Commit it back to GitHub
 6) All the tests should be passed
-![Screenshot](Screenshots/Screenshot 2023-04-13 003107.png)
+![Screenshot](Screenshots/github-all-test-passed.png)
 7) However, the second time of committing the exactly same repository will fail with the unknown error again.
 
 8) Evidence of performing this can be found from GitHub Action from #69 to #73.
-![Screenshot](Screenshots/Screenshot 2023-04-13 003557.png)
+![Screenshot](Screenshots/github-action-69-73.png)
