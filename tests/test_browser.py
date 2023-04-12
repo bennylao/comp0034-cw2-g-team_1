@@ -9,9 +9,12 @@ def test_home_page_title(chrome_driver, run_app_win, flask_port):
     WHEN the homepage is accessed
     THEN the value of the page title should be "Home"
     """
-    url = f"http://127.0.0.1:5000/"
+    url = f"http://localhost:{flask_port}/"
     chrome_driver.get(url)
-    assert chrome_driver.title == "Home"
+    heading = WebDriverWait(chrome_driver, 10).until(
+        EC.presence_of_element_located((By.TAG_NAME, 'h1'))
+    )
+    assert heading.text == "Home"
 
 
 def test_link_to_dashboard(chrome_driver, run_app_win, flask_port):
