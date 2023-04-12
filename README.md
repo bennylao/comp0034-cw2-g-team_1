@@ -1,44 +1,55 @@
 # Read Me
 
-### Link to Repository
+## Link to Repository
 https://github.com/ucl-comp0035/comp0034-cw2-g-team_1.git
 
 ### Password Reset Link Feature with token
 Followed an online tutorial by Corey Schafer titled "Python Flask Tutorial: Full-Featured Web App Part 10 - Email and Password Reset".
 https://www.youtube.com/watch?v=vutyTx7IaAI&t=361s
 
-### Set Up Instruction
+## Set Up Instruction
 ```
 pip install -r requirements.txt
 pip install e .
 ```
-### Run Pytest
+## Run Pytest
 ```
 pytest
 ```
 
 
-### Run Coverage
+## Run Coverage
 ```
 pytest --cov 
 ```
  
 
-### Import Data from csv to database
+## Import Data from csv to database
 ```
 python data/excel_to_db.py
 ```
 
 
-### Test Reports
+## Test Reports
 *insert screenshot*
 
 
 
-### Coverage Report
+## Coverage Report
 *insert screenshot*
 
 
-### Unexpected Error Occurred on GitHub Continuous Integration
-Although all the tests passed on a local computer, sometimes the first tests will fail without unknown error.
+## Unexpected Error Occurred on GitHub Continuous Integration
+Although all the tests passed on a local computer (CI 1), sometimes the first test will fail with an unknown error
+
+The error occurred from the command ```chrome_driver.get(url)```
+(see CI 2 and CI 3).
+
+### CI 1
 ![Screenshot](Screenshots/Screenshot 2023-04-12 235959.png)
+
+### CI 2
+![Screenshot](Screenshots/Screenshot 2023-04-13 000823.png)
+
+### CI 3
+![Screenshot](Screenshots/Screenshot 2023-04-13 000747.png)
