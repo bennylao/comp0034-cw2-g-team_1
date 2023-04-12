@@ -9,7 +9,6 @@ from flask_mail import Message
 from config import Config
 from crayfish_analysis_app.schemas import Crayfish1Schema, Crayfish2Schema
 
-
 main_bp = Blueprint('views', __name__)
 
 
@@ -56,7 +55,7 @@ def signup():
         email_exists = User.query.filter_by(email=email).first()
         username_exists = User.query.filter_by(username=username).first()
 
-        #Validating the inputs from form
+        # Validating the inputs from form
         if email_exists:
             flash('Email is already in use.', category='error')
         elif username_exists:
@@ -114,7 +113,8 @@ def login():
 
     return render_template('login.html', user=current_user)
 
-def send_email (user):
+
+def send_email(user):
     """
     This function sends the email with reset link to user
     Args: 
@@ -125,18 +125,18 @@ def send_email (user):
         NA
     """
 
-    #generate reset token using the function get_reset_token() in models.py
+    # generate reset token using the function get_reset_token() in models.py
     token = user.get_reset_token()
-    #creating message object with subject, sender and recipient
-    msg = Message('Password Reset Request', 
-                   sender = 'ranaprasen24@gmail.com',
-                   recipients = [user.email])
-    #Message with the reset link with the token
-    msg.body =f'''Please click on the link below to reset your password:
+    # creating message object with subject, sender and recipient
+    msg = Message('Password Reset Request',
+                  sender='ranaprasen24@gmail.com',
+                  recipients=[user.email])
+    # Message with the reset link with the token
+    msg.body = f'''Please click on the link below to reset your password:
 {url_for('views.reset_token', token=token, _external=True)}
 If you did not request to change password, you can ignore this email.
 '''
-    #sends the mail through the server set up in __init__.py
+    # sends the mail through the server set up in __init__.py
     Config.MAIL.send(msg)
 
 
@@ -169,9 +169,8 @@ def reset_request():
     return render_template('reset_request.html', user=current_user)
 
 
-
 @main_bp.route('/reset-password/<token>', methods=['GET', 'POST'])
-def reset_token(token): 
+def reset_token(token):
     """
     This function imports the newly created Excel file in the correct format
     Args:
@@ -183,23 +182,23 @@ def reset_token(token):
         The 'reset_token.html' page if token is valid
         The 'reset_request.html' page if token is invalid or expired
     """
-    #verifies the token using function verify_token() in models.py
+    # verifies the token using function verify_token() in models.py
     user = User.verify_token(token)
-    
+
     if user is None:
         flash('The Token is Expired or Invalid', category='warning')
         return redirect(url_for('views.reset_request'))
     else:
-        #obtains entry inputted by the user
+        # obtains entry inputted by the user
         if request.method == 'POST':
             reset_password1 = request.form.get("reset_password1")
             reset_password2 = request.form.get("reset_password2")
-            #checks if passwords match and if password is long enough
+            # checks if passwords match and if password is long enough
             if reset_password1 != reset_password2:
                 flash('New passwords don\'t match!', category='error')
             elif len(reset_password1) < 6:
                 flash('Password is too short. It must be 6 characters or more.', category='error')
-            #updates database with new password
+            # updates database with new password
             else:
                 user.password = generate_password_hash(reset_password1, method='sha256')
                 db.session.commit()
@@ -240,15 +239,15 @@ def create_post():
     """
     if request.method == "POST":
 
-        #obtains entry inputted by the user
+        # obtains entry inputted by the user
         text = request.form.get('text')
 
-        #validates the input
+        # validates the input
         if not text:
             flash('Post cannot be empty.', category='error')
         else:
 
-            #creates a new post and updates the database
+            # creates a new post and updates the database
             post = Post(text=text, author=current_user.id)
             db.session.add(post)
             db.session.commit()
@@ -271,17 +270,17 @@ def delete_post(id):
         The 'forum.html'page with the post deleted
 
     """
-    #obtains the post with the id from the database
+    # obtains the post with the id from the database
     post = Post.query.filter_by(id=id).first()
 
-    #checks if the post exists and if the user has permission to delete the post
+    # checks if the post exists and if the user has permission to delete the post
     if not post:
         flash("Post does not exist.", category="error")
     elif current_user.id != post.user.id:
         flash("You do not have permission to delete this post.", category="error")
     else:
 
-        #deletes the post and updates the database
+        # deletes the post and updates the database
         db.session.delete(post)
         db.session.commit()
         flash("Post deleted.", category="success")
