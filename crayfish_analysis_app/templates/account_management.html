@@ -4,17 +4,8 @@
 <br />
 <h1 align="center">{% block header1 %}Account Management{% endblock %}</h1>
 <br />
-<div align="center">
-    <form method="POST" action="/delete-account/{{user.id}}" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
-        <button type="submit" class="btn btn-lg btn-danger">
-            Delete Account
-        </button>
-    </form>
-</div>
-<br />
-
 <div class="d-flex justify-content-center align-items-center" style="height:50vh">
-    <div class="card border-0" style="max-width: 1600px;">
+    <div class="card border-1" style="max-width: 1600px;">
       <div class="card-body">
         <form method="POST" action="/change-password">
           <h1 class="card-title text-center">Change Password</h1>
@@ -44,12 +35,28 @@
                 placeholder="Confirm New Password"
             />
             <br />
-            <div align="center"><button class="btn btn-primary" type="submit">Change Password</button></div>
+            <div><button class="btn btn-primary" type="submit">Change Password</button></div>
           </div>
         </form>
       </div>
     </div>
   </div>
+
+<br />
+<div align="center">
+  <div class="card border-1" style="max-width: 355px;">
+    <div class="card-body">
+      <form method="POST" action="/delete-account/{{user.id}}" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+        <h2 class="card-title text-center">Manage Account</h2>
+        <div class="form-group"> 
+          <button type="submit" class="btn btn-lg btn-danger">
+              Delete Account
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
 
