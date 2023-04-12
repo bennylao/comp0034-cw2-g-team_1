@@ -55,3 +55,30 @@ def chrome_driver():
     driver.quit()
 
 
+@pytest.fixture(scope="module")
+def flask_port():
+    """Ask OS for a free port."""
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(("", 0))
+        addr = s.getsockname()
+        port = addr[1]
+        return port
+
+
+@pytest.fixture(scope="module")
+def run_app_win(flask_port):
+    """Runs the Flask app for live server testing on Windows"""
+    server = subprocess.Popen(
+        [
+            "flask",
+            "--app",
+            "crayfish_analysis_app:create_app('config.TestingConfig')",
+            "run",
+            "--port",
+            str(flask_port),
+        ]
+    )
+    try:
+        yield server
+    finally:
+        server.terminate()
