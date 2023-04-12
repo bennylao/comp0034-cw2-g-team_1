@@ -29,10 +29,10 @@ text-align: center;
     cursor: pointer;
     font-size: 36px;
     position: absolute;
-    transition: transform 250ms;
+    transition: transform 500ms;
 }
 
 .tricky_button:hover {
-    transform: translateY(250px);
+    transform: translateY(500px) rotate(45deg) scale(0.1, 0.1);
     background-color: RoyalBlue;
 }
