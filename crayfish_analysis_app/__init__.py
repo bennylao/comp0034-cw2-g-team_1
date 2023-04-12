@@ -34,7 +34,7 @@ def create_app(config_class_name):
 
     login_manager.init_app(app)
 
-     #Configuring the mail server
+    #Configuring the mail server
     #Using the gmail server using flask-mail
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'
     app.config['MAIL_PORT'] = 465
