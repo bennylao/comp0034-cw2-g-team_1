@@ -12,8 +12,6 @@ ma = Marshmallow()
 def create_app(config_class_name):
     """Create and configure the Flask app"""
 
-    global mail
-
     app = Flask(__name__)
 
     app.config.from_object(config_class_name)
@@ -34,14 +32,6 @@ def create_app(config_class_name):
 
     login_manager.init_app(app)
 
-    # Configuring the mail server
-    # Using the gmail server using flask-mail
-    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-    app.config['MAIL_PORT'] = 465
-    app.config['MAIL_USE_TLS'] = False
-    app.config['MAIL_USE_SSL'] = True
-    app.config['MAIL_USERNAME'] = 'ranaprasen24@gmail.com'
-    app.config['MAIL_PASSWORD'] = 'zuvbrfoamcspsvub'
     # initialising the extension with flask app
     mail = Mail(app)
 
