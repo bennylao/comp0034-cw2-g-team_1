@@ -13,19 +13,41 @@ from crayfish_analysis_app.schemas import Crayfish1Schema, Crayfish2Schema
 main_bp = Blueprint('views', __name__)
 
 
+"""
+    This function imports the newly created Excel file in the correct format
+    Args:
+        
+    Raises:
+        NA
+    Returns:
+        The 'home.html' page
+    """
+
 @main_bp.route('/')
 @main_bp.route("/home")
 # @login_required
 def home():
-    """Returns home page """
+    
+    
     posts = Post.query.all()
     return render_template('home.html', user=current_user, posts=posts)
 
 
 @main_bp.route("/signup", methods=['GET', 'POST'])
 def signup():
-    """Render signup page and handle signup form submission"""
+    """
+    This function renders the signup page and creates a new user
+    Args:
+        NA
+    Raises:
+        Flask Validation Error(str): If the form is not filled out correctly
+        
+    Returns:
+        The 'home.html' page if singup is successful
+        The 'signup.html' page if signup is unsuccessful
+    """
     if request.method == 'POST':
+        # obtains the entry inputted by the user
         email = request.form.get("email")
         username = request.form.get("username")
         password1 = request.form.get("password1")
@@ -34,8 +56,11 @@ def signup():
         # Regular expression for validating an Email
         regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,4}\b'
 
+        # finding the email or username in database
         email_exists = User.query.filter_by(email=email).first()
         username_exists = User.query.filter_by(username=username).first()
+
+        #Validating the inputs from form
         if email_exists:
             flash('Email is already in use.', category='error')
         elif username_exists:
@@ -49,6 +74,7 @@ def signup():
         elif not re.fullmatch(regex, email):
             flash('Email is invalid.', category='error')
         else:
+            # if all the validations are passed, then the user is created and added to database
             new_user = User(email=email, username=username, password=generate_password_hash(password1, method='sha256'))
             db.session.add(new_user)
             db.session.commit()
@@ -61,12 +87,25 @@ def signup():
 
 @main_bp.route("/login", methods=['GET', 'POST'])
 def login():
-    """Returns login page"""
+    """
+    renders the login page and logs in the user
+    Args:
+        
+    Raises:
+        Flask Validation Error(str): If the form is not filled out correctly
+    Returns:
+        The 'home.html' page if login is successful
+        The 'login.html' page if login is unsuccessful due to incrrect password or email
+    """
     if request.method == 'POST':
+        # obtains the entry inputted by the user
         email = request.form.get("email")
         password = request.form.get("password")
 
+        # finding the email in database
         user = User.query.filter_by(email=email).first()
+
+        # validating the inputs from form
         if user:
             if check_password_hash(user.password, password):
                 flash('Logged in!', category='success')
@@ -80,21 +119,44 @@ def login():
     return render_template('login.html', user=current_user)
 
 def send_email (user):
+    """
+    This function sends the email with reset link to user
+    Args: 
+        (User Object): The users email address  
+    Raises:
+        NA
+    Returns:
+        NA
+    """
+
     #generate reset token using the function get_reset_token() in models.py
     token = user.get_reset_token()
     #creating message object with subject, sender and recipient
     msg = Message('Password Reset Request', 
                    sender = 'ranaprasen24@gmail.com',
                    recipients = [user.email])
+    #Message with the reset link with the token
     msg.body =f'''Please click on the link below to reset your password:
 {url_for('views.reset_token', token=token, _external=True)}
 If you did not request to change password, you can ignore this email.
 '''
+    #sends the mail through the server set up in __init__.py
     Config.MAIL.send(msg)
     
 
 @main_bp.route('/reset-password', methods=['GET', 'POST'])
 def reset_request():
+    """
+    This function manages the password reset request and sends the email to the user with the reset link
+    Args:
+        NA
+    Raises:
+        Flask Validation Error(str): If the form is not filled out correctly
+    Returns:
+        The 'login.html' page if email is found & rest link is sent
+        The 'reset_request.html' page if email is not found or invalid
+    """
+    
     if request.method == 'POST':
         #obtains the entry inputted by the user
         email = request.form.get("email")
@@ -114,6 +176,17 @@ def reset_request():
 
 @main_bp.route('/reset-password/<token>', methods=['GET', 'POST'])
 def reset_token(token): 
+    """
+    This function imports the newly created Excel file in the correct format
+    Args:
+        token(str): The token generated by the function get_reset_token() in models.py
+        
+    Raises:
+        Flask ValidationError(str): If the form is not filled out correctly
+    Returns:
+        The 'reset_token.html' page if token is valid
+        The 'reset_request.html' page if token is invalid or expired
+    """
     #verifies the token using function verify_token() in models.py     
     user = User.verify_token(token)
     
@@ -142,6 +215,16 @@ def reset_token(token):
 @main_bp.route("/logout")
 @login_required
 def logout():
+    """
+    Logs out the user
+    Args:
+        NA        
+    Raises:
+        NA
+    Returns:
+        The 'home.html' page if token is valid
+        
+    """
     logout_user()
     return redirect(url_for('views.home'))
 
@@ -149,12 +232,27 @@ def logout():
 @main_bp.route("/create-post", methods=['GET', 'POST'])
 @login_required
 def create_post():
+    """
+    Creates a post
+    Args:
+        NA        
+    Raises:
+        flask Validation Error(str): If the form is not filled out correctly
+    Returns:
+        The 'forum.html' with the new post if the form is filled out correctly
+        The 'create_post.html' page if the form is not filled out correctly
+    """
     if request.method == "POST":
+
+        #obtains entry inputted by the user
         text = request.form.get('text')
 
+        #validates the input
         if not text:
             flash('Post cannot be empty.', category='error')
         else:
+        
+            #creates a new post and updates the database
             post = Post(text=text, author=current_user.id)
             db.session.add(post)
             db.session.commit()
@@ -167,13 +265,27 @@ def create_post():
 @main_bp.route("/delete-post/<id>")
 @login_required
 def delete_post(id):
+    """
+    Deletes a post
+    Args:
+        id(int): The id of the post        
+    Raises:
+        NA
+    Returns:
+        The 'forum.html'page with the post deleted
+    
+    """
+    #obtains the post with the id from the database
     post = Post.query.filter_by(id=id).first()
 
+    #checks if the post exists and if the user has permission to delete the post
     if not post:
         flash("Post does not exist.", category="error")
     elif current_user.id != post.user.id:
         flash("You do not have permission to delete this post.", category="error")
     else:
+
+        #deletes the post and updates the database
         db.session.delete(post)
         db.session.commit()
         flash("Post deleted.", category="success")
@@ -182,9 +294,20 @@ def delete_post(id):
 
 @main_bp.route("/change-password", methods=['GET', 'POST'])
 @login_required
-# checks the old password against the existing database password.
-# if the old password matches, then the user can change their password using Post method.
 def change_password():
+    """
+    This funciton changes the password of the user. Checks the old password 
+    against the existing database password. if the old password matches, 
+    then the user can change their password using Post method.
+
+    Args:
+        NA      
+    Raises:
+        flask Validation Error(str): If the form is not filled out correctly
+    Returns:
+        The 'home.html' page if the form is filled out correctly
+        The 'change_password.html' page if the form is not filled out correctly
+    """
     # obtains the entry inputted by the user.
     if request.method == 'POST':
         old_password = request.form.get("old_password")
@@ -210,7 +333,7 @@ def change_password():
             flash('Password has been successfully changed!', category='success')
             return redirect(url_for('views.home'))
 
-    return render_template('home.html', user=current_user)
+    return render_template('account_management.html', user=current_user)
 
 
 @main_bp.route("/delete-account/<id>", methods=['POST'])
