@@ -128,5 +128,5 @@ def test_get_logout(test_client, create_user):
 
     response = test_client.get("/logout", follow_redirects=True)
     assert response.status_code == 200
-    # Check that the second request was to the index page.
+    # Check that it is redirected to homepage.
     assert response.request.path == "/home"
