@@ -57,6 +57,24 @@ def test_post_signup_invalid_email(test_client):
 
     assert text == 'Email is invalid.'
 
+def test_post_signup_not_same_password(test_client):
+    exists = db.session.execute(
+        db.select(User).filter_by(username="Invalid_email")
+    ).scalar()
+    if exists:
+        db.session.execute(db.delete(User).where(User.username == "Invalid_email"))
+        db.session.commit()
+
+    test_client.post("/signup", data={
+        "username": "Invalid_email",
+        "email": "I-am-invalid-email",
+        "password1": "invalidemail",
+        "password2": "invalidemail2"
+    })
+    text = ''.join(get_flashed_messages())
+
+    assert text == "Passwords don't match!"
+
 
 def test_post_login(test_client, create_user):
     response = test_client.post("/login", data={
@@ -108,3 +126,6 @@ def test_post_delete_user(test_client, create_user):
 
     assert response.status_code == 302
     assert exist is None
+
+
+
