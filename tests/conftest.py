@@ -55,7 +55,7 @@ def chrome_driver():
     driver.quit()
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def flask_port():
     """Ask OS for a free port."""
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -65,7 +65,7 @@ def flask_port():
         return port
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def run_app_win(flask_port):
     """Runs the Flask app for live server testing on Windows"""
     server = subprocess.Popen(
