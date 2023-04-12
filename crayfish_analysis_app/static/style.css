@@ -17,10 +17,6 @@
 text-align: center;
 }
 
-.error_text {
-    font-size: 36px;
-    }
-
 .tricky_button {
     background-color: DodgerBlue;
     border: none;
@@ -28,6 +24,7 @@ text-align: center;
     padding: 2px 24px;
     cursor: pointer;
     font-size: 36px;
+    left: 43%;
     position: absolute;
     transition: transform 500ms;
 }
