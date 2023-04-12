@@ -428,20 +428,45 @@ def like(post_id):
 
 @main_bp.route("/about")
 def about():
-    """Returns about page """
+    """
+    This function renders the about page
+    Args:
+        NA
+    Raises:
+        NA
+    Returns:
+        about.html
+    """
     return render_template('about.html', user=current_user)
 
 
 @main_bp.route("/account-management")
 @login_required
 def account_management():
-    """Returns account management page """
+    """
+    This function renders the account management page
+    Args:
+        NA
+    Raises:
+        NA
+    Returns:
+        account_management.html
+    """
     return render_template('account_management.html', user=current_user)
 
 
 @main_bp.route("/forum")
 def forum():
-    """Returns forum page """
+    """
+    This function renders the forum page
+    Args:
+        NA
+    Raises:
+        NA
+    Returns:
+        forum.html
+    """
+    # Needs to get all posts from the post model
     posts = Post.query.all()
     return render_template('forum.html', user=current_user, posts=posts)
 
@@ -454,18 +479,34 @@ crayfish2_schema = Crayfish2Schema()
 
 @main_bp.route("/crayfish1")
 def crayfish1():
-    """Returns a list crayfish data in crayfish1 in JSON."""
+    """
+    This function renders the crayfish1 page
+    Args:
+        NA
+    Raises:
+        NA
+    Returns:
+        crayfish1.html
+    """
     # Select all the regions using Flask-SQLAlchemy
     all_crayfish1 = db.session.execute(db.select(Crayfish1)).scalars()
     # Get the data using Marshmallow schema (returns JSON)
     result = crayfish1s_schema.dump(all_crayfish1)
-    # Return the data
+    # Return a list crayfish data in crayfish1 in JSON
     return render_template("crayfish1.html", crayfish_list=result, user=current_user)
 
 
 @main_bp.get("/crayfish1/<int:id>")
 def crayfish1_id(id):
-    """Returns the details for a specified id"""
+    """
+    This function returns the details for a specified id
+    Args:
+        id
+    Raises:
+        NA
+    Returns:
+        crayfish1_schema.dump(crayfish)
+    """
     # Query the database to find the record, return a 404 not found code it the record isn't found
     crayfish = db.session.execute(
         db.select(Crayfish1).filter_by(id=id)
@@ -476,18 +517,34 @@ def crayfish1_id(id):
 
 @main_bp.get("/crayfish2")
 def crayfish2():
-    """Returns a list of crayfish data in crayfish2 in JSON."""
+    """
+    This function renders the crayfish2 page
+    Args:
+        NA
+    Raises:
+        NA
+    Returns:
+        crayfish2.html
+    """
     # Select all the regions using Flask-SQLAlchemy
     all_crayfish2 = db.session.execute(db.select(Crayfish2)).scalars()
     # Get the data using Marshmallow schema (returns JSON)
     result = crayfish2s_schema.dump(all_crayfish2)
-    # Return the data
+    # Return a list of crayfish data in crayfish2 in JSON
     return render_template("crayfish2.html", crayfish_list=result, user=current_user)
 
 
 @main_bp.get("/crayfish2/<int:id>")
 def crayfish2_id(id):
-    """Returns the details for a specified id"""
+    """
+    This function returns the details for a specified id
+    Args:
+        id
+    Raises:
+        NA
+    Returns:
+        crayfish2_schema.dump(crayfish)
+    """
     # Query the database to find the record, return a 404 not found code it the record isn't found
     crayfish = db.session.execute(
         db.select(Crayfish2).filter_by(id=id)
@@ -498,7 +555,15 @@ def crayfish2_id(id):
 
 @main_bp.delete('/crayfish1/<code>')
 def crayfish1_delete(code):
-    """Removes a crayfish1 record from the dataset."""
+    """
+    This function removes a crayfish1 record from the dataset
+    Args:
+        code
+    Raises:
+        NA
+    Returns:
+        JSON HTTP response
+    """
     # Query the database to find the record, return a 404 not found code it the record isn't found
     crayfish = db.session.execute(
         db.select(Crayfish1).filter_by(id=code)
@@ -515,7 +580,15 @@ def crayfish1_delete(code):
 
 @main_bp.delete('/crayfish2/<code>')
 def crayfish2_delete(code):
-    """Removes a crayfish2 record from the dataset."""
+    """
+    This function removes a crayfish2 record from the dataset
+    Args:
+        code
+    Raises:
+        NA
+    Returns:
+        JSON HTTP response
+    """
     # Query the database to find the record, return a 404 not found code it the record isn't found
     crayfish = db.session.execute(
         db.select(Crayfish2).filter_by(id=code)
@@ -532,7 +605,15 @@ def crayfish2_delete(code):
 
 @main_bp.post("/crayfish1")
 def crayfish1_add():
-    """Adds a new crayfish1 record to the dataset."""
+    """
+    This function adds a new crayfish1 record to the dataset
+    Args:
+        NA
+    Raises:
+        NA
+    Returns:
+        HTTP response
+    """
     # Get the values of the JSON sent in the request
     site = request.json.get("site", "")
     method = request.json.get("method", "")
@@ -550,7 +631,15 @@ def crayfish1_add():
 
 @main_bp.post("/crayfish2")
 def crayfish2_add():
-    """Adds a new crayfish2 record to the dataset."""
+    """
+    This function adds a new crayfish2 record to the dataset
+    Args:
+        NA
+    Raises:
+        NA
+    Returns:
+        HTTP response
+    """
     # Get the values of the JSON sent in the request
     site = request.json.get("site", "")
     gender = request.json.get("gender", "")
@@ -568,7 +657,15 @@ def crayfish2_add():
 
 @main_bp.patch('/crayfish1/<code>')
 def crayfish1_update(code):
-    """Updates changed fields for the crayfish1 record"""
+    """
+    This function updates changed fields for the crayfish1 record
+    Args:
+        code
+    Raises:
+        NA
+    Returns:
+        JSON result
+    """
     # Find the current crayfish1 in the database
     existing_crayfish = db.session.execute(
         db.select(Crayfish1).filter_by(id=code)
@@ -589,7 +686,15 @@ def crayfish1_update(code):
 
 @main_bp.patch('/crayfish2/<code>')
 def crayfish2_update(code):
-    """Updates changed fields for the crayfish2 record"""
+    """
+    This function updates changed fields for the crayfish2 record
+    Args:
+        code
+    Raises:
+        NA
+    Returns:
+        JSON result
+    """
     # Find the current crayfish2 in the database
     existing_crayfish = db.session.execute(
         db.select(Crayfish2).filter_by(id=code)
@@ -610,6 +715,15 @@ def crayfish2_update(code):
 
 @main_bp.route('/crayfish1/download')
 def post1():
+    """
+    This function generates a CSV file containing data from the crayfish1 table and returns it as a response
+    Args:
+        NA
+    Raises:
+        NA
+    Returns:
+        Flask response object containing the CSV data
+    """
     si = StringIO()
     # Creating a new csv instance
     cw = csv.writer(si)
@@ -629,6 +743,15 @@ def post1():
 
 @main_bp.route('/crayfish2/download')
 def post2():
+    """
+    This function generates a CSV file containing data from the crayfish2 table and returns it as a response
+    Args:
+        NA
+    Raises:
+        NA
+    Returns:
+        Flask response object containing the CSV data
+    """
     si = StringIO()
     # Creating a new csv instance
     cw = csv.writer(si)

@@ -6,7 +6,7 @@ https://github.com/ucl-comp0035/comp0034-cw2-g-team_1.git
 ### Set Up Instruction
 ```
 pip install -r requirements.txt
-pip install e.
+pip install e .
 ```
 ### Run Pytest
 ```
@@ -24,3 +24,12 @@ pytest --cov
 ```
 python data/excel_to_db.py
 ```
+
+
+### Test Reports
+*insert screenshot*
+
+
+
+### Coverage Report
+*insert screenshot*
