@@ -13,23 +13,20 @@ from crayfish_analysis_app.schemas import Crayfish1Schema, Crayfish2Schema
 main_bp = Blueprint('views', __name__)
 
 
-"""
-    This function imports the newly created Excel file in the correct format
-    Args:
-        
-    Raises:
-        NA
-    Returns:
-        The 'home.html' page
-    """
 
 @main_bp.route('/')
 @main_bp.route("/home")
 # @login_required
 def home():
-    
-    
-    posts = Post.query.all()
+    """
+    Redirects to the gome page
+    Args:
+        
+    Raises:
+        NA
+    Returns:
+        home.html page
+    """
     return render_template('home.html', user=current_user, posts=posts)
 
 
