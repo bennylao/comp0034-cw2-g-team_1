@@ -1,14 +1,38 @@
 /* Style buttons */
 .btn {
-  background-color: DodgerBlue;
-  border: none;
-  color: white;
-  padding: 1px 12px;
-  cursor: pointer;
-  font-size: 20px;
+    background-color: DodgerBlue;
+    border: none;
+    color: white;
+    padding: 1px 12px;
+    cursor: pointer;
+    font-size: 20px;
 }
 
 /* Darker background on mouse-over */
 .btn:hover {
   background-color: RoyalBlue;
+}
+
+.container{
+text-align: center;
+}
+
+.error_text {
+    font-size: 36px;
+    }
+
+.tricky_button {
+    background-color: DodgerBlue;
+    border: none;
+    color: white;
+    padding: 2px 24px;
+    cursor: pointer;
+    font-size: 36px;
+    position: absolute;
+    transition: transform 500ms;
+}
+
+.tricky_button:hover {
+    transform: translateY(500px) rotate(45deg) scale(0.1, 0.1);
+    background-color: RoyalBlue;
 }
