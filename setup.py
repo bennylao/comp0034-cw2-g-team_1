@@ -7,9 +7,13 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'flask',
-        'Flask-SQLAlchemy',
-        'dash',
-        'plotly',
+        "flask",
+        "flask-wtf",
+        "flask-sqlalchemy",
+        "Flask-WTF",
+        "flask-marshmallow",
+        "marshmallow-sqlalchemy",
+        "pandas",
+        "requests",
     ],
 )

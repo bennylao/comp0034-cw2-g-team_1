@@ -2,8 +2,12 @@
 {% set title = 'Crayfish with weight' %}
 {% block content %}
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <h1>Crayfish with weight and length</h1>
-<a class="nav-item nav-link" href="/crayfish2/download">Database 2 Download</a>
+<form>
+<button type="submit" formaction="/crayfish2/download" class="btn"> <i class="fa fa-download"></i> Download Database 2</button>
+</form>
 <p>We have data for the following crayfish</p>
 <ul>
     {% for crayfish2 in crayfish_list %}

@@ -4,17 +4,17 @@ from flask import get_flashed_messages
 from werkzeug.security import check_password_hash
 
 
-def test_get_home(client):
+def test_get_home(test_client):
     """
     GIVEN
     WHEN
     THEN
     """
-    response = client.get("/home")
+    response = test_client.get("/home")
     assert response.status_code == 200
 
 
-def test_post_signup_new_user(client):
+def test_post_signup_new_user(test_client):
     # Check if the region exists, it does then delete it
     exists = db.session.execute(
         db.select(User).filter_by(username="crayfish_king")
@@ -23,7 +23,7 @@ def test_post_signup_new_user(client):
         db.session.execute(db.delete(User).where(User.username == "crayfish_king"))
         db.session.commit()
 
-    response = client.post("/signup", data={
+    response = test_client.post("/signup", data={
         "username": "crayfish_king",
         "email": "crayfish_king@crayfish.com",
         "password1": "ilovecrayfish",
@@ -39,7 +39,7 @@ def test_post_signup_new_user(client):
     assert check_password_hash(target.password, 'ilovecrayfish') is True
 
 
-def test_post_signup_invalid_email(client):
+def test_post_signup_invalid_email(test_client):
     exists = db.session.execute(
         db.select(User).filter_by(username="Invalid_email")
     ).scalar()
@@ -47,7 +47,7 @@ def test_post_signup_invalid_email(client):
         db.session.execute(db.delete(User).where(User.username == "Invalid_email"))
         db.session.commit()
 
-    client.post("/signup", data={
+    test_client.post("/signup", data={
         "username": "Invalid_email",
         "email": "I-am-invalid-email",
         "password1": "invalidemail",
@@ -58,8 +58,8 @@ def test_post_signup_invalid_email(client):
     assert text == 'Email is invalid.'
 
 
-def test_post_login(client, create_user):
-    response = client.post("/login", data={
+def test_post_login(test_client, create_user):
+    response = test_client.post("/login", data={
         "email": "testingsample@test.com",
         "password": "123456",
     })
@@ -68,8 +68,8 @@ def test_post_login(client, create_user):
     assert text == 'Logged in!'
 
 
-def test_post_login_wrong_password(client, create_user):
-    client.post("/login", data={
+def test_post_login_wrong_password(test_client, create_user):
+    test_client.post("/login", data={
         "email": "testingsample@test.com",
         "password": "WrongPassword",
     })
@@ -78,8 +78,8 @@ def test_post_login_wrong_password(client, create_user):
     assert text == 'Password is incorrect.'
 
 
-def test_post_login_wrong_email(client, create_user):
-    client.post("/login", data={
+def test_post_login_wrong_email(test_client, create_user):
+    test_client.post("/login", data={
         "email": "WrongEmail@test.com",
         "password": "123456",
     })
@@ -88,8 +88,8 @@ def test_post_login_wrong_email(client, create_user):
     assert text == 'Email does not exist.'
 
 
-def test_post_delete_user(client, create_user):
-    client.post("/login", data={
+def test_post_delete_user(test_client, create_user):
+    test_client.post("/login", data={
         "email": "testingsample@test.com",
         "password": "123456",
     })
@@ -100,7 +100,7 @@ def test_post_delete_user(client, create_user):
 
     target_id = target.id
 
-    response = client.post(f"/delete-account/{target_id}")
+    response = test_client.post(f"/delete-account/{target_id}")
 
     exist = db.session.execute(
         db.select(User).filter_by(username="IamTest")

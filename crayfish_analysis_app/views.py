@@ -1,14 +1,14 @@
 import csv
 from io import StringIO
-from flask import Blueprint, render_template, request, flash, url_for, redirect, request, make_response, jsonify
+from flask import Blueprint, render_template, flash, url_for, redirect, request, make_response, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User, db, Post, Comment, Like, Crayfish1, Crayfish2
 import re
+from flask_mail import Message
+from config import Config
 from crayfish_analysis_app.schemas import Crayfish1Schema, Crayfish2Schema
 
-# Regular expression for validating an Email
-regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,4}\b'
 
 main_bp = Blueprint('views', __name__)
 
@@ -79,18 +79,64 @@ def login():
 
     return render_template('login.html', user=current_user)
 
+def send_email (user):
+    #generate reset token using the function get_reset_token() in models.py
+    token = user.get_reset_token()
+    #creating message object with subject, sender and recipient
+    msg = Message('Password Reset Request', 
+                   sender = 'ranaprasen24@gmail.com',
+                   recipients = [user.email])
+    msg.body =f'''Please click on the link below to reset your password:
+{url_for('views.reset_token', token=token, _external=True)}
+If you did not request to change password, you can ignore this email.
+'''
+    Config.MAIL.send(msg)
+    
 
-@main_bp.route('/reset_password', methods=['GET', 'POST'])
-def reset_password():
+@main_bp.route('/reset-password', methods=['GET', 'POST'])
+def reset_request():
     if request.method == 'POST':
+        #obtains the entry inputted by the user
         email = request.form.get("email")
+        #finds user with the email
         user = User.query.filter_by(email=email).first()
         if user:
-            flash('A reset link has been sent to this email.', category='success')
+            #sends email to the user if email is found
+            send_email(user)
+            flash('A reset link has been sent to this email.', category='suceess')
+            return redirect(url_for('views.login'))
         else:
             flash('This email is not recognised.', category='error')
+          
+    return render_template('reset_request.html', user=current_user)
 
-    return render_template('reset_password.html', user=current_user, title='Reset Password')
+
+
+@main_bp.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_token(token): 
+    #verifies the token using function verify_token() in models.py     
+    user = User.verify_token(token)
+    
+    if user is None:
+        flash('The Token is Expired or Invalid', category='warning')
+        return redirect(url_for('views.reset_request'))
+    else:
+        #obtains entry inputted by the user
+        if request.method == 'POST':
+            reset_password1 = request.form.get("reset_password1")
+            reset_password2 = request.form.get("reset_password2")
+            #checks if passwords match and if password is long enough
+            if reset_password1 != reset_password2:
+                flash('New passwords don\'t match!', category='error')
+            elif len(reset_password1) < 6:
+                flash('Password is too short. It must be 6 characters or more.', category='error')
+            #updates database with new password
+            else:
+                user.password = generate_password_hash(reset_password1, method='sha256')
+                db.session.commit()
+                flash('Password has been updated!', category='success')
+                return redirect(url_for('views.home'))
+    return render_template('reset_token.html', user=current_user)
 
 
 @main_bp.route("/logout")
@@ -291,7 +337,7 @@ def crayfish1():
     # Get the data using Marshmallow schema (returns JSON)
     result = crayfish1s_schema.dump(all_crayfish1)
     # Return the data
-    return render_template("index1.html", crayfish_list=result, user = current_user)
+    return render_template("crayfish1.html", crayfish_list=result, user=current_user)
 
 
 @main_bp.get("/crayfish1/<int:id>")
@@ -313,7 +359,7 @@ def crayfish2():
     # Get the data using Marshmallow schema (returns JSON)
     result = crayfish2s_schema.dump(all_crayfish2)
     # Return the data
-    return render_template("index2.html", crayfish_list=result, user = current_user)
+    return render_template("crayfish2.html", crayfish_list=result, user=current_user)
 
 
 @main_bp.get("/crayfish2/<int:id>")
@@ -370,7 +416,7 @@ def crayfish1_add():
     gender = request.json.get("gender", "")
     length = request.json.get("length", "")
     # Create a new Crayfish1 object using the values
-    crayfish = Crayfish1(site=site, method=method, gender = gender, length = length)
+    crayfish = Crayfish1(site=site, method=method, gender=gender, length=length)
     # Save the new crayfish to the database
     db.session.add(crayfish)
     db.session.commit()
@@ -388,7 +434,7 @@ def crayfish2_add():
     length = request.json.get("length", "")
     weight = request.json.get("weight", "")
     # Create a new Crayfish2 object using the values
-    crayfish = Crayfish2(site=site, gender = gender, length = length, weight = weight)
+    crayfish = Crayfish2(site=site, gender=gender, length=length, weight=weight)
     # Save the new crayfish to the database
     db.session.add(crayfish)
     db.session.commit()
@@ -438,43 +484,40 @@ def crayfish2_update(code):
     result = crayfish2_schema.jsonify(updated_region)
     return result
 
+
 @main_bp.route('/crayfish1/download')
-@login_required
 def post1():
     si = StringIO()
-    #Creating a new csv instance
+    # Creating a new csv instance
     cw = csv.writer(si)
-    #Get the data from the crayfish1 table
+    # Get the data from the crayfish1 table
     crayfish_list = Crayfish1.query.all()
     cw.writerow(["id", "site", "method", "gender", "length (mm)"])
-    #Add the data to the csv file
+    # Add the data to the csv file
     for crayfish in crayfish_list:
         crayfish_ls = [crayfish.id, crayfish.site, crayfish.method, crayfish.gender, crayfish.length]
         cw.writerow(crayfish_ls)
     output = make_response(si.getvalue())
-    #Name the file
+    # Name the file
     output.headers["Content-Disposition"] = "attachment; filename=database1.csv"
     output.headers["Content-type"] = "text/csv"
     return output
 
+
 @main_bp.route('/crayfish2/download')
-@login_required
 def post2():
     si = StringIO()
-    #Creating a new csv instance
+    # Creating a new csv instance
     cw = csv.writer(si)
-    #Get the data from the crayfish2 table
+    # Get the data from the crayfish2 table
     crayfish_list = Crayfish2.query.all()
     cw.writerow(["id", "site", "gender", "length (mm)", "weight (g)"])
-    #Add the data to the csv file
+    # Add the data to the csv file
     for crayfish in crayfish_list:
         crayfish_ls = [crayfish.id, crayfish.site, crayfish.gender, crayfish.length, crayfish.weight]
         cw.writerow(crayfish_ls)
-    #Name the file
+    # Name the file
     output = make_response(si.getvalue())
     output.headers["Content-Disposition"] = "attachment; filename=database2.csv"
     output.headers["Content-type"] = "text/csv"
     return output
-
-
-
