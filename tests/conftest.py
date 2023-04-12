@@ -47,6 +47,7 @@ def chrome_driver():
         For running on your computer: `headless` to be commented out
     """
     options = Options()
+    options.add_argument("--disable-gpu")
     options.add_argument("--headless")
     options.add_argument("--window-size=1920,1080")
     driver = Chrome(options=options)
