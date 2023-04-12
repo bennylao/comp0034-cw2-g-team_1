@@ -1,14 +1,12 @@
 import csv
 from io import StringIO
-from flask import Blueprint, render_template, request, flash, url_for, redirect, request, make_response, jsonify
+from flask import Blueprint, render_template, flash, url_for, redirect, request, make_response, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User, db, Post, Comment, Like, Crayfish1, Crayfish2
 import re
 from crayfish_analysis_app.schemas import Crayfish1Schema, Crayfish2Schema
 
-# Regular expression for validating an Email
-regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,4}\b'
 
 main_bp = Blueprint('views', __name__)
 
