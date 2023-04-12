@@ -11,10 +11,8 @@ def test_home_page_title(chrome_driver, run_app_win, flask_port):
     """
     url = f"http://localhost:{flask_port}/"
     chrome_driver.get(url)
-    heading = WebDriverWait(chrome_driver, 10).until(
-        EC.presence_of_element_located((By.TAG_NAME, 'h1'))
-    )
-    assert heading.text == "Home"
+    chrome_driver.implicitly_wait(3)
+    assert chrome_driver.title == "Home"
 
 
 def test_link_to_dashboard(chrome_driver, run_app_win, flask_port):
