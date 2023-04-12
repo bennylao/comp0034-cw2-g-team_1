@@ -21,24 +21,45 @@ class User(db.Model, UserMixin):
     comments = db.relationship('Comment', backref='user', passive_deletes=True)
     likes = db.relationship('Like', backref='user', passive_deletes=True)
 
+    # Creating a unique token which is valid for 15 minutes
+    def get_reset_token(self, expires_sec=900):
+        """
+        Creates a unique token for the user which is valid for 15 minutes
+        Args:
+            expires_sec (int): Expiration time in seconds. Set to 900 sec = 15mins.
+        Raises:
+            NA
+        Returns:
+            str: Serialized token with user id
+        """
+        # initializing the serializer with the secret key & expiration time
 
-    #Creating a unique token which is valid for 15 minutes
-    def get_reset_token(self,expires_sec=900):
-        #initializing the serializer with the secret key & expiration time
+    # Creating a unique token which is valid for 15 minutes
+    def get_reset_token(self, expires_sec=900):
+        # initializing the serializer with the secret key & expiration time
         serial = Serializer(Config.SECRET_KEY, expires_sec)
-        #returns the serialized token with users id as a string
+        # returns the serialized token with users id as a string
         return serial.dumps({'user_id': self.id}).decode('utf-8')
-    
-    #Verifying the token 
+
+    # Verifying the token
     @staticmethod
     def verify_token(token):
+        """
+        Verifies the user id by deserializing the token and checking it in the database.
+        Args:
+            token (str): Serialized token with user id
+        Raises:
+            NA
+        Returns:
+            (User object): User object if token is valid
+        """
         serial = Serializer(Config.SECRET_KEY)
         try:
-            #deserializing the token and gets the users id
+            # deserializing the token and gets the users id
             user_id = serial.loads(token)['user_id']
         except:
             return None
-        #finds user object with the given id and returns it 
+        # finds user object with the given id and returns it
         return User.query.get(user_id)
 
     def __repr__(self):

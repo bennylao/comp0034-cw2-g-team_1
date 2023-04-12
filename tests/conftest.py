@@ -43,8 +43,8 @@ def create_user():
 def chrome_driver():
     """Selenium webdriver with options to support running in GitHub actions
     Note:
-        For CI: `headless` not commented out
-        For running on your computer: `headless` to be commented out
+        For CI: headless not commented out
+        For running on your computer: headless to be commented out
     """
     options = Options()
     options.add_argument("--headless")
