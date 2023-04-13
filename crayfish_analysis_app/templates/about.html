@@ -51,17 +51,17 @@
         <div class="row">
             <div class="col-md-12" style="text-align:center;">
                 <p>
-                    For more access to our web-app, please sign up or log in into an existing account.
+                    You can access the Dashboard and the databases by clicking on the buttons below.
                 </p>
             </div>
-            <div class="col-md-6" style="text-align:right;">
-                <div>
-                <a class ="btn btn-primary" href = "{{url_for('views.signup')}}">Sign-up</a>
-                </div>
+            <div class="col-md-4" style="text-align:right;">
+                <a class ="btn btn-primary" href = "{{url_for('/dashboard/')}}">Dashboard</a>
             </div>
-            <div class="col-md-6" style="text-align:left;">
-                <a class ="btn btn-primary" href = "{{url_for('views.login')}}">Log-in</a>
-        
+            <div class="col-md-4" style="text-align:center;">
+                <a class ="btn btn-primary" href = "{{url_for('views.crayfish1')}}">Database 1</a>
+            </div>
+            <div class="col-md-4" style="text-align:left;">
+                <a class ="btn btn-primary" href = "{{url_for('views.crayfish2')}}">Database 2</a>
             </div>
         </div>
     </div>
