@@ -38,6 +38,19 @@ def create_user():
         db.session.commit()
 
 
+@pytest.fixture(scope="function")
+def create_user_for_resetting_password():
+    # Check if the region exists, it does then delete it
+    exists = db.session.execute(
+        db.select(User).filter_by(username="User_for_reset_pwd")
+    ).scalar()
+    if not exists:
+        new_user = User(email='sample_reset_pwd@test.com', username='User_for_reset_pwd',
+                        password=generate_password_hash('123456', method='sha256'))
+        db.session.add(new_user)
+        db.session.commit()
+
+
 # Used for Selenium tests
 @pytest.fixture(scope="class")
 def chrome_driver():
@@ -47,7 +60,7 @@ def chrome_driver():
         For running on your computer: headless to be commented out
     """
     options = Options()
-    options.add_argument("--headless")
+    # options.add_argument("--headless")
     options.add_argument("--window-size=1920,1080")
     driver = Chrome(options=options)
     driver.maximize_window()

@@ -267,7 +267,7 @@ def delete_post(id):
     Raises:
         NA
     Returns:
-        The 'forum.html'page with the post deleted
+        The 'forum.html' page with the post deleted
 
     """
     # obtains the post with the id from the database

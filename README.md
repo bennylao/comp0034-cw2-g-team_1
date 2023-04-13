@@ -47,8 +47,8 @@ pytest --cov
 ## Coverage Report
 The coverage for ```dash_app\app.py``` is low because the dash app has already been tested in the previous coursework.
 As we don't want to include too many repeated codes from the previous coursework, the testing codes for the dash app are
-not put in this repository. The helper function ```read_excel_multi_index``` is also not tested as it has already been
-tested in the COMP0035 coursework 1.
+not put in this repository. The helper function ```read_excel_multi_index``` is also not tested as it is imported from 
+COMP0035 coursework 1.
 
 *However, it is worth noting that the layout of the dash app has been modified a bit.
 User can now return to the flask app (i.e., homepage, forum page, etc.) from the dash app.*

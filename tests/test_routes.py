@@ -1,6 +1,7 @@
-from crayfish_analysis_app.models import db, User
+from crayfish_analysis_app.models import db, User, Post
 from flask import get_flashed_messages
 from werkzeug.security import check_password_hash, generate_password_hash
+import datetime
 
 
 def test_get_home(test_client):
@@ -95,6 +96,33 @@ def test_get_logout(test_client, create_user):
     assert response.request.path == "/home"
 
 
+def test_get_create_forum_without_login(test_client):
+    response = test_client.get("/create-post", follow_redirects=True)
+
+    text = ''.join(get_flashed_messages())
+    assert response.status_code == 200
+    assert text == 'Please log in to access this page.'
+
+
+def test_get_create_forum_with_login(test_client, create_user):
+    test_client.post("/login", data={
+        "email": "testingsample@test.com",
+        "password": "123456",
+    })
+    response = test_client.get("/create-post")
+
+    assert response.status_code == 200
+
+
+def test_get_error_route(test_client, create_user):
+
+    response = test_client.get("/random_route")
+    html_raw_code_1 = '<h1 style=\"text-align: center\">404 Not Found</h1>'
+    html_raw_code_2 = '<p style=\"font-size: 36px;\">Oops! It seems like you\'ve found sth interesting...</p>'
+    assert response.status_code == 404
+    assert html_raw_code_1 and html_raw_code_2 in response.get_data(as_text=True)
+
+
 def test_post_signup_new_user(test_client):
     # Check if the record exists, it does then delete it
     exists = db.session.execute(
@@ -104,12 +132,20 @@ def test_post_signup_new_user(test_client):
         db.session.execute(db.delete(User).where(User.username == "crayfish_king"))
         db.session.commit()
 
+    num_user_in_db_before = db.session.scalar(
+        db.select(db.func.count()).select_from(User)
+    )
+
     response = test_client.post("/signup", data={
         "username": "crayfish_king",
         "email": "crayfish_king@crayfish.com",
         "password1": "ilovecrayfish",
         "password2": "ilovecrayfish"
     })
+
+    num_user_in_db_after = db.session.scalar(
+        db.select(db.func.count()).select_from(User)
+    )
 
     target = db.session.execute(
         db.select(User).filter_by(username="crayfish_king")
@@ -118,6 +154,7 @@ def test_post_signup_new_user(test_client):
     assert response.status_code == 302
     assert target.email == "crayfish_king@crayfish.com"
     assert check_password_hash(target.password, 'ilovecrayfish') is True
+    assert (num_user_in_db_after - num_user_in_db_before) == 1
 
 
 def test_post_signup_invalid_email(test_client):
@@ -255,9 +292,30 @@ def test_post_delete_user(test_client, create_user):
     assert exist is None
 
 
-def test_post_create_forum_without_login(test_client, create_user):
-    response = test_client.get("/create-post", follow_redirects=True)
+def test_post_create_forum(test_client, create_user):
+    test_client.post("/login", data={
+        "email": "testingsample@test.com",
+        "password": "123456",
+    })
 
-    text = ''.join(get_flashed_messages())
-    assert response.status_code == 200
-    assert text == 'Please log in to access this page.'
+    target = db.session.execute(
+        db.select(User).filter_by(username="IamTest")
+    ).scalar()
+
+    target_id = target.id
+
+    response = test_client.post("/create-post", data={
+        "text": "Sample post for testing",
+        "author": f"{target_id}",
+    })
+
+    exist = db.session.execute(
+        db.select(Post).filter_by(author=target_id)
+    ).scalar()
+
+    text = get_flashed_messages()[1]
+
+    assert response.status_code == 302
+    assert text == 'Post created!'
+    assert exist.text == "Sample post for testing"
+    assert exist.date_created == datetime.datetime.now().date()
