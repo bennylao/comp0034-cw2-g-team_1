@@ -56,9 +56,9 @@ def test_get_about(test_client):
 
 def test_get_database1(test_client):
     """
-    GIVEN
-    WHEN
-    THEN
+    GIVEN the user goes to the database 1 page
+    THEN it should redirect the user to the database 1 page
+        and the status code given should be 200
     """
     response = test_client.get("/crayfish1")
     assert response.status_code == 200
@@ -66,9 +66,9 @@ def test_get_database1(test_client):
 
 def test_get_database2(test_client):
     """
-    GIVEN
-    WHEN
-    THEN
+    GIVEN the user goes to the database 2 page
+    THEN it should redirect the user to the database  page
+        and the status code given should be 200
     """
     response = test_client.get("/crayfish2")
     assert response.status_code == 200
@@ -76,15 +76,19 @@ def test_get_database2(test_client):
 
 def test_get_login(test_client):
     """
-    GIVEN
-    WHEN
-    THEN
+    GIVEN the user goes to the login page
+    THEN it should redirect the user to the login page
+        and the status code given should be 200
     """
     response = test_client.get("/login")
     assert response.status_code == 200
 
 
 def test_get_logout(test_client, create_user):
+    """
+    GIVEN the user logs out
+    THEN it should log the user out
+    """
     test_client.post("/login", data={
         "email": "testingsample@test.com",
         "password": "123456",
@@ -97,6 +101,10 @@ def test_get_logout(test_client, create_user):
 
 
 def test_get_create_forum_without_login(test_client):
+    """
+    GIVEN the user tries to create post without logging in
+    THEN it redirect and should tell the user to log in in the log in page
+    """
     response = test_client.get("/create-post", follow_redirects=True)
 
     text = ''.join(get_flashed_messages())
@@ -105,6 +113,10 @@ def test_get_create_forum_without_login(test_client):
 
 
 def test_get_create_forum_with_login(test_client, create_user):
+    """
+    GIVEN the user tries to create post after logging in
+    THEN it should redirect the user to the create post page
+    """
     test_client.post("/login", data={
         "email": "testingsample@test.com",
         "password": "123456",
@@ -115,7 +127,10 @@ def test_get_create_forum_with_login(test_client, create_user):
 
 
 def test_get_error_route(test_client, create_user):
-
+    """
+    GIVEN the user is in an invalid url route
+    THEN it gives in a 404 error page
+    """
     response = test_client.get("/random_route")
     html_raw_code_1 = '<h1 style=\"text-align: center\">404 Not Found</h1>'
     html_raw_code_2 = '<p style=\"font-size: 36px;\">Oops! It seems like you\'ve found sth interesting...</p>'
@@ -124,6 +139,12 @@ def test_get_error_route(test_client, create_user):
 
 
 def test_post_signup_new_user(test_client):
+    """
+    GIVEN a user is signing up
+    WHEN the inputs to the sign up form are valid
+    THEN the user should be able to sign up and added to the database
+        with correct details and give a response status code of 200
+    """
     # Check if the record exists, it does then delete it
     exists = db.session.execute(
         db.select(User).filter_by(username="crayfish_king")
@@ -158,7 +179,10 @@ def test_post_signup_new_user(test_client):
 
 
 def test_post_signup_invalid_email(test_client):
-    # Check if the record exists, it does then delete it
+    """
+    GIVEN the user tries sign up with an invalid email
+    THEN it should not allow the user to sign up and display a error message
+    """
     exists = db.session.execute(
         db.select(User).filter_by(username="Invalid_email")
     ).scalar()
@@ -178,6 +202,10 @@ def test_post_signup_invalid_email(test_client):
 
 
 def test_post_signup_existing_email(test_client):
+    """
+    GIVEN the user tries sign up with an existing email
+    THEN it should not allow the user to sign up and display a error message
+    """
     # Check if the record exists, it does then delete it
     exists = db.session.execute(
         db.select(User).filter_by(username="Existing_User")
@@ -200,6 +228,10 @@ def test_post_signup_existing_email(test_client):
 
 
 def test_post_signup_existing_user(test_client):
+    """
+    GIVEN the user tries sign up with an existing username
+    THEN it should not allow the user to sign up and display a error message
+    """
     # Check if the record exists, it does then delete it
     exists = db.session.execute(
         db.select(User).filter_by(username="Existing_User")
@@ -222,6 +254,11 @@ def test_post_signup_existing_user(test_client):
 
 
 def test_post_signup_not_same_password(test_client):
+    """
+    GIVEN the user tries sign up
+    When the password and confirm password are not the same
+    THEN it should not allow the user to sign up and display a error message
+    """
     exists = db.session.execute(
         db.select(User).filter_by(username="Invalid_email")
     ).scalar()
@@ -241,6 +278,11 @@ def test_post_signup_not_same_password(test_client):
 
 
 def test_post_login(test_client, create_user):
+    """
+    GIVEN the user tries login
+    WHen the details are correct
+    THEN it should log the user in
+    """
     response = test_client.post("/login", data={
         "email": "testingsample@test.com",
         "password": "123456",
@@ -251,6 +293,11 @@ def test_post_login(test_client, create_user):
 
 
 def test_post_login_wrong_password(test_client, create_user):
+    """
+    GIVEN the user tries login
+    WHen the password is not correct
+    THEN it should not log the user in and display a error message
+    """
     test_client.post("/login", data={
         "email": "testingsample@test.com",
         "password": "WrongPassword",
@@ -261,6 +308,11 @@ def test_post_login_wrong_password(test_client, create_user):
 
 
 def test_post_login_wrong_email(test_client, create_user):
+    """
+    GIVEN the user tries login
+    WHen the email is not correct
+    THEN it should not log the user in and display a error message
+    """
     test_client.post("/login", data={
         "email": "WrongEmail@test.com",
         "password": "123456",
@@ -271,6 +323,11 @@ def test_post_login_wrong_email(test_client, create_user):
 
 
 def test_post_delete_user(test_client, create_user):
+    """
+    GIVEN the user is logged in and tries delete account
+    WHen user confirms delete account
+    THEN it should delete the user account and remove data from database
+    """
     test_client.post("/login", data={
         "email": "testingsample@test.com",
         "password": "123456",
@@ -293,6 +350,11 @@ def test_post_delete_user(test_client, create_user):
 
 
 def test_post_create_forum(test_client, create_user):
+    """
+    GIVEN the user is logged in and tries to make a post on forum
+    WHen user confirms post
+    THEN it should create a post and add it to the database
+    """
     test_client.post("/login", data={
         "email": "testingsample@test.com",
         "password": "123456",
