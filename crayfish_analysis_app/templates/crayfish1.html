@@ -8,7 +8,9 @@
     <h1 class="text-center mb-4">Crayfish Caught Using Different Trapping Methods</h1>
     <form>
       <button type="submit" formaction="/crayfish1/download" class="btn"> <i class="fa fa-download"></i> Download Database 1</button>
+      {% if current_user.is_authenticated %}
       <button type="submit" formaction="/crayfish1add" class="btn btn-primary"><i class="fa fa-plus"></i> Add Crayfish Record</button>
+      {% endif %}
     </form>
     <br>
     <div class="card">
@@ -21,9 +23,11 @@
               {{ crayfish1['id'] }} {{ crayfish1['site'] }} {{ crayfish1['method'] }} {{ crayfish1['gender'] }} {{ crayfish1['length'] }}mm
             </div>
             <div>
+              {% if current_user.is_authenticated %}
               <form method="post" action="{{ url_for('views.crayfish1delete', id=crayfish1['id']) }}">
-                <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o"></i> Delete</button>
-              </form>
+                <button type="submit" class="btn" style="background-color: rgb(245, 111, 111); color: white;"><i class="fa fa-trash-o"></i> Delete</button>
+              </form>              
+              {% endif %}
             </div>
           </li>
           {% endfor %}

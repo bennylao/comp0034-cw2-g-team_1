@@ -11,14 +11,14 @@ pip install -e .
 ```
 
 
-## To Run the flask app
+## To Run the Flask App
 ```
 python -m flask --app "crayfish_analysis_app:create_app('config.DevelopmentConfig')" --debug run
 ```
 The flask app should be running on http://127.0.0.1:5000.
 
 
-## Import excel to database
+## Import Excel to Database
 If the tables named "crayfish1" and "crayfish2" in database.db are empty or there is no data list shown in the route 
 ```/crayfish1``` and ```/crayfish2```, the following command should be executed once 
 to import the data from the Excel file to the database. *Note that this command should not be run twice,
@@ -50,14 +50,13 @@ As we don't want to include too many repeated codes from the previous coursework
 not put in this repository. The helper function ```read_excel_multi_index``` is also not tested as it is imported from 
 COMP0035 coursework 1.
 
-*However, it is worth noting that the layout of the dash app has been modified a bit.
-User can now return to the flask app (i.e., homepage, forum page, etc.) from the dash app.*
+*It is also worth noting that the layout of the dash app has been modified a bit to be consistent with the flask app.
+Users can also return to the flask app (i.e., homepage, forum page, etc.) from the dash app nav bar.*
 
 *!!!!!!!!!!!!!!!!!!!insert screenshot!!!!!!!!!!!!!!!!!!!!*
 
 
-# Good to mention
-## Forgot Password
+# Other Things to Mention
 
 ### Forum Functionality
 
@@ -65,7 +64,7 @@ This extra feature was added by following an online tutorial by *Tech With Tim*.
 https://www.youtube.com/watch?v=GQcM8wdduLI
 ![Screenshot](Screenshots/forum.png)
 
-### Password Reset Link Feature with token
+### Forgot Password: Password Reset Link Feature with Token
 Followed an online tutorial by Corey Schafer titled "Python Flask Tutorial: 
 Full-Featured Web App Part 10 - Email and Password Reset".
 https://www.youtube.com/watch?v=vutyTx7IaAI&t=361s
@@ -76,7 +75,7 @@ An email from "ranaprasen24@gmail.com" will be sent to you shortly for resetting
 sometimes it might be in the spam so please check your email carefully.
 ![Screenshot](Screenshots/forget-password.png)
 
-## Error Handler for flask app
+## Error Handler for Flask App
 Error page for response code 404 is developed, user will be redirected to this error page while 
 the user is accessing a route that does not exist.
 ![Screenshot](Screenshots/error-page.png)
