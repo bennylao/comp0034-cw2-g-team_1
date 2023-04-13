@@ -59,6 +59,12 @@ User can now return to the flask app (i.e., homepage, forum page, etc.) from the
 # Good to mention
 ## Forgot Password
 
+### Forum Functionality
+
+This extra feature was added by following an online tutorial by *Tech With Tim*.
+https://www.youtube.com/watch?v=GQcM8wdduLI
+![Screenshot](Screenshots/forum.png)
+
 ### Password Reset Link Feature with token
 Followed an online tutorial by Corey Schafer titled "Python Flask Tutorial: 
 Full-Featured Web App Part 10 - Email and Password Reset".
