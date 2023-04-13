@@ -393,7 +393,7 @@ def test_013_crayfish2_page_title(chrome_driver, run_app_win, flask_port):
 
 
 def test_014_reset_password_by_email(chrome_driver, run_app_win, flask_port, test_client,
-                                 create_user_for_resetting_password):
+                                     create_user_for_resetting_password):
     """
     GIVEN a running app
     WHEN changing password using forgot password method
@@ -576,12 +576,12 @@ def test_016_database_1_add_record(chrome_driver, run_app_win, flask_port, test_
 
 
 def test_017_database_1_delete_record(chrome_driver, run_app_win, flask_port, test_client, create_user,
-                                  create_record_crayfish1):
+                                      create_record_crayfish1):
     """
     GIVEN a running app
     WHEN logging in
     AND going to crayfish1 page
-    AND deleteing a crayfish from the database 
+    AND deleteing a crayfish from the database
     THEN the crayfish should not be in the database
     """
     url = f"http://localhost:{flask_port}/login"
