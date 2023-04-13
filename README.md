@@ -41,7 +41,7 @@ pytest --cov
 
 
 ## Test Reports
-*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!insert screenshot!!!!!!!!!!!!!!!!!!!!!!!!!!!!*
+![Screenshot](Screenshots/test-report.png)
 
 
 ## Coverage Report
@@ -53,7 +53,7 @@ COMP0035 coursework 1.
 *It is also worth noting that the layout of the dash app has been modified a bit to be consistent with the flask app.
 Users can also return to the flask app (i.e., homepage, forum page, etc.) from the dash app nav bar.*
 
-*!!!!!!!!!!!!!!!!!!!insert screenshot!!!!!!!!!!!!!!!!!!!!*
+![Screenshot](Screenshots/coverage.png)
 
 
 # Other Things to Mention

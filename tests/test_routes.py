@@ -4,7 +4,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 import datetime
 
 
-def test_get_home(test_client):
+def test_018_get_home(test_client):
     """
     GIVEN the user goes to the home page
     THEN it should take the user to the home page
@@ -14,7 +14,7 @@ def test_get_home(test_client):
     assert response.status_code == 200
 
 
-def test_get_signup(test_client):
+def test_019_get_signup(test_client):
     """
     GIVEN the user goes to the signup page
     THEN it should take the user to the signup page
@@ -24,7 +24,7 @@ def test_get_signup(test_client):
     assert response.status_code == 200
 
 
-def test_get_dashboard(test_client):
+def test_020_get_dashboard(test_client):
     """
     GIVEN the user goes to the dashboard page
     THEN it should take the user to the dashboard app
@@ -34,7 +34,7 @@ def test_get_dashboard(test_client):
     assert response.status_code == 308
 
 
-def test_get_forum(test_client):
+def test_021_get_forum(test_client):
     """
     GIVEN the user goes to the forum page
     THEN it should take the user to the forum page
@@ -44,7 +44,7 @@ def test_get_forum(test_client):
     assert response.status_code == 200
 
 
-def test_get_about(test_client):
+def test_022_get_about(test_client):
     """
     GIVEN the user goes to the about page
     THEN it should take the user to the about page
@@ -54,7 +54,7 @@ def test_get_about(test_client):
     assert response.status_code == 200
 
 
-def test_get_database1(test_client):
+def test_023_get_database1(test_client):
     """
     GIVEN the user goes to the database 1 page
     THEN it should redirect the user to the database 1 page
@@ -64,7 +64,7 @@ def test_get_database1(test_client):
     assert response.status_code == 200
 
 
-def test_get_database2(test_client):
+def test_024_get_database2(test_client):
     """
     GIVEN the user goes to the database 2 page
     THEN it should redirect the user to the database  page
@@ -74,7 +74,7 @@ def test_get_database2(test_client):
     assert response.status_code == 200
 
 
-def test_get_login(test_client):
+def test_025_get_login(test_client):
     """
     GIVEN the user goes to the login page
     THEN it should redirect the user to the login page
@@ -84,7 +84,7 @@ def test_get_login(test_client):
     assert response.status_code == 200
 
 
-def test_get_logout(test_client, create_user):
+def test_026_get_logout(test_client, create_user):
     """
     GIVEN the user logs out
     THEN it should log the user out
@@ -100,7 +100,7 @@ def test_get_logout(test_client, create_user):
     assert response.request.path == "/home"
 
 
-def test_get_create_forum_without_login(test_client):
+def test_027_get_create_forum_without_login(test_client):
     """
     GIVEN the user tries to create post without logging in
     THEN it redirect and should tell the user to log in on the login page
@@ -112,7 +112,7 @@ def test_get_create_forum_without_login(test_client):
     assert text == 'Please log in to access this page.'
 
 
-def test_get_create_forum_with_login(test_client, create_user):
+def test_028_get_create_forum_with_login(test_client, create_user):
     """
     GIVEN the user tries to create post after logging in
     THEN it should redirect the user to the create post page
@@ -126,7 +126,7 @@ def test_get_create_forum_with_login(test_client, create_user):
     assert response.status_code == 200
 
 
-def test_get_error_route(test_client, create_user):
+def test_029_get_error_route(test_client, create_user):
     """
     GIVEN the user is in an invalid url route
     THEN it gives in a 404 error page
@@ -138,7 +138,7 @@ def test_get_error_route(test_client, create_user):
     assert html_raw_code_1 and html_raw_code_2 in response.get_data(as_text=True)
 
 
-def test_post_signup_new_user(test_client):
+def test_030_post_signup_new_user(test_client):
     """
     GIVEN a user is signing up
     WHEN the inputs to the sign-up form are valid
@@ -178,7 +178,7 @@ def test_post_signup_new_user(test_client):
     assert (num_user_in_db_after - num_user_in_db_before) == 1
 
 
-def test_post_signup_invalid_email(test_client):
+def test_031_post_signup_invalid_email(test_client):
     """
     GIVEN the user tries sign up with an invalid email
     THEN it should not allow the user to sign up and display an error message
@@ -201,7 +201,7 @@ def test_post_signup_invalid_email(test_client):
     assert text == 'Email is invalid.'
 
 
-def test_post_signup_existing_email(test_client):
+def test_032_post_signup_existing_email(test_client):
     """
     GIVEN the user tries sign up with an existing email
     THEN it should not allow the user to sign up and display an error message
@@ -227,7 +227,7 @@ def test_post_signup_existing_email(test_client):
     assert text == 'Email is already in use.'
 
 
-def test_post_signup_existing_user(test_client):
+def test_033_post_signup_existing_user(test_client):
     """
     GIVEN the user tries sign up with an existing username
     THEN it should not allow the user to sign up and display an error message
@@ -253,7 +253,7 @@ def test_post_signup_existing_user(test_client):
     assert text == 'Username is already in use.'
 
 
-def test_post_signup_not_same_password(test_client):
+def test_034_post_signup_not_same_password(test_client):
     """
     GIVEN the user tries sign up
     When the password and confirm password are not the same
@@ -277,7 +277,7 @@ def test_post_signup_not_same_password(test_client):
     assert text == "Passwords don't match!"
 
 
-def test_post_login(test_client, create_user):
+def test_035_post_login(test_client, create_user):
     """
     GIVEN the user tries login
     WHen the details are correct
@@ -292,7 +292,7 @@ def test_post_login(test_client, create_user):
     assert text == 'Logged in!'
 
 
-def test_post_login_wrong_password(test_client, create_user):
+def test_036_post_login_wrong_password(test_client, create_user):
     """
     GIVEN the user tries login
     WHen the password is not correct
@@ -307,7 +307,7 @@ def test_post_login_wrong_password(test_client, create_user):
     assert text == 'Password is incorrect.'
 
 
-def test_post_login_wrong_email(test_client, create_user):
+def test_037_post_login_wrong_email(test_client, create_user):
     """
     GIVEN the user tries login
     WHen the email is not correct
@@ -322,7 +322,7 @@ def test_post_login_wrong_email(test_client, create_user):
     assert text == 'Email does not exist.'
 
 
-def test_post_delete_user(test_client, create_user):
+def test_038_post_delete_user(test_client, create_user):
     """
     GIVEN the user is logged in and tries to delete account
     WHen user confirms delete account
@@ -349,7 +349,7 @@ def test_post_delete_user(test_client, create_user):
     assert exist is None
 
 
-def test_post_create_forum(test_client, create_user):
+def test_039_post_create_forum(test_client, create_user):
     """
     GIVEN the user is logged in and tries to make a post on forum
     WHen user confirms post
@@ -383,7 +383,7 @@ def test_post_create_forum(test_client, create_user):
     assert exist.date_created == datetime.datetime.now().date()
 
 
-def test_change_password(test_client, create_user):
+def test_040_change_password(test_client, create_user):
     """
     GIVEN the user is logged in
     WHEN the password is changed correctly
@@ -417,7 +417,7 @@ def test_change_password(test_client, create_user):
     assert check_password_hash(user.password, '1234567') is True
 
 
-def test_change_password_old_password_wrong(test_client, create_user):
+def test_041_change_password_old_password_wrong(test_client, create_user):
     """
     GIVEN the user is logged in
     WHEN the old_password given is incorrect
@@ -446,7 +446,7 @@ def test_change_password_old_password_wrong(test_client, create_user):
     assert text == 'Old password is incorrect.'
 
 
-def test_change_password_new_password_not_same(test_client, create_user):
+def test_042_change_password_new_password_not_same(test_client, create_user):
     """
     GIVEN the user is logged in
     WHEN the new passwords don't match

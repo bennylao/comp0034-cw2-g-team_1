@@ -7,7 +7,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 import time
 
 
-def test_home_page_title(chrome_driver, run_app_win, flask_port):
+def test_001_home_page_title(chrome_driver, run_app_win, flask_port):
     """
     GIVEN a running app
     WHEN the homepage is accessed
@@ -19,7 +19,7 @@ def test_home_page_title(chrome_driver, run_app_win, flask_port):
     assert chrome_driver.title == "Home"
 
 
-def test_homepage_subheadings(chrome_driver, run_app_win, flask_port):
+def test_002_homepage_subheadings(chrome_driver, run_app_win, flask_port):
     """
     GIVEN a running app
     WHEN the homepage is accessed
@@ -42,7 +42,7 @@ def test_homepage_subheadings(chrome_driver, run_app_win, flask_port):
     assert heading3.text == "Protect Ecosystems"
 
 
-def test_forum_page_title(chrome_driver, run_app_win, flask_port):
+def test_003_forum_page_title(chrome_driver, run_app_win, flask_port):
     """
     GIVEN a running app
     WHEN the form page is accessed
@@ -56,7 +56,7 @@ def test_forum_page_title(chrome_driver, run_app_win, flask_port):
     assert title.text == "Forum Posts"
 
 
-def test_about_page_title(chrome_driver, run_app_win, flask_port):
+def test_004_about_page_title(chrome_driver, run_app_win, flask_port):
     """
     GIVEN a running app
     WHEN the About page is accessed
@@ -70,7 +70,7 @@ def test_about_page_title(chrome_driver, run_app_win, flask_port):
     assert title.text == "About Us"
 
 
-def test_link_to_dashboard(chrome_driver, run_app_win, flask_port):
+def test_005_link_to_dashboard(chrome_driver, run_app_win, flask_port):
     """
     GIVEN a running app
     WHEN the dashboard is accessed
@@ -86,7 +86,7 @@ def test_link_to_dashboard(chrome_driver, run_app_win, flask_port):
     assert current_url == f"http://localhost:{flask_port}/dashboard/"
 
 
-def test_dashboard_title(chrome_driver, run_app_win, flask_port):
+def test_006_dashboard_title(chrome_driver, run_app_win, flask_port):
     """
     GIVEN a running app
     WHEN the dashboard is accessed
@@ -100,7 +100,7 @@ def test_dashboard_title(chrome_driver, run_app_win, flask_port):
     assert heading.text == "Crayfish Analysis Dashboard"
 
 
-def test_signup(chrome_driver, run_app_win, flask_port, test_client):
+def test_007_signup(chrome_driver, run_app_win, flask_port, test_client):
     """
     GIVEN a running app
     WHEN signing up is successful
@@ -147,7 +147,7 @@ def test_signup(chrome_driver, run_app_win, flask_port, test_client):
     assert check_password_hash(target.password, '123456') is True
 
 
-def test_login(chrome_driver, run_app_win, flask_port, test_client, create_user):
+def test_008_login(chrome_driver, run_app_win, flask_port, test_client, create_user):
     """
     GIVEN a running app
     WHEN loging in is successful
@@ -175,7 +175,7 @@ def test_login(chrome_driver, run_app_win, flask_port, test_client, create_user)
     assert current_url == f"http://localhost:{flask_port}/home"
 
 
-def test_forum_post(chrome_driver, run_app_win, flask_port, test_client, create_user):
+def test_009_forum_post(chrome_driver, run_app_win, flask_port, test_client, create_user):
     """
     GIVEN a running app
     WHEN loging in is successful
@@ -231,7 +231,7 @@ def test_forum_post(chrome_driver, run_app_win, flask_port, test_client, create_
     assert search_text in current_url
 
 
-def test_like(chrome_driver, run_app_win, flask_port, test_client, create_user):
+def test_010_like(chrome_driver, run_app_win, flask_port, test_client, create_user):
     """
     GIVEN a running app
     WHEN loging in is successful
@@ -293,7 +293,7 @@ def test_like(chrome_driver, run_app_win, flask_port, test_client, create_user):
     ).text == "1"
 
 
-def test_comment(chrome_driver, run_app_win, flask_port, test_client, create_user):
+def test_011_comment(chrome_driver, run_app_win, flask_port, test_client, create_user):
     """
     GIVEN a running app
     WHEN loging in is successful
@@ -364,7 +364,7 @@ def test_comment(chrome_driver, run_app_win, flask_port, test_client, create_use
     assert 'This is a new comment that I made.' in source
 
 
-def test_crayfish1_page_title(chrome_driver, run_app_win, flask_port):
+def test_012_crayfish1_page_title(chrome_driver, run_app_win, flask_port):
     """
     GIVEN a running app
     WHEN the crayfish1 page is accessed
@@ -378,7 +378,7 @@ def test_crayfish1_page_title(chrome_driver, run_app_win, flask_port):
     assert title.text == "Crayfish Caught Using Different Trapping Methods"
 
 
-def test_crayfish2_page_title(chrome_driver, run_app_win, flask_port):
+def test_013_crayfish2_page_title(chrome_driver, run_app_win, flask_port):
     """
     GIVEN a running app
     WHEN the crayfish2 page is accessed
@@ -392,7 +392,7 @@ def test_crayfish2_page_title(chrome_driver, run_app_win, flask_port):
     assert title.text == "Crayfish Lengths and Weights"
 
 
-def test_reset_password_by_email(chrome_driver, run_app_win, flask_port, test_client,
+def test_014_reset_password_by_email(chrome_driver, run_app_win, flask_port, test_client,
                                  create_user_for_resetting_password):
     """
     GIVEN a running app
@@ -414,7 +414,7 @@ def test_reset_password_by_email(chrome_driver, run_app_win, flask_port, test_cl
     forgot_pwd.click()
     input_email = WebDriverWait(chrome_driver, 10).until(
         EC.presence_of_element_located((By.ID, 'email')))
-    
+
     input_email.send_keys("sample_reset_pwd@test.com")
     btn = WebDriverWait(chrome_driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div/div/div/form/div/div/button'))
@@ -442,14 +442,14 @@ def test_reset_password_by_email(chrome_driver, run_app_win, flask_port, test_cl
     change.click()
     db.session.commit()
 
-    assert check_password_hash(user.password, 'aaaaaa') is True 
+    assert check_password_hash(user.password, 'aaaaaa') is True
 
 
-def test_change_password(chrome_driver, run_app_win, flask_port, test_client, create_user_for_resetting_password):
+def test_015_change_password(chrome_driver, run_app_win, flask_port, test_client, create_user_for_resetting_password):
     """
     GIVEN a running app
     WHEN logging in
-    AND changing the password 
+    AND changing the password
     THEN the password in the database should be
         changed to the new password
     """
@@ -503,12 +503,12 @@ def test_change_password(chrome_driver, run_app_win, flask_port, test_client, cr
     assert check_password_hash(user.password, '1234567') is True
 
 
-def test_database_1_add_record(chrome_driver, run_app_win, flask_port, test_client, create_user):
+def test_016_database_1_add_record(chrome_driver, run_app_win, flask_port, test_client, create_user):
     """
     GIVEN a running app
     WHEN logging in
     AND going to crayfish1 page
-    AND adding a crayfish into the database 
+    AND adding a crayfish into the database
     THEN the crayfish should be in the database
     """
     url = f"http://localhost:{flask_port}/login"
@@ -574,7 +574,8 @@ def test_database_1_add_record(chrome_driver, run_app_win, flask_port, test_clie
     db.session.execute(db.delete(Crayfish1).where(Crayfish1.site == "Testing_Site"))
     db.session.commit()
 
-def test_database_1_delete_record(chrome_driver, run_app_win, flask_port, test_client, create_user,
+
+def test_017_database_1_delete_record(chrome_driver, run_app_win, flask_port, test_client, create_user,
                                   create_record_crayfish1):
     """
     GIVEN a running app
@@ -616,7 +617,8 @@ def test_database_1_delete_record(chrome_driver, run_app_win, flask_port, test_c
     time.sleep(5)
 
     delete = WebDriverWait(chrome_driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, f'/html/body/div/div/div/div/div/ul/li[{target.id}]/div[2]/form/button'))
+        EC.presence_of_element_located(
+            (By.XPATH, f'/html/body/div/div/div/div/div/ul/li[{target.id}]/div[2]/form/button'))
     )
     delete.click()
 
@@ -630,4 +632,4 @@ def test_database_1_delete_record(chrome_driver, run_app_win, flask_port, test_c
         db.select(Crayfish1).filter_by(site="Test_site")
     ).scalar()
 
-    assert target_after is None 
+    assert target_after is None

@@ -34,7 +34,7 @@ def signup():
 
     Raises:
         Flask Validation Error(str): If the form is not filled out correctly
-        
+
     Returns:
         The 'home.html' page if sign up is successful
         The 'signup.html' page if signup is unsuccessful
@@ -82,7 +82,7 @@ def signup():
 def login():
     """
     renders the login page and logs in the user
-        
+
     Raises:
         Flask Validation Error(str): If the form is not filled out correctly
     Returns:
@@ -114,8 +114,8 @@ def login():
 def send_email(user):
     """
     This function sends the email with reset link to user
-    Args: 
-        (User Object): The users email address  
+    Args:
+        (User Object): The users email address
     Raises:
         NA
     Returns:
@@ -330,7 +330,7 @@ def change_password():
 def delete_user(id):
     """
     This function is used to delete an existing users account
-    Args: 
+    Args:
         id(int): The id of the user
     Raises:
         NA
@@ -363,7 +363,7 @@ def delete_user(id):
 def posts(username):
     """
     This function is used to display the posts of an user.
-    Args: 
+    Args:
         username (str): The username of the user
     Raises:
         NA
@@ -377,7 +377,7 @@ def posts(username):
     if not user:
         flash("No user with that username exists.", category="error")
         return redirect(url_for("views.forum"))
-    
+
     # Obtains the posts of the user
     posts = user.posts
     return render_template("posts.html", user=current_user, posts=posts, username=username)
@@ -388,12 +388,12 @@ def posts(username):
 def create_comment(post_id):
     """
     This function is used to create a new comment.
-    Args: 
+    Args:
         post_id (int): The id of the post
     Raises:
         NA
     Returns:
-        The 'forum.html' page 
+        The 'forum.html' page
     """
     # Obtains entry from the user
     text = request.form.get('text')
@@ -417,12 +417,12 @@ def create_comment(post_id):
 def delete_comment(comment_id):
     """
     This function is used to delete an existing comment.
-    Args: 
+    Args:
         comment_id (int): The id of the comment
     Raises:
         NA
     Returns:
-        The 'forum.html' page 
+        The 'forum.html' page
     """
     # Obtains the comment from the database
     comment = Comment.query.filter_by(id=comment_id).first()
@@ -444,12 +444,12 @@ def delete_comment(comment_id):
 def like(post_id):
     """
     This function is used to like a post.
-    Args: 
+    Args:
         post_id (int): The id of the post
     Raises:
         NA
     Returns:
-        The 'forum.html' page 
+        The 'forum.html' page
     """
     # Obtains the post id from the database
     post = Post.query.filter_by(id=post_id)
@@ -462,7 +462,7 @@ def like(post_id):
         db.session.delete(like)
         db.session.commit()
     else:
-        #Add new like to databse
+        # Add new like to database
         like = Like(author=current_user.id, post_id=post_id)
         db.session.add(like)
         db.session.commit()
