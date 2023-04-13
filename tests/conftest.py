@@ -1,7 +1,7 @@
 import pytest
 import config
 from crayfish_analysis_app import create_app
-from crayfish_analysis_app.models import db, User
+from crayfish_analysis_app.models import db, User, Crayfish1
 from werkzeug.security import generate_password_hash
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import Chrome
@@ -47,6 +47,19 @@ def create_user_for_resetting_password():
     if not exists:
         new_user = User(email='sample_reset_pwd@test.com', username='User_for_reset_pwd',
                         password=generate_password_hash('123456', method='sha256'))
+        db.session.add(new_user)
+        db.session.commit()
+
+
+@pytest.fixture(scope="function")
+def create_record_crayfish1():
+    # Check if the region exists, it does then delete it
+    exists = db.session.execute(
+        db.select(Crayfish1).filter_by(site="Test_site")
+    ).scalar()
+    if not exists:
+        new_user = Crayfish1(site='Test_site', method='Test_method',
+                             gender='M', length='100000000000')
         db.session.add(new_user)
         db.session.commit()
 
