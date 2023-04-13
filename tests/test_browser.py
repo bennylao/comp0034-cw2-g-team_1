@@ -60,8 +60,8 @@ def test_forum_page_title(chrome_driver, run_app_win, flask_port):
 def test_about_page_title(chrome_driver, run_app_win, flask_port):
     """
     GIVEN a running app
-    WHEN the form page is accessed
-    THEN the page title should be "Forum Posts"
+    WHEN the About page is accessed
+    THEN the page title should be "About"
     """
     url = f"http://localhost:{flask_port}/about"
     chrome_driver.get(url)
@@ -74,8 +74,8 @@ def test_about_page_title(chrome_driver, run_app_win, flask_port):
 def test_link_to_dashboard(chrome_driver, run_app_win, flask_port):
     """
     GIVEN a running app
-    WHEN the homepage is accessed
-    THEN the value of the page title should be "Home"
+    WHEN the dashboard is accessed
+    THEN the url should change to the dashboard url
     """
     url = f"http://localhost:{flask_port}/"
     chrome_driver.get(url)
@@ -90,8 +90,8 @@ def test_link_to_dashboard(chrome_driver, run_app_win, flask_port):
 def test_dashboard_title(chrome_driver, run_app_win, flask_port):
     """
     GIVEN a running app
-    WHEN the homepage is accessed
-    THEN the value of the page title should be "Home"
+    WHEN the dashboard is accessed
+    THEN the value of the page title should be "Crayfish Analysis Dashboard"
     """
     url = f"http://localhost:{flask_port}/dashboard/"
     chrome_driver.get(url)
@@ -362,3 +362,93 @@ def test_comment(chrome_driver, run_app_win, flask_port, test_client):
     source = chrome_driver.page_source
 
     assert 'This is a new comment that I made.' in source
+
+def test_crayfish1_page_title(chrome_driver, run_app_win, flask_port):
+    """
+    GIVEN a running app
+    WHEN the crayfish1 page is accessed
+    THEN the page title should be "Crayfish Caught Using Different Trapping Methods"
+    """
+    url = f"http://localhost:{flask_port}/crayfish1"
+    chrome_driver.get(url)
+    title = WebDriverWait(chrome_driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '/html/body/div/h1'))
+    )
+    assert title.text == "Crayfish Caught Using Different Trapping Methods"
+
+def test_crayfish2_page_title(chrome_driver, run_app_win, flask_port):
+    """
+    GIVEN a running app
+    WHEN the crayfish2 page is accessed
+    THEN the page title should be "Crayfish Weights and Lengths"
+    """
+    url = f"http://localhost:{flask_port}/crayfish2"
+    chrome_driver.get(url)
+    title = WebDriverWait(chrome_driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '/html/body/div/h1'))
+    )
+    assert title.text == "Crayfish Weights and Lengths"
+
+def test_reset_password_by_email(chrome_driver, run_app_win, flask_port, test_client, create_user_for_resetting_password):
+    """
+    GIVEN a running app
+    WHEN changing password using forgot password method
+    THEN the password is changed in the database
+    """
+    url = f"http://localhost:{flask_port}/"
+    chrome_driver.get(url)
+    logout = WebDriverWait(chrome_driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '//*[@id="navbar"]/div/a[8]'))
+    )
+    logout.click()
+    login = WebDriverWait(chrome_driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '//*[@id="navbar"]/div/a[7]'))
+    )
+    login.click()
+    forgot_pwd = WebDriverWait(chrome_driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div/div/div/form/div/div/a'))
+    )
+    forgot_pwd.click()
+    input_email = WebDriverWait(chrome_driver, 10).until(
+        EC.presence_of_element_located((By.ID, 'email')))
+    input_email.send_keys("sample_reset_pwd@test.com")
+    btn = WebDriverWait(chrome_driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div/div/div/form/div/div/button'))
+    )
+    btn.click()
+
+    user = db.session.execute(
+        db.select(User).filter_by(email="sample_reset_pwd@test.com")
+    ).scalar()
+
+    url = (f"http://localhost:{flask_port}/" + "reset-password/" + str(user.get_reset_token()))
+    
+    chrome_driver.get(url)
+
+    password1 = WebDriverWait(chrome_driver, 10).until(
+        EC.presence_of_element_located((By.ID, 'reset_password1'))
+    )
+    password1.send_keys("aaaaaa")
+
+    password2 = WebDriverWait(chrome_driver, 10).until(
+        EC.presence_of_element_located((By.ID, 'reset_password2'))
+    )
+    password2.send_keys("aaaaaa")
+
+    change = WebDriverWait(chrome_driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '/html/body/div/div/div/div/form/div/div/button'))
+    )
+
+    change.click()
+
+    user = db.session.execute(
+        db.select(User).filter_by(email="sample_reset_pwd@test.com")
+    ).scalar()
+
+    assert check_password_hash(user.password, 'aaaaaa') is True
+
+
+
+
+
+
