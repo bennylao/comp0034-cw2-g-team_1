@@ -198,7 +198,7 @@ def reset_token(token):
                 flash('Password is too short. It must be 6 characters or more.', category='error')
             # updates database with new password
             else:
-                user.password = reset_password1
+                user.password = generate_password_hash(reset_password1, method="sha256")
                 db.session.commit()
                 flash('Password has been updated!', category='success')
                 return redirect(url_for('views.login'))
@@ -750,7 +750,7 @@ def post2():
 
 
 @main_bp.app_errorhandler(404)
-def page_not_found():
+def page_not_found(e):
     """ Return error 404 """
     return render_template('404.html', user=current_user), 404
 
