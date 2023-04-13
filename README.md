@@ -15,6 +15,8 @@ pip install -e .
 ```
 python -m flask --app "crayfish_analysis_app:create_app('config.DevelopmentConfig')" --debug run
 ```
+The flask app should be running on http://127.0.0.1:5000.
+
 
 ## Import excel to database
 If the tables named "crayfish1" and "crayfish2" in database.db are empty or there is no data list shown in the route 
