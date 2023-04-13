@@ -400,6 +400,12 @@ def test_reset_password_by_email(chrome_driver, run_app_win, flask_port, test_cl
     WHEN changing password using forgot password method
     THEN the password is changed in the database
     """
+    user = db.session.execute(
+        db.select(User).filter_by(email="sample_reset_pwd@test.com")
+    ).scalar()
+    user.password = generate_password_hash("123456", method='sha256')
+    db.session.commit()
+
     url = f"http://localhost:{flask_port}/login"
     chrome_driver.get(url)
 
@@ -409,15 +415,12 @@ def test_reset_password_by_email(chrome_driver, run_app_win, flask_port, test_cl
     forgot_pwd.click()
     input_email = WebDriverWait(chrome_driver, 10).until(
         EC.presence_of_element_located((By.ID, 'email')))
+    
     input_email.send_keys("sample_reset_pwd@test.com")
     btn = WebDriverWait(chrome_driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div/div/div/form/div/div/button'))
     )
     btn.click()
-
-    user = db.session.execute(
-        db.select(User).filter_by(email="sample_reset_pwd@test.com")
-    ).scalar()
 
     url = (f"http://localhost:{flask_port}/" + "reset-password/" + str(user.get_reset_token()))
 
@@ -438,8 +441,9 @@ def test_reset_password_by_email(chrome_driver, run_app_win, flask_port, test_cl
     )
 
     change.click()
+    db.session.commit()
 
-    assert check_password_hash(user.password, 'aaaaaa') is True
+    assert check_password_hash(user.password, 'aaaaaa') is True 
 
 def test_change_password(chrome_driver, run_app_win, flask_port, test_client, create_user_for_resetting_password):
     """
