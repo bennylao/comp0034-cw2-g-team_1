@@ -328,6 +328,16 @@ def change_password():
 @main_bp.route("/delete-account/<id>", methods=['POST'])
 @login_required
 def delete_user(id):
+    """
+    This function is used to delete an existing users account
+    Args: 
+        id(int): The id of the user
+    Raises:
+        NA
+    Returns:
+        The 'home.html' page if delete is successful
+    """
+    # Obtains the user id from the database
     user = User.query.filter_by(id=id).first()
 
     if not user:
@@ -351,12 +361,24 @@ def delete_user(id):
 
 @main_bp.route("/posts/<username>")
 def posts(username):
+    """
+    This function is used to display the posts of an user.
+    Args: 
+        username (str): The username of the user
+    Raises:
+        NA
+    Returns:
+        The 'forum.html' page if user does not exist
+        The 'posts.html' page if user exists
+    """
+    # Obtains the users username from the database
     user = User.query.filter_by(username=username).first()
 
     if not user:
         flash("No user with that username exists.", category="error")
         return redirect(url_for("views.forum"))
-
+    
+    # Obtains the posts of the user
     posts = user.posts
     return render_template("posts.html", user=current_user, posts=posts, username=username)
 
@@ -364,6 +386,16 @@ def posts(username):
 @main_bp.route("/create-comment/<post_id>", methods=['POST'])
 @login_required
 def create_comment(post_id):
+    """
+    This function is used to create a new comment.
+    Args: 
+        post_id (int): The id of the post
+    Raises:
+        NA
+    Returns:
+        The 'forum.html' page 
+    """
+    # Obtains entry from the user
     text = request.form.get('text')
 
     if not text:
@@ -371,6 +403,7 @@ def create_comment(post_id):
     else:
         post = Post.query.filter_by(id=post_id)
         if post:
+            # Adds the comment to the database
             comment = Comment(text=text, author=current_user.id, post_id=post_id)
             db.session.add(comment)
             db.session.commit()
@@ -382,6 +415,16 @@ def create_comment(post_id):
 @main_bp.route("/delete-comment/<comment_id>")
 @login_required
 def delete_comment(comment_id):
+    """
+    This function is used to delete an existing comment.
+    Args: 
+        comment_id (int): The id of the comment
+    Raises:
+        NA
+    Returns:
+        The 'forum.html' page 
+    """
+    # Obtains the comment from the database
     comment = Comment.query.filter_by(id=comment_id).first()
 
     if not comment:
@@ -399,7 +442,18 @@ def delete_comment(comment_id):
 @main_bp.route("/like-post/<post_id>", methods=["GET"])
 @login_required
 def like(post_id):
+    """
+    This function is used to like a post.
+    Args: 
+        post_id (int): The id of the post
+    Raises:
+        NA
+    Returns:
+        The 'forum.html' page 
+    """
+    # Obtains the post id from the database
     post = Post.query.filter_by(id=post_id)
+    # Checks if current user has already liked the post
     like = Like.query.filter_by(author=current_user.id, post_id=post_id).first()
 
     if not post:
@@ -408,6 +462,7 @@ def like(post_id):
         db.session.delete(like)
         db.session.commit()
     else:
+        #Add new like to databse
         like = Like(author=current_user.id, post_id=post_id)
         db.session.add(like)
         db.session.commit()
