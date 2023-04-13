@@ -46,7 +46,7 @@ def test_homepage_subheadings(chrome_driver, run_app_win, flask_port):
 def test_forum_page_title(chrome_driver, run_app_win, flask_port):
     """
     GIVEN a running app
-    WHEN the fourm page is accessed
+    WHEN the form page is accessed
     THEN the page title should be "Forum Posts"
     """
     url = f"http://localhost:{flask_port}/forum"
@@ -57,10 +57,10 @@ def test_forum_page_title(chrome_driver, run_app_win, flask_port):
     assert title.text == "Forum Posts"
 
 
-def test_About_page_title(chrome_driver, run_app_win, flask_port):
+def test_about_page_title(chrome_driver, run_app_win, flask_port):
     """
     GIVEN a running app
-    WHEN the fourm page is accessed
+    WHEN the form page is accessed
     THEN the page title should be "Forum Posts"
     """
     url = f"http://localhost:{flask_port}/about"
@@ -68,7 +68,7 @@ def test_About_page_title(chrome_driver, run_app_win, flask_port):
     title = WebDriverWait(chrome_driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '/html/body/div/h1'))
     )
-    assert title.text == "About"
+    assert title.text == "About Us"
 
 
 def test_link_to_dashboard(chrome_driver, run_app_win, flask_port):
@@ -105,7 +105,7 @@ def test_signup(chrome_driver, run_app_win, flask_port, test_client):
     """
     GIVEN a running app
     WHEN signing up is successful
-    THEN the sign up information should be in database
+    THEN the sign-up information should be in database
     """
 
     url = f"http://localhost:{flask_port}/signup"
@@ -178,8 +178,8 @@ def test_login(chrome_driver, run_app_win, flask_port, test_client):
 def test_forum_post(chrome_driver, run_app_win, flask_port, test_client):
     """
     GIVEN a running app
-    WHEN loging in is successfuly
-    AND going to the forum page and makeing a new post
+    WHEN loging in is successful
+    AND going to the forum page and making a new post
     THEN the message in the post should be in the forum page
     """
     url = f"http://localhost:{flask_port}/login"
@@ -234,8 +234,8 @@ def test_forum_post(chrome_driver, run_app_win, flask_port, test_client):
 def test_like(chrome_driver, run_app_win, flask_port, test_client):
     """
     GIVEN a running app
-    WHEN loging in is successfuly
-    AND going to the forum page and makeing a new post
+    WHEN loging in is successful
+    AND going to the forum page and making a new post
     AND pressing the like button
     THEN the like number should be one
     """
@@ -296,8 +296,8 @@ def test_like(chrome_driver, run_app_win, flask_port, test_client):
 def test_comment(chrome_driver, run_app_win, flask_port, test_client):
     """
     GIVEN a running app
-    WHEN loging in is successfuly
-    AND going to the forum page and makeing a new post
+    WHEN loging in is successful
+    AND going to the forum page and making a new post
     AND pressing the like button
     THEN the like number should be one
     """

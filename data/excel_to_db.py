@@ -44,7 +44,7 @@ site_list = list(df1.columns.get_level_values(0).unique())
 site_df1 = []
 site_df2 = []
 
-#Turn the hierarchical dataframe to a normal 2D dataframe
+# Turn the hierarchical dataframe to a normal 2D dataframe
 for site in site_list:
     met_1 = df1[site, 'Drawdown'].dropna(how='all')
     met_1.insert(0, "Site", [site] * len(met_1.index), True)

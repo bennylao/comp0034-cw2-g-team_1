@@ -2,14 +2,18 @@
 
 {% block content%}
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <h1 align="center">{% block header1 %}404 Not Found{% endblock %}</h1>
+    <h1 style="text-align: center">{% block header1 %}404 Not Found{% endblock %}</h1>
     <br>
-    <p class = 'error_text'>Oops! It seems like you've found sth interesting...</p>
+    <p style="font-size: 36px;">Oops! It seems like you've found sth interesting...</p>
     <br>
     <div class="container">
-    <form>
-    <button type="submit" formaction="/home" class="tricky_button" >Back Home</button>
-    </form>
+        <p style="font-size: 24px;">Please use the top bar for returning to homepage.
+            <span style="font-size: 12px;">
+            (I believe you can't return to homepage with the button below)</span>
+        </p>
+        <form>
+        <button type="submit" formaction="/home" class="tricky_button" >Back Home</button>
+        </form>
     </div>
 
 {% endblock %}

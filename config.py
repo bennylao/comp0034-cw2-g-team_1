@@ -15,6 +15,15 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False
 
+    # Configuring the mail server
+    # Using the gmail server using flask-mail
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 465
+    MAIL_USE_TLS = False
+    MAIL_USE_SSL = True
+    MAIL_USERNAME = 'ranaprasen24@gmail.com'
+    MAIL_PASSWORD = 'zuvbrfoamcspsvub'
+
 
 class ProductionConfig(Config):
     """Production config.
