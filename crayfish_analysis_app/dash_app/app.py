@@ -178,7 +178,7 @@ def toggle_modal(n1, is_open):
     """
     Opens the pop-up that explains why the chart is made
     Args:
-        n1 (boolean): Acts as a swtich
+        n1 (boolean): Acts as a switch
         is_open (string): The information that pops up
     Raises:
         NA
@@ -201,7 +201,7 @@ weight_minimum, weight_maximum = find_min_and_max(df2, 'Weight (g)')
 # Creates the Dash app
 def create_dash_app(flask_app):
     """Creates Dash as a route in Flask
-    :param flask_app: A confired Flask app
+    :param flask_app: A configured Flask app
     :return dash_app: A configured Dash app registered to the Flask app
     """
     # Register the Dash app to a route '/dashboard/' on a Flask app
@@ -747,13 +747,13 @@ def create_dash_app(flask_app):
 
         fig = go.Figure()
         i = 0
-        # enabiling the hoverover feature
+        # enabling the hover over feature
         for data in dist_data_list:
             fig.add_trace(go.Scatter(x=data, y=normal_dist_probability(data, dist_mean_list[i], dist_sd_list[i]),
                                      name=site_selection[i]))
             i += 1
 
-        # customising the chart appreadence and features
+        # customising the chart appearance and features
         fig.update_layout(
             # title="Title",
             xaxis_title=info,
@@ -818,7 +818,7 @@ def create_dash_app(flask_app):
             yaxis_range=[count_2017_m - 100, count_2016_f + count_2016_m + 100],
             paper_bgcolor="white",
         ),
-        # enabiling hover over feature
+        # enabling hover over feature
         fig.update_xaxes(dtick="M2")
         fig.update_traces(hovertemplate='Year: %{x} <br>Population: %{y}<extra></extra>')
         return fig

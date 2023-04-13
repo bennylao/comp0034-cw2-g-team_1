@@ -17,9 +17,8 @@ main_bp = Blueprint('views', __name__)
 # @login_required
 def home():
     """
-    Redirects to the gome page
-    Args:
-        
+    Redirects to the home page
+
     Raises:
         NA
     Returns:
@@ -32,13 +31,12 @@ def home():
 def signup():
     """
     This function renders the signup page and creates a new user
-    Args:
-        NA
+
     Raises:
         Flask Validation Error(str): If the form is not filled out correctly
         
     Returns:
-        The 'home.html' page if singup is successful
+        The 'home.html' page if sign up is successful
         The 'signup.html' page if signup is unsuccessful
     """
     if request.method == 'POST':
@@ -84,13 +82,12 @@ def signup():
 def login():
     """
     renders the login page and logs in the user
-    Args:
         
     Raises:
         Flask Validation Error(str): If the form is not filled out correctly
     Returns:
         The 'home.html' page if login is successful
-        The 'login.html' page if login is unsuccessful due to incrrect password or email
+        The 'login.html' page if login is unsuccessful due to incorrect password or email
     """
     if request.method == 'POST':
         # obtains the entry inputted by the user
@@ -145,8 +142,7 @@ If you did not request to change password, you can ignore this email.
 def reset_request():
     """
     This function manages the password reset request and sends the email to the user with the reset link
-    Args:
-        NA
+
     Raises:
         Flask Validation Error(str): If the form is not filled out correctly
     Returns:
@@ -162,7 +158,7 @@ def reset_request():
         if user:
             # sends email to the user if email is found
             send_email(user)
-            flash('A reset link has been sent to this email.', category='suceess')
+            flash('A reset link has been sent to this email.', category='success')
             return redirect(url_for('views.login'))
         else:
             flash('This email is not recognised.', category='error')
@@ -180,7 +176,7 @@ def reset_token(token):
     Raises:
         Flask ValidationError(str): If the form is not filled out correctly
     Returns:
-        THe 'reset_token.html' page if the new passwords dont meet the criteria
+        THe 'reset_token.html' page if the new passwords don't meet the criteria
         The 'login.html' page if password is reset
         The 'reset_request.html' page if token is invalid or expired
     """
@@ -202,7 +198,7 @@ def reset_token(token):
                 flash('Password is too short. It must be 6 characters or more.', category='error')
             # updates database with new password
             else:
-                user.password = generate_password_hash(reset_password1, method='sha256')
+                user.password = reset_password1
                 db.session.commit()
                 flash('Password has been updated!', category='success')
                 return redirect(url_for('views.login'))
@@ -214,8 +210,7 @@ def reset_token(token):
 def logout():
     """
     Logs out the user
-    Args:
-        NA
+
     Raises:
         NA
     Returns:
@@ -231,8 +226,7 @@ def logout():
 def create_post():
     """
     Creates a post
-    Args:
-        NA
+
     Raises:
         flask Validation Error(str): If the form is not filled out correctly
     Returns:
@@ -293,12 +287,10 @@ def delete_post(id):
 @login_required
 def change_password():
     """
-    This funciton changes the password of the user. Checks the old password
+    This function changes the password of the user. Checks the old password
     against the existing database password. if the old password matches,
     then the user can change their password using Post method.
 
-    Args:
-        NA
     Raises:
         flask Validation Error(str): If the form is not filled out correctly
     Returns:
@@ -427,8 +419,7 @@ def like(post_id):
 def about():
     """
     This function renders the about page
-    Args:
-        NA
+
     Raises:
         NA
     Returns:
@@ -442,8 +433,7 @@ def about():
 def account_management():
     """
     This function renders the account management page
-    Args:
-        NA
+
     Raises:
         NA
     Returns:
@@ -456,8 +446,7 @@ def account_management():
 def forum():
     """
     This function renders the forum page
-    Args:
-        NA
+
     Raises:
         NA
     Returns:
@@ -478,8 +467,7 @@ crayfish2_schema = Crayfish2Schema()
 def crayfish1():
     """
     This function renders the crayfish1 page
-    Args:
-        NA
+
     Raises:
         NA
     Returns:
@@ -516,8 +504,7 @@ def crayfish1_id(id):
 def crayfish2():
     """
     This function renders the crayfish2 page
-    Args:
-        NA
+
     Raises:
         NA
     Returns:
@@ -604,8 +591,7 @@ def crayfish2_delete(code):
 def crayfish1_add():
     """
     This function adds a new crayfish1 record to the dataset
-    Args:
-        NA
+
     Raises:
         NA
     Returns:
@@ -630,8 +616,7 @@ def crayfish1_add():
 def crayfish2_add():
     """
     This function adds a new crayfish2 record to the dataset
-    Args:
-        NA
+
     Raises:
         NA
     Returns:
@@ -714,8 +699,7 @@ def crayfish2_update(code):
 def post1():
     """
     This function generates a CSV file containing data from the crayfish1 table and returns it as a response
-    Args:
-        NA
+
     Raises:
         NA
     Returns:
@@ -742,8 +726,7 @@ def post1():
 def post2():
     """
     This function generates a CSV file containing data from the crayfish2 table and returns it as a response
-    Args:
-        NA
+
     Raises:
         NA
     Returns:
@@ -767,9 +750,10 @@ def post2():
 
 
 @main_bp.app_errorhandler(404)
-def page_not_found(e):
+def page_not_found():
     """ Return error 404 """
     return render_template('404.html', user=current_user), 404
+
 
 @main_bp.route('/crayfish1delete/<id>', methods=['POST'])
 @login_required
@@ -795,6 +779,7 @@ def crayfish1delete(id):
     # takes user back to previous page
     return redirect(url_for('views.crayfish1'))
 
+
 @main_bp.route('/crayfish2delete/<id>', methods=['POST'])
 @login_required
 def crayfish2delete(id):
@@ -819,13 +804,13 @@ def crayfish2delete(id):
     # takes user back to previous page
     return redirect(url_for('views.crayfish2'))
 
+
 @main_bp.route('/crayfish1add', methods=['GET', 'POST'])
 @login_required
 def crayfish1add():
     """
     This function allows users to add records to the crayfish 1 database
-    Args:
-        NA
+
     Raises:
         ValueError if length is not a number
     Returns:
@@ -861,7 +846,7 @@ def crayfish1add():
         db.session.commit()
         flash('Record added!', category='success')
         return redirect(url_for('views.crayfish1'))
-    
+
     return render_template('crayfish1add.html', user=current_user)
 
 
@@ -870,8 +855,7 @@ def crayfish1add():
 def crayfish2add():
     """
     This function allows users to add records to the crayfish 2 database
-    Args:
-        NA
+
     Raises:
         ValueError if length or weight is not a number
     Returns:
@@ -906,7 +890,7 @@ def crayfish2add():
                 flash('Weight must be positive.', category='error')
                 return redirect(url_for('views.crayfish2add'))
         except ValueError:
-            flash('Weighth must be a number.', category='error')
+            flash('Weight must be a number.', category='error')
             return redirect(url_for('views.crayfish2add'))
 
         crayfish2 = Crayfish2(site=site, gender=gender, length=length, weight=weight)
@@ -914,5 +898,5 @@ def crayfish2add():
         db.session.commit()
         flash('Record added!', category='success')
         return redirect(url_for('views.crayfish2'))
-    
+
     return render_template('crayfish2add.html', user=current_user)

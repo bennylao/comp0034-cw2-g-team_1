@@ -26,7 +26,7 @@ class User(db.Model, UserMixin):
         """
         Creates a unique token for the user which is valid for 15 minutes
         Args:
-            expires_sec (int): Expiration time in seconds. Set to 900 sec = 15mins.
+            expires_sec (int): Expiration time in seconds. Set to 900 sec = 15 mins.
         Raises:
             NA
         Returns:

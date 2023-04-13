@@ -103,7 +103,7 @@ def test_get_logout(test_client, create_user):
 def test_get_create_forum_without_login(test_client):
     """
     GIVEN the user tries to create post without logging in
-    THEN it redirect and should tell the user to log in in the log in page
+    THEN it redirect and should tell the user to log in on the login page
     """
     response = test_client.get("/create-post", follow_redirects=True)
 
@@ -141,7 +141,7 @@ def test_get_error_route(test_client, create_user):
 def test_post_signup_new_user(test_client):
     """
     GIVEN a user is signing up
-    WHEN the inputs to the sign up form are valid
+    WHEN the inputs to the sign-up form are valid
     THEN the user should be able to sign up and added to the database
         with correct details and give a response status code of 200
     """
@@ -181,7 +181,7 @@ def test_post_signup_new_user(test_client):
 def test_post_signup_invalid_email(test_client):
     """
     GIVEN the user tries sign up with an invalid email
-    THEN it should not allow the user to sign up and display a error message
+    THEN it should not allow the user to sign up and display an error message
     """
     exists = db.session.execute(
         db.select(User).filter_by(username="Invalid_email")
@@ -204,7 +204,7 @@ def test_post_signup_invalid_email(test_client):
 def test_post_signup_existing_email(test_client):
     """
     GIVEN the user tries sign up with an existing email
-    THEN it should not allow the user to sign up and display a error message
+    THEN it should not allow the user to sign up and display an error message
     """
     # Check if the record exists, it does then delete it
     exists = db.session.execute(
@@ -230,7 +230,7 @@ def test_post_signup_existing_email(test_client):
 def test_post_signup_existing_user(test_client):
     """
     GIVEN the user tries sign up with an existing username
-    THEN it should not allow the user to sign up and display a error message
+    THEN it should not allow the user to sign up and display an error message
     """
     # Check if the record exists, it does then delete it
     exists = db.session.execute(
@@ -257,7 +257,7 @@ def test_post_signup_not_same_password(test_client):
     """
     GIVEN the user tries sign up
     When the password and confirm password are not the same
-    THEN it should not allow the user to sign up and display a error message
+    THEN it should not allow the user to sign up and display an error message
     """
     exists = db.session.execute(
         db.select(User).filter_by(username="Invalid_email")
@@ -296,7 +296,7 @@ def test_post_login_wrong_password(test_client, create_user):
     """
     GIVEN the user tries login
     WHen the password is not correct
-    THEN it should not log the user in and display a error message
+    THEN it should not log the user in and display an error message
     """
     test_client.post("/login", data={
         "email": "testingsample@test.com",
@@ -311,7 +311,7 @@ def test_post_login_wrong_email(test_client, create_user):
     """
     GIVEN the user tries login
     WHen the email is not correct
-    THEN it should not log the user in and display a error message
+    THEN it should not log the user in and display an error message
     """
     test_client.post("/login", data={
         "email": "WrongEmail@test.com",
@@ -324,7 +324,7 @@ def test_post_login_wrong_email(test_client, create_user):
 
 def test_post_delete_user(test_client, create_user):
     """
-    GIVEN the user is logged in and tries delete account
+    GIVEN the user is logged in and tries to delete account
     WHen user confirms delete account
     THEN it should delete the user account and remove data from database
     """
@@ -382,13 +382,14 @@ def test_post_create_forum(test_client, create_user):
     assert exist.text == "Sample post for testing"
     assert exist.date_created == datetime.datetime.now().date()
 
+
 def test_change_password(test_client, create_user):
     """
     GIVEN the user is logged in
     WHEN the password is changed correctly
     THEN the message 'Password has been successfully changed!'
         should flash
-    AND responce code should be 302
+    AND response code should be 302
     AND the password of the user should change
     """
     user = db.session.execute(
@@ -415,6 +416,7 @@ def test_change_password(test_client, create_user):
     assert text == 'Password has been successfully changed!'
     assert check_password_hash(user.password, '1234567') is True
 
+
 def test_change_password_old_password_wrong(test_client, create_user):
     """
     GIVEN the user is logged in
@@ -433,7 +435,7 @@ def test_change_password_old_password_wrong(test_client, create_user):
         "password": "123456",
     })
 
-    response = test_client.post("/change-password", data={
+    test_client.post("/change-password", data={
         "old_password": "12345",
         "new_password1": "123456",
         "new_password2": "1234567"
@@ -442,6 +444,7 @@ def test_change_password_old_password_wrong(test_client, create_user):
     text = get_flashed_messages()[1]
 
     assert text == 'Old password is incorrect.'
+
 
 def test_change_password_new_password_not_same(test_client, create_user):
     """
@@ -461,7 +464,7 @@ def test_change_password_new_password_not_same(test_client, create_user):
         "password": "123456",
     })
 
-    response = test_client.post("/change-password", data={
+    test_client.post("/change-password", data={
         "old_password": "123456",
         "new_password1": "12345",
         "new_password2": "1234567"
