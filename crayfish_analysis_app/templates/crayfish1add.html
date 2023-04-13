@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br/>
+<br/>
+<br/>
+<div class="d-flex justify-content-center align-items-center" style="height:50vh">
+    <div class="card border-0" style="max-width: 1600px;">
+      <div class="card-body">
+        <form method="POST">
+          <h1 class="card-title text-center">Add New Crayfish Record to Database 1</h1>
+          <br>
+          <div class="form-group text-center">
+            <label for="site">Site:</label>
+            <input type="text" name="site" id="site" placeholder="Enter Site" required>
+            <br><br>
+            <label for="method">Method:</label>
+            <input type="text" name="method" id="method" placeholder="Enter Method" required>
+            <br><br>
+            <label for="gender">Gender:</label>
+            <input type="text" name="gender" id="gender" placeholder="Enter Gender" required>
+            <br><br>
+            <label for="length">Length:</label>
+            <input type="number" name="length" id="length" placeholder="Enter Length" required>
+            <br><br>
+            <div align="center"><button class="btn btn-primary" type="submit">Add Record</button></div>
+          </div>
+        </form>
+      </div>
+      <div style="text-align: center">
+        <br>
+        <a href="/crayfish1">
+            <button type="button" class="btn btn-lg btn-secondary">
+                Back
+            </button>
+        </a>
+    </div>
+    </div>
+  </div>
+{% endblock %}

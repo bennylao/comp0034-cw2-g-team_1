@@ -6,9 +6,9 @@ import datetime
 
 def test_get_home(test_client):
     """
-    GIVEN
-    WHEN
-    THEN
+    GIVEN the user goes to the home page
+    THEN it should take the user to the home page
+        and the status code given should be 200
     """
     response = test_client.get("/home")
     assert response.status_code == 200
@@ -16,9 +16,9 @@ def test_get_home(test_client):
 
 def test_get_signup(test_client):
     """
-    GIVEN
-    WHEN
-    THEN
+    GIVEN the user goes to the signup page
+    THEN it should take the user to the signup page
+        and the status code given should be 200
     """
     response = test_client.get("/signup")
     assert response.status_code == 200
@@ -26,9 +26,9 @@ def test_get_signup(test_client):
 
 def test_get_dashboard(test_client):
     """
-    GIVEN
-    WHEN
-    THEN
+    GIVEN the user goes to the dashboard page
+    THEN it should take the user to the dashboard app
+        and the status code given should be 308
     """
     response = test_client.get("/dashboard")
     assert response.status_code == 308
@@ -36,9 +36,9 @@ def test_get_dashboard(test_client):
 
 def test_get_forum(test_client):
     """
-    GIVEN
-    WHEN
-    THEN
+    GIVEN the user goes to the forum page
+    THEN it should take the user to the forum page
+        and the status code given should be 200
     """
     response = test_client.get("/forum")
     assert response.status_code == 200
@@ -46,9 +46,9 @@ def test_get_forum(test_client):
 
 def test_get_about(test_client):
     """
-    GIVEN
-    WHEN
-    THEN
+    GIVEN the user goes to the about page
+    THEN it should take the user to the about page
+        and the status code given should be 200
     """
     response = test_client.get("/about")
     assert response.status_code == 200
