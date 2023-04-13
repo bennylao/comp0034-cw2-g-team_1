@@ -770,3 +770,106 @@ def post2():
 def page_not_found(e):
     """ Return error 404 """
     return render_template('404.html', user=current_user), 404
+
+@main_bp.route('/crayfish1delete/<id>', methods=['POST'])
+@login_required
+def crayfish1delete(id):
+    crayfish = Crayfish1.query.filter_by(id=id).first()
+
+    if not crayfish:
+        flash("Record does not exist.", category="error")
+    else:
+        db.session.delete(crayfish)
+        db.session.commit()
+        flash("Record deleted.", category="success")
+    return redirect(url_for('views.crayfish1'))
+
+@main_bp.route('/crayfish2delete/<id>', methods=['POST'])
+@login_required
+def crayfish2delete(id):
+    crayfish = Crayfish2.query.filter_by(id=id).first()
+
+    if not crayfish:
+        flash("Record does not exist.", category="error")
+    else:
+        db.session.delete(crayfish)
+        db.session.commit()
+        flash("Record deleted.", category="success")
+    return redirect(url_for('views.crayfish2'))
+
+@main_bp.route('/crayfish1add', methods=['GET', 'POST'])
+# @login_required
+def crayfish1add():
+    if request.method == 'POST':
+        site = request.form.get('site')
+        method = request.form.get('method')
+        gender = request.form.get('gender')
+        length = request.form.get('length')
+
+        if not site:
+            flash('Field cannot be empty.', category='error')
+
+        if not method:
+            flash('Field cannot be empty.', category='error')
+
+        if not gender:
+            flash('Field cannot be empty.', category='error')
+
+        try:
+            length = float(length)
+            if length < 0:
+                flash('Length must be positive.', category='error')
+                return redirect(url_for('views.crayfish1add'))
+        except ValueError:
+            flash('Length must be a number.', category='error')
+            return redirect(url_for('views.crayfish1add'))
+
+        crayfish1 = Crayfish1(site=site, method=method, gender=gender, length=length)
+        db.session.add(crayfish1)
+        db.session.commit()
+        flash('Record added!', category='success')
+        return redirect(url_for('views.crayfish1'))
+    
+    return render_template('crayfish1add.html', user=current_user)
+
+
+@main_bp.route('/crayfish2add', methods=['GET', 'POST'])
+# @login_required
+def crayfish2add():
+    if request.method == 'POST':
+        site = request.form.get('site')
+        gender = request.form.get('gender')
+        length = request.form.get('length')
+        weight = request.form.get('weight')
+
+        if not site:
+            flash('Field cannot be empty.', category='error')
+
+        if not gender:
+            flash('Field cannot be empty.', category='error')
+
+        try:
+            length = float(length)
+            if length < 0:
+                flash('Length must be positive.', category='error')
+                return redirect(url_for('views.crayfish2add'))
+        except ValueError:
+            flash('Length must be a number.', category='error')
+            return redirect(url_for('views.crayfish2add'))
+
+        try:
+            weight = float(weight)
+            if length < 0:
+                flash('Weight must be positive.', category='error')
+                return redirect(url_for('views.crayfish2add'))
+        except ValueError:
+            flash('Weighth must be a number.', category='error')
+            return redirect(url_for('views.crayfish2add'))
+
+        crayfish2 = Crayfish2(site=site, gender=gender, length=length, weight=weight)
+        db.session.add(crayfish2)
+        db.session.commit()
+        flash('Record added!', category='success')
+        return redirect(url_for('views.crayfish2'))
+    
+    return render_template('crayfish2add.html', user=current_user)
