@@ -805,7 +805,7 @@ def post2():
 
 
 @main_bp.app_errorhandler(404)
-def page_not_found(e):
+def page_not_found():
     """ Return error 404 """
     return render_template('404.html', user=current_user), 404
 

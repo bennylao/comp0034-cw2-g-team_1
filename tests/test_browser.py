@@ -504,6 +504,13 @@ def test_change_password(chrome_driver, run_app_win, flask_port, test_client, cr
 
 
 def test_database_1_add_record(chrome_driver, run_app_win, flask_port, test_client, create_user):
+    """
+    GIVEN a running app
+    WHEN logging in
+    AND going to crayfish1 page
+    AND adding a crayfish into the database 
+    THEN the crayfish should be in the database
+    """
     url = f"http://localhost:{flask_port}/login"
     chrome_driver.get(url)
 
@@ -567,9 +574,15 @@ def test_database_1_add_record(chrome_driver, run_app_win, flask_port, test_clie
     db.session.execute(db.delete(Crayfish1).where(Crayfish1.site == "Testing_Site"))
     db.session.commit()
 
-
 def test_database_1_delete_record(chrome_driver, run_app_win, flask_port, test_client, create_user,
                                   create_record_crayfish1):
+    """
+    GIVEN a running app
+    WHEN logging in
+    AND going to crayfish1 page
+    AND deleteing a crayfish from the database 
+    THEN the crayfish should not be in the database
+    """
     url = f"http://localhost:{flask_port}/login"
     chrome_driver.get(url)
 
@@ -603,7 +616,18 @@ def test_database_1_delete_record(chrome_driver, run_app_win, flask_port, test_c
     time.sleep(5)
 
     delete = WebDriverWait(chrome_driver, 10).until(
-        EC.presence_of_element_located(
-            (By.XPATH, f'/html/body/div/div/div/div/div/ul/li[{target.id}]/div[2]/form/button'))
+        EC.presence_of_element_located((By.XPATH, f'/html/body/div/div/div/div/div/ul/li[{target.id}]/div[2]/form/button'))
     )
     delete.click()
+
+    WebDriverWait(chrome_driver, 10).until(EC.alert_is_present())
+    chrome_driver.switch_to.alert.accept()
+
+    chrome_driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    time.sleep(3)
+
+    target_after = db.session.execute(
+        db.select(Crayfish1).filter_by(site="Test_site")
+    ).scalar()
+
+    assert target_after is None 
