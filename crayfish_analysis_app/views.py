@@ -798,7 +798,7 @@ def crayfish2delete(id):
     return redirect(url_for('views.crayfish2'))
 
 @main_bp.route('/crayfish1add', methods=['GET', 'POST'])
-# @login_required
+@login_required
 def crayfish1add():
     if request.method == 'POST':
         site = request.form.get('site')
@@ -834,7 +834,7 @@ def crayfish1add():
 
 
 @main_bp.route('/crayfish2add', methods=['GET', 'POST'])
-# @login_required
+@login_required
 def crayfish2add():
     if request.method == 'POST':
         site = request.form.get('site')
