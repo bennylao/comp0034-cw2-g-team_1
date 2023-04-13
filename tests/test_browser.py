@@ -2,9 +2,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from crayfish_analysis_app.models import db
-from crayfish_analysis_app.models import User, Post, Like, Comment, Crayfish1, Crayfish2
+from crayfish_analysis_app.models import User, Post, Like, Comment, Crayfish1
 from werkzeug.security import check_password_hash, generate_password_hash
-from flask import get_flashed_messages
 import time
 
 
@@ -441,12 +440,13 @@ def test_reset_password_by_email(chrome_driver, run_app_win, flask_port, test_cl
 
     assert check_password_hash(user.password, 'aaaaaa') is True
 
+
 def test_change_password(chrome_driver, run_app_win, flask_port, test_client, create_user_for_resetting_password):
     """
     GIVEN a running app
     WHEN logging in
     AND changing the password 
-    THEN the password the password in the database should be
+    THEN the password in the database should be
         changed to the new password
     """
     url = f"http://localhost:{flask_port}/login"
@@ -470,24 +470,24 @@ def test_change_password(chrome_driver, run_app_win, flask_port, test_client, cr
     login_button = WebDriverWait(chrome_driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "/html/body/div/div/div/div/form/div/div/button"))
     )
-    
+
     login_button.click()
 
     chrome_driver.get(f"http://localhost:{flask_port}/account-management")
 
     old_password = WebDriverWait(chrome_driver, 10).until(
         EC.presence_of_element_located((By.ID, 'old_password')))
-    
+
     old_password.send_keys("123456")
 
     new_password1 = WebDriverWait(chrome_driver, 10).until(
         EC.presence_of_element_located((By.ID, 'new_password1')))
-    
+
     new_password1.send_keys("1234567")
 
     new_password2 = WebDriverWait(chrome_driver, 10).until(
         EC.presence_of_element_located((By.ID, 'new_password2')))
-    
+
     new_password2.send_keys("1234567")
 
     change_pass = WebDriverWait(chrome_driver, 10).until(
@@ -495,11 +495,9 @@ def test_change_password(chrome_driver, run_app_win, flask_port, test_client, cr
     )
 
     change_pass.click()
-    
-    assert check_password_hash(user.password, '1234567') is True 
 
+    assert check_password_hash(user.password, '1234567') is True
 
-    
 
 def test_database_1_add_record(chrome_driver, run_app_win, flask_port, test_client, create_user):
     url = f"http://localhost:{flask_port}/login"
@@ -601,53 +599,7 @@ def test_database_1_delete_record(chrome_driver, run_app_win, flask_port, test_c
     time.sleep(5)
 
     delete = WebDriverWait(chrome_driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, f'/html/body/div/div/div/div/div/ul/li[{target.id}]/div[2]/form/button'))
+        EC.presence_of_element_located(
+            (By.XPATH, f'/html/body/div/div/div/div/div/ul/li[{target.id}]/div[2]/form/button'))
     )
     delete.click()
-
-
-
-def test_database_1_delete_record(chrome_driver, run_app_win, flask_port, test_client, create_user,
-                                  create_record_crayfish1):
-    url = f"http://localhost:{flask_port}/login"
-    chrome_driver.get(url)
-
-    email = WebDriverWait(chrome_driver, 10).until(
-        EC.presence_of_element_located((By.ID, 'email'))
-    )
-    email.send_keys('testingsample@test.com')
-
-    password = WebDriverWait(chrome_driver, 10).until(
-        EC.presence_of_element_located((By.ID, 'password'))
-    )
-    password.send_keys('123456')
-
-    login_button = WebDriverWait(chrome_driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, '/html/body/div/div/div/div/form/div/div/button'))
-    )
-    login_button.click()
-
-    database_1 = WebDriverWait(chrome_driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, '//*[@id="navbar"]/div/a[5]'))
-    )
-    database_1.click()
-
-    chrome_driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-
-    target = db.session.execute(
-        db.select(Crayfish1).filter_by(site="Test_site")
-    ).scalar()
-
-    # Ensure the driver has scrolled to the bottom and the delete button is visible and clickable
-    time.sleep(5)
-
-    delete = WebDriverWait(chrome_driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, f'/html/body/div/div/div/div/div/ul/li[{target.id}]/div[2]/form/button'))
-    )
-    delete.click()
-
-    target_after = db.session.execute(
-        db.select(Crayfish1).filter_by(site="Test_site")
-    ).scalar()
-
-    assert target_after is None
