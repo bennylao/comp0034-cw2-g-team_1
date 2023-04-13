@@ -3,9 +3,6 @@
 ## Link to Repository
 https://github.com/ucl-comp0035/comp0034-cw2-g-team_1.git
 
-### Password Reset Link Feature with token
-Followed an online tutorial by Corey Schafer titled "Python Flask Tutorial: Full-Featured Web App Part 10 - Email and Password Reset".
-https://www.youtube.com/watch?v=vutyTx7IaAI&t=361s
 
 ## Set Up Instruction
 ```
@@ -59,6 +56,12 @@ User can now return to the flask app (i.e., homepage, forum page, etc.) from the
 
 # Good to mention
 ## Forgot Password
+
+### Password Reset Link Feature with token
+Followed an online tutorial by Corey Schafer titled "Python Flask Tutorial: 
+Full-Featured Web App Part 10 - Email and Password Reset".
+https://www.youtube.com/watch?v=vutyTx7IaAI&t=361s
+
 Forgot Password is developed. In order to have a try of this feature, you will have to create a new account with 
 your actual email in the signup page. Then logout and come back to login page and press the button 'Forgot Password?'
 An email from "ranaprasen24@gmail.com" will be sent to you shortly for resetting the password, 
