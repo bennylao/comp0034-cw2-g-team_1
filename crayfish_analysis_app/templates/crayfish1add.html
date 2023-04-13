@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Add New Crayfish Record to Database 1</h1>
+  <br>
+  <h3></h3>
+  <form method="POST">
+    <label for="site">Site:</label>
+    <input type="text" name="site" id="site" required>
+    <br><br>
+    <label for="method">Method:</label>
+    <input type="text" name="method" id="method" required>
+    <br><br>
+    <label for="gender">Gender:</label>
+    <input type="text" name="gender" id="gender" required>
+    <br><br>
+    <label for="length">Length:</label>
+    <input type="number" name="length" id="length" required>
+    <br><br>
+    <button type="submit">Add Record</button>
+  </form>
+{% endblock %}

@@ -1,18 +1,35 @@
 {% extends 'base.html' %}
 {% set title = 'Trapping Methods' %}
 {% block content %}
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<h1 style="text-align: center">Crayfish Caught Using Different Trapping Methods</h1>
-<form>
-<button type="submit" formaction="/crayfish1/download" class="btn"> <i class="fa fa-download"></i> Download Database 1</button>
-</form>
-<br>
-<p>We have data for the following methods</p>
-<ul>
-    {% for crayfish1 in crayfish_list %}
-    <li>{{ crayfish1['id'] }} {{ crayfish1['site'] }} {{ crayfish1['method'] }} {{ crayfish1['gender'] }} {{ crayfish1['length'] }}mm</li>
-    {% endfor %}
-</ul>
+<div class="card border-white">
+  <div class="card-body">
+    <h1 class="text-center mb-4">Crayfish Caught Using Different Trapping Methods</h1>
+    <form>
+      <button type="submit" formaction="/crayfish1/download" class="btn"> <i class="fa fa-download"></i> Download Database 1</button>
+      <button type="submit" formaction="/crayfish1add" class="btn btn-primary"><i class="fa fa-plus"></i> Add Crayfish Record</button>
+    </form>
+    <br>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Crayfish List</h5>
+        <ul class="list-group list-group-flush">
+          {% for crayfish1 in crayfish_list %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              {{ crayfish1['id'] }} {{ crayfish1['site'] }} {{ crayfish1['method'] }} {{ crayfish1['gender'] }} {{ crayfish1['length'] }}mm
+            </div>
+            <div>
+              <form method="post" action="{{ url_for('views.crayfish1delete', id=crayfish1['id']) }}">
+                <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o"></i> Delete</button>
+              </form>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
