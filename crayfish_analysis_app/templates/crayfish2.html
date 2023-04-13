@@ -8,6 +8,43 @@
     <h1 class="text-center mb-4">Crayfish Lengths and Weights</h1>
     <form>
       <button type="submit" formaction="/crayfish2/download" class="btn"> <i class="fa fa-download"></i> Download Database 2</button>
+      {% if current_user.is_authenticated %}
+      <button type="submit" formaction="/crayfish2add" class="btn btn-primary"><i class="fa fa-plus"></i> Add Crayfish Record</button>
+      {% endif %}
+    </form>
+    <br>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Crayfish List</h5>
+        <ul class="list-group list-group-flush">
+          {% for crayfish2 in crayfish_list %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              {{ crayfish2['id'] }} {{ crayfish2['site'] }} {{ crayfish2['gender'] }} {{ crayfish2['length'] }}mm {{ crayfish2['weight'] }}g
+            </div>
+            <div>
+              {% if current_user.is_authenticated %}
+              <form method="post" action="{{ url_for('views.crayfish2delete', id=crayfish2['id']) }}">
+                <button type="submit" class="btn" style="background-color: rgb(245, 111, 111); color: white;"><i class="fa fa-trash-o"></i> Delete</button>
+              </form>              
+              {% endif %}
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<div class="card border-white">
+  <div class="card-body">
+    <h1 class="text-center mb-4">Crayfish Lengths and Weights</h1>
+    <form>
+      <button type="submit" formaction="/crayfish2/download" class="btn"> <i class="fa fa-download"></i> Download Database 2</button>
       <button type="submit" formaction="/crayfish2add" class="btn btn-primary"><i class="fa fa-plus"></i> Add Crayfish Record</button>
     </form>
     <br>
@@ -26,29 +63,6 @@
               </form>
             </div>
           </li>
-          {% endfor %}
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
-{% endblock %}
-
-<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<div class="card border-white">
-  <div class="card-body">
-    <h1 class="text-center mb-4">Crayfish Lengths and Weights</h1>
-    <form>
-      <button type="submit" formaction="/crayfish2/download" class="btn"> <i class="fa fa-download"></i> Download Database 2</button>
-    </form>
-    <br>
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Crayfish List</h5>
-        <ul class="list-group list-group-flush">
-          {% for crayfish2 in crayfish_list %}
-          <li class="list-group-item">{{ crayfish2['id'] }} {{ crayfish2['site'] }} {{ crayfish2['gender'] }} {{ crayfish2['length'] }}mm {{ crayfish2['weight'] }}g</li>
           {% endfor %}
         </ul>
       </div>
