@@ -144,3 +144,5 @@ def chrome_driver():
 7) However, the second time of committing the exactly same repository will fail with the unknown error again.
 8) Evidence of performing this can be found from GitHub Action from #69 to #73.
 ![Screenshot](Screenshots/github-action-69-73.png)
+9) This error can also be proven from GitHub Actions #79 and #80 where the only difference between these two versions is
+a line in ```README.md```.
