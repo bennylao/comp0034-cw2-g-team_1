@@ -774,32 +774,63 @@ def page_not_found(e):
 @main_bp.route('/crayfish1delete/<id>', methods=['POST'])
 @login_required
 def crayfish1delete(id):
+    """
+    This function allows users to delete records from the crayfish 1 database
+    Args:
+        id
+    Raises:
+        flash error message if record does not exist
+    Returns:
+        takes user back to crayfish1 page
+    """
     crayfish = Crayfish1.query.filter_by(id=id).first()
-
+    # checks if record exists
     if not crayfish:
         flash("Record does not exist.", category="error")
+    # deletes record from database
     else:
         db.session.delete(crayfish)
         db.session.commit()
         flash("Record deleted.", category="success")
+    # takes user back to previous page
     return redirect(url_for('views.crayfish1'))
 
 @main_bp.route('/crayfish2delete/<id>', methods=['POST'])
 @login_required
 def crayfish2delete(id):
+    """
+    This function allows users to delete records from the crayfish 2 database
+    Args:
+        id
+    Raises:
+        flash error message if record does not exist
+    Returns:
+        takes user back to crayfish2 page
+    """
     crayfish = Crayfish2.query.filter_by(id=id).first()
-
+    # checks if record exists
     if not crayfish:
         flash("Record does not exist.", category="error")
+    # deletes record from database
     else:
         db.session.delete(crayfish)
         db.session.commit()
         flash("Record deleted.", category="success")
+    # takes user back to previous page
     return redirect(url_for('views.crayfish2'))
 
 @main_bp.route('/crayfish1add', methods=['GET', 'POST'])
 @login_required
 def crayfish1add():
+    """
+    This function allows users to add records to the crayfish 1 database
+    Args:
+        NA
+    Raises:
+        ValueError if length is not a number
+    Returns:
+        takes user back to crayfish1 page
+    """
     if request.method == 'POST':
         site = request.form.get('site')
         method = request.form.get('method')
@@ -815,6 +846,7 @@ def crayfish1add():
         if not gender:
             flash('Field cannot be empty.', category='error')
 
+        # needs to check if length is positive
         try:
             length = float(length)
             if length < 0:
@@ -836,6 +868,15 @@ def crayfish1add():
 @main_bp.route('/crayfish2add', methods=['GET', 'POST'])
 @login_required
 def crayfish2add():
+    """
+    This function allows users to add records to the crayfish 2 database
+    Args:
+        NA
+    Raises:
+        ValueError if length or weight is not a number
+    Returns:
+        takes user back to crayfish2 page
+    """
     if request.method == 'POST':
         site = request.form.get('site')
         gender = request.form.get('gender')
@@ -848,6 +889,7 @@ def crayfish2add():
         if not gender:
             flash('Field cannot be empty.', category='error')
 
+        # needs to check if length is positive
         try:
             length = float(length)
             if length < 0:
@@ -857,6 +899,7 @@ def crayfish2add():
             flash('Length must be a number.', category='error')
             return redirect(url_for('views.crayfish2add'))
 
+        # needs to check if weight is positive
         try:
             weight = float(weight)
             if length < 0:
