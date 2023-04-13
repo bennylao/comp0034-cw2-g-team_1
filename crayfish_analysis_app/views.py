@@ -781,3 +781,16 @@ def crayfish1delete(id):
         db.session.commit()
         flash("Record deleted.", category="success")
     return redirect(url_for('views.crayfish1'))
+
+@main_bp.route('/crayfish2delete/<id>', methods=['POST'])
+@login_required
+def crayfish2delete(id):
+    crayfish = Crayfish2.query.filter_by(id=id).first()
+
+    if not crayfish:
+        flash("Record does not exist.", category="error")
+    else:
+        db.session.delete(crayfish)
+        db.session.commit()
+        flash("Record deleted.", category="success")
+    return redirect(url_for('views.crayfish2'))

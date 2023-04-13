@@ -15,7 +15,16 @@
         <h5 class="card-title">Crayfish List</h5>
         <ul class="list-group list-group-flush">
           {% for crayfish2 in crayfish_list %}
-          <li class="list-group-item">{{ crayfish2['id'] }} {{ crayfish2['site'] }} {{ crayfish2['gender'] }} {{ crayfish2['length'] }}mm {{ crayfish2['weight'] }}g</li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              {{ crayfish2['id'] }} {{ crayfish2['site'] }} {{ crayfish2['gender'] }} {{ crayfish2['length'] }}mm {{ crayfish2['weight'] }}g
+            </div>
+            <div>
+              <form method="post" action="{{ url_for('views.crayfish2delete', id=crayfish2['id']) }}">
+                <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o"></i> Delete</button>
+              </form>
+            </div>
+          </li>
           {% endfor %}
         </ul>
       </div>
@@ -23,3 +32,25 @@
   </div>
 </div>
 {% endblock %}
+
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<div class="card border-white">
+  <div class="card-body">
+    <h1 class="text-center mb-4">Crayfish Lengths and Weights</h1>
+    <form>
+      <button type="submit" formaction="/crayfish2/download" class="btn"> <i class="fa fa-download"></i> Download Database 2</button>
+    </form>
+    <br>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Crayfish List</h5>
+        <ul class="list-group list-group-flush">
+          {% for crayfish2 in crayfish_list %}
+          <li class="list-group-item">{{ crayfish2['id'] }} {{ crayfish2['site'] }} {{ crayfish2['gender'] }} {{ crayfish2['length'] }}mm {{ crayfish2['weight'] }}g</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div> -->
