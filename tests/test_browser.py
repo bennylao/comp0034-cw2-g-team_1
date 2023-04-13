@@ -3,7 +3,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from crayfish_analysis_app.models import db
 from crayfish_analysis_app.models import User, Post, Like, Comment
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from flask import get_flashed_messages
 import time
 
@@ -395,16 +395,9 @@ def test_reset_password_by_email(chrome_driver, run_app_win, flask_port, test_cl
     WHEN changing password using forgot password method
     THEN the password is changed in the database
     """
-    url = f"http://localhost:{flask_port}/"
+    url = f"http://localhost:{flask_port}/login"
     chrome_driver.get(url)
-    logout = WebDriverWait(chrome_driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, '//*[@id="navbar"]/div/a[8]'))
-    )
-    logout.click()
-    login = WebDriverWait(chrome_driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, '//*[@id="navbar"]/div/a[7]'))
-    )
-    login.click()
+
     forgot_pwd = WebDriverWait(chrome_driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div/div/div/form/div/div/a'))
     )
@@ -441,13 +434,67 @@ def test_reset_password_by_email(chrome_driver, run_app_win, flask_port, test_cl
 
     change.click()
 
+    assert check_password_hash(user.password, 'aaaaaa') is True
+
+def test_change_password(chrome_driver, run_app_win, flask_port, test_client, create_user_for_resetting_password):
+    """
+    GIVEN a running app
+    WHEN logging in
+    AND changing the password 
+    THEN the password the password in the database should be
+        changed to the new password
+    """
+    url = f"http://localhost:{flask_port}/login"
+    chrome_driver.get(url)
+
     user = db.session.execute(
         db.select(User).filter_by(email="sample_reset_pwd@test.com")
     ).scalar()
 
-    assert check_password_hash(user.password, 'aaaaaa') is True
+    user.password = generate_password_hash("123456", method='sha256')
+    db.session.commit()
+
+    input_email = WebDriverWait(chrome_driver, 10).until(
+        EC.presence_of_element_located((By.ID, 'email')))
+    input_email.send_keys("sample_reset_pwd@test.com")
+
+    input_password = WebDriverWait(chrome_driver, 10).until(
+        EC.presence_of_element_located((By.ID, 'password')))
+    input_password.send_keys("123456")
+
+    login_button = WebDriverWait(chrome_driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "/html/body/div/div/div/div/form/div/div/button"))
+    )
+    
+    login_button.click()
+
+    chrome_driver.get(f"http://localhost:{flask_port}/account-management")
+
+    old_password = WebDriverWait(chrome_driver, 10).until(
+        EC.presence_of_element_located((By.ID, 'old_password')))
+    
+    old_password.send_keys("123456")
+
+    new_password1 = WebDriverWait(chrome_driver, 10).until(
+        EC.presence_of_element_located((By.ID, 'new_password1')))
+    
+    new_password1.send_keys("1234567")
+
+    new_password2 = WebDriverWait(chrome_driver, 10).until(
+        EC.presence_of_element_located((By.ID, 'new_password2')))
+    
+    new_password2.send_keys("1234567")
+
+    change_pass = WebDriverWait(chrome_driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "/html/body/div/div[1]/div/div/form/div/div/button"))
+    )
+
+    change_pass.click()
+    
+    assert check_password_hash(user.password, '1234567') is True 
 
 
+    
 
 
 

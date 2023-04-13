@@ -319,3 +319,92 @@ def test_post_create_forum(test_client, create_user):
     assert text == 'Post created!'
     assert exist.text == "Sample post for testing"
     assert exist.date_created == datetime.datetime.now().date()
+
+def test_change_password(test_client, create_user):
+    """
+    GIVEN the user is logged in
+    WHEN the password is changed correctly
+    THEN the message 'Password has been successfully changed!'
+        should flash
+    AND responce code should be 302
+    AND the password of the user should change
+    """
+    user = db.session.execute(
+        db.select(User).filter_by(email="testingsample@test.com")
+    ).scalar()
+
+    user.password = generate_password_hash("123456", method='sha256')
+    db.session.commit()
+
+    test_client.post("/login", data={
+        "email": "testingsample@test.com",
+        "password": "123456",
+    })
+
+    response = test_client.post("/change-password", data={
+        "old_password": "123456",
+        "new_password1": "1234567",
+        "new_password2": "1234567"
+    })
+
+    text = get_flashed_messages()[1]
+
+    assert response.status_code == 302
+    assert text == 'Password has been successfully changed!'
+    assert check_password_hash(user.password, '1234567') is True
+
+def test_change_password_old_password_wrong(test_client, create_user):
+    """
+    GIVEN the user is logged in
+    WHEN the old_password given is incorrect
+    THEN the message 'Old password is incorrect.' should flash
+    """
+    user = db.session.execute(
+        db.select(User).filter_by(email="testingsample@test.com")
+    ).scalar()
+
+    user.password = generate_password_hash("123456", method='sha256')
+    db.session.commit()
+
+    test_client.post("/login", data={
+        "email": "testingsample@test.com",
+        "password": "123456",
+    })
+
+    response = test_client.post("/change-password", data={
+        "old_password": "12345",
+        "new_password1": "123456",
+        "new_password2": "1234567"
+    })
+
+    text = get_flashed_messages()[1]
+
+    assert text == 'Old password is incorrect.'
+
+def test_change_password_new_password_not_same(test_client, create_user):
+    """
+    GIVEN the user is logged in
+    WHEN the new passwords don't match
+    THEN the message 'New passwords don\'t match!' should flash
+    """
+    user = db.session.execute(
+        db.select(User).filter_by(email="testingsample@test.com")
+    ).scalar()
+
+    user.password = generate_password_hash("123456", method='sha256')
+    db.session.commit()
+
+    test_client.post("/login", data={
+        "email": "testingsample@test.com",
+        "password": "123456",
+    })
+
+    response = test_client.post("/change-password", data={
+        "old_password": "123456",
+        "new_password1": "12345",
+        "new_password2": "1234567"
+    })
+
+    text = get_flashed_messages()[1]
+
+    assert text == 'New passwords don\'t match!'
