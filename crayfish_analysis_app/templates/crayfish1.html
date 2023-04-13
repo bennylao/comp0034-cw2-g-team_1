@@ -15,7 +15,16 @@
         <h5 class="card-title">Crayfish List</h5>
         <ul class="list-group list-group-flush">
           {% for crayfish1 in crayfish_list %}
-          <li class="list-group-item">{{ crayfish1['id'] }} {{ crayfish1['site'] }} {{ crayfish1['method'] }} {{ crayfish1['gender'] }} {{ crayfish1['length'] }}mm</li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              {{ crayfish1['id'] }} {{ crayfish1['site'] }} {{ crayfish1['method'] }} {{ crayfish1['gender'] }} {{ crayfish1['length'] }}mm
+            </div>
+            <div>
+              <form method="post" action="{{ url_for('views.crayfish1delete', id=crayfish1['id']) }}">
+                <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o"></i> Delete</button>
+              </form>
+            </div>
+          </li>
           {% endfor %}
         </ul>
       </div>

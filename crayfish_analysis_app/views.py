@@ -768,3 +768,16 @@ def post2():
 def page_not_found(e):
     """ Return error 404 """
     return render_template('404.html', user=current_user), 404
+
+@main_bp.route('/crayfish1delete/<id>', methods=['POST'])
+@login_required
+def crayfish1delete(id):
+    crayfish = Crayfish1.query.filter_by(id=id).first()
+
+    if not crayfish:
+        flash("Record does not exist.", category="error")
+    else:
+        db.session.delete(crayfish)
+        db.session.commit()
+        flash("Record deleted.", category="success")
+    return redirect(url_for('views.crayfish1'))
