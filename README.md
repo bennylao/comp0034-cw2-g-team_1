@@ -1,8 +1,32 @@
-# Read Me
+# UK Crayfish Data Dashboard: Tackling Environmental Challenges
 
-## Link to Repository
-https://github.com/ucl-comp0035/comp0034-cw2-g-team_1.git
+## Description
+This interactive dashboard is dedicated to the critical analysis of crayfish data in the UK, 
+with a particular focus on addressing the environmental challenges posed by the invasive signal crayfish species. 
+The rapid increase in the signal crayfish population is detrimentally impacting ecosystems, biodiversity, 
+and public infrastructure, as these crayfish consume surrounding aquatic life and burrow into riverbanks. 
+Our tool provides a valuable resource for scientists and fishermen to locate, monitor, and manage crayfish populations, 
+thereby contributing significantly to wildlife conservation and environmental protection efforts.
 
+## Technology Stack
+- Backend: Python, flask, dash, plotly
+- Frontend: Jinja2, HTML, CSS
+- Data Analysis: pandas, numpy
+- Database: sqlite3, sqlalchemy
+
+## Usage
+
+Users can interact with the dashboard to:
+
+- Identify high-risk areas due to large populations of signal crayfish.
+- Understand the best methods for capturing female signal crayfish.
+- Analyse demographic data such as average size, weight, and gender distribution of crayfish.
+- Locate the best sites for specific types of signal crayfish capture.
+
+## Design and Architecture
+This project combines robust data analysis algorithms with a user-friendly presentation layer. 
+The architecture is designed to facilitate easy navigation and interactive data exploration, 
+enabling users to make informed decisions and analyses.
 
 ## Set Up Instruction
 ```shell
@@ -25,15 +49,12 @@ otherwise the data in the database will be duplicated.*
 python data/excel_to_db.py
 ```
 
-## Run Pytest
+## Testing
+- To run tests: 
 ```shell
 pytest
 ```
-
-## Run Coverage
+- To generate test coverage reports:
 ```shell
-pytest --cov 
+pytest --cov
 ```
-
-## Test Reports
-![Screenshot](Screenshots/test-report.png)
