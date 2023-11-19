@@ -13,6 +13,7 @@ thereby contributing significantly to wildlife conservation and environmental pr
 - Frontend: Jinja2, HTML, CSS
 - Data Analysis: pandas, numpy
 - Database: sqlite3, sqlalchemy
+- Testing: pytest, Selenium
 
 ## Usage
 
